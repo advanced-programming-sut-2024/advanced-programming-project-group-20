@@ -1,24 +1,29 @@
 package Model;
 
+import javafx.scene.image.Image;
+
+
 public class Card {
     private String name;
     private String type;
-    private String position;
     private String ability;
     private boolean description;
     private int power;
     private Faction faction;
-    private int numberOfCartInGame=0;
+    private int numberOfCartInGame;
+    private Image image;
 
-    public Card(String name, String type, String position, String ability, boolean description, int power, Faction faction, int numberOfCartInGame) {
+
+    public Card(String name, String type, String ability, boolean description
+            , int power, Faction faction, int numberOfCartInGame) {
         this.name = name;
         this.type = type;
-        this.position = position;
         this.ability = ability;
         this.description = description;
         this.power = power;
         this.faction = faction;
         this.numberOfCartInGame = numberOfCartInGame;
+        this.image = new Image(String.valueOf(Card.class.getResource("/" + faction.getName() + "/" + name + ".jpg")));
     }
 
     public void abilityAction(){
@@ -44,13 +49,6 @@ public class Card {
         this.type = type;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
 
     public String getAbility() {
         return ability;
