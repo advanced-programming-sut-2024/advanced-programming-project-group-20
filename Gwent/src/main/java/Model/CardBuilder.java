@@ -17,7 +17,46 @@ public class CardBuilder {
     public static Card skellige(String cardName){
         Skellige skellige = new Skellige();
         return switch (cardName) {
-
+            case "Mardroeme" -> new Card(cardName, "spell", "mardoeme",
+                    true, -1, skellige, 3);
+            case "Berserker" -> new Card(cardName, "closeCombatUnit", "berserker",
+                    true, 4, skellige, 1);
+            case "Vidkaarl" -> new Card(cardName, "closeCombatUnit", "moralBoost",
+                    true, 14, skellige, 1111);  //there is no number for this card in dock;
+            case "Svanrige", "Udalryk", "DonarAnHindar" -> new Card(cardName, "closeCombatUnit", null,
+                    false, 4, skellige, 1);
+            case "ClanAnCraite" -> new Card(cardName, "closeCombatUnit", "tightBond",
+                    false, 6, skellige, 3);
+            case "MadmanLugos" -> new Card(cardName, "closeCombatUnit", null,
+                    false, 6, skellige, 1);
+            case "Cerys" -> new Card(cardName, "closeCombatUnit", "hero&muster",
+                    true, 10, skellige, 1);
+            case "Kambi" -> new Card(cardName, "closeCombatUnit", "hero&transformers",
+                    true, 11, skellige, 1);
+            case "BirnaBran" -> new Card(cardName, "closeCombatUnit", "medic",
+                    false, 2, skellige, 1);
+            case "ClanDrummondShieldmaiden" -> new Card(cardName, "closeCombatUnit", "tightBond",
+                    true, 4, skellige, 1);
+            case "ClanDimunPirate" -> new Card(cardName, "rangedUnit", "scorch",
+                    true, 6, skellige, 1);
+            case "ClanBrokvarArcher" -> new Card(cardName, "rangedUnit", null,
+                    false, 6, skellige, 3);
+            case "Ermion" -> new Card(cardName, "rangedUnit", "hero&mardroeme",
+                    false, 8, skellige, 1);
+            case "Hjalmar" -> new Card(cardName, "rangedUnit", "hero",
+                    false, 10, skellige, 1);
+            case "YoungBerserker" -> new Card(cardName, "rangedUnit", "berserker",
+                    true, 2, skellige, 3);
+            case "YoungVidkaarl" -> new Card(cardName, "rangedUnit", "tightBond",
+                    true, 8, skellige, 3); //there is no number for this card in dock;
+            case "LightLongship" -> new Card(cardName, "rangedUnit", "muster",
+                    false, 4, skellige, 3);
+            case "WarLongship" -> new Card(cardName, "siegeUnit", "tightBond",
+                    false, 6, skellige, 3);
+            case "DraigBon-Dhu" -> new Card(cardName, "siegeUnit", "commander'sHorn",
+                    false, 2, skellige, 1);
+            case "Olaf" -> new Card(cardName, "agileUnit", "moralBoost",
+                    false, 12, skellige, 1);
             default -> null;
         };
     }
