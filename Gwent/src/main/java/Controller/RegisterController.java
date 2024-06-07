@@ -1,6 +1,6 @@
 package Controller;
 
-public class RegisterController implements Menu{
+public class RegisterController {
     public static String Register(String username,String password,String passwordConfirm,String nickName,String email){
 
         return null;
@@ -18,18 +18,4 @@ public class RegisterController implements Menu{
         return true;
     }
 
-    @Override
-    public void interMenu(String menuName) {
-
-    }
-
-    @Override
-    public void exitMenu() {
-
-    }
-
-    @Override
-    public String showCurrent() {
-        return null;
-    }
 }
