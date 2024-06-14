@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="720.0" prefWidth="900.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.RegisterMenu">
+
+    <Button id="registerButton" layoutX="273.0" layoutY="465.0" onMouseClicked="#register" text="Register">
+        <font>
+            <Font size="21.0" />
+        </font></Button>
+    <Button id="loginButton" layoutX="475.0" layoutY="465.0" onMouseClicked="#goToLoginMenu" prefHeight="58.0" prefWidth="147.0" text="Have account? Login" />
+
+
+    <VBox layoutX="314.0" layoutY="267.0" prefHeight="178.0" prefWidth="232.0" spacing="3">
+        <TextField fx:id="usernameField" promptText="username" styleClass="text-field" />
+        <TextField fx:id="nickNameField" promptText="nickname" styleClass="text-field" />
+        <TextField fx:id="emailField" promptText="email" styleClass="text-field" />
+        <TextField fx:id="passwordField" promptText="password" styleClass="text-field" />
+        <TextField fx:id="repeatedPasswordField" promptText="repeat passoword" />
+
+    </VBox>
+    <Label layoutY="1.0" prefHeight="26.0" prefWidth="123.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="Register menu" textAlignment="CENTER" />
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="356.0" layoutY="216.0" prefHeight="26.0" prefWidth="147.0" text="Welcome!" />
+    <!--   <ScrollPane layoutX="44.0" layoutY="55.0" prefHeight="200.0" fitToWidth="true" prefWidth="200.0">-->
+    <!--     <content>-->
+    <!--       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="427.0" prefWidth="200.0">-->
+    <!--            <children>-->
+    <!--               <Button layoutX="74.0" layoutY="274.0" mnemonicParsing="false" text="hillo44" />-->
+    <!--            </children></AnchorPane>-->
+    <!--     </content>-->
+    <!--   </ScrollPane>-->
+
+</AnchorPane>

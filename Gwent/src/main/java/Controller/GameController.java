@@ -3,7 +3,7 @@ package Controller;
 import Model.Card;
 
 public class GameController {
-public static String  vetoCard(Card card){
+public static String vetoCard(Card card){
     return null;
 }
 public static void showCardInfo(Card card){
