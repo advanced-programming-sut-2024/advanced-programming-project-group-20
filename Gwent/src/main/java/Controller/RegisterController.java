@@ -76,7 +76,7 @@ public class RegisterController {
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {
-            loginMenu.start(RegisterMenu.stage);
+            loginMenu.start(ApplicationController.getStage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

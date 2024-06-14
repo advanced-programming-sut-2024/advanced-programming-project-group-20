@@ -44,7 +44,7 @@ public class LoginMenu extends Application {
 
     public void goRegisterMenu(MouseEvent mouseEvent) {
         try {
-            new RegisterMenu().start(RegisterMenu.stage);
+            new RegisterMenu().start(ApplicationController.getStage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

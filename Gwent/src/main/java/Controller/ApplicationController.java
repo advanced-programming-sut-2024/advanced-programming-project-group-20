@@ -9,9 +9,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class ApplicationController {
-   private static Stage stage ;
-   public static final int WIDTH =1280;
-   public static final int HEIGHT =720;
+    private static Stage stage;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
 
 
     public static Stage getStage() {
@@ -21,10 +21,12 @@ public class ApplicationController {
     public static void setStage(Stage stage) {
         ApplicationController.stage = stage;
     }
-     public static void setRootSize(Pane pane){
+
+    public static void setRootSize(Pane pane) {
         pane.setPrefHeight(HEIGHT);
         pane.setPrefWidth(WIDTH);
-     }
+    }
+
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         //Todo hardcode
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);

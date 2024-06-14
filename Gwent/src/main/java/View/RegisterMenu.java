@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class RegisterMenu extends Application {
-    public static Stage stage;
     @FXML
     private TextField repeatedPasswordField;
     @FXML
@@ -41,7 +40,7 @@ public class RegisterMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        RegisterMenu.stage = stage;
+        ApplicationController.setStage(stage);
         stage.setHeight(720);
         stage.setWidth(900);
 //        SetHeightAndWidth(stage);
@@ -60,7 +59,7 @@ public class RegisterMenu extends Application {
 
     public void goToLoginMenu(MouseEvent mouseEvent) {
         try {
-            new LoginMenu().start(stage);
+            new LoginMenu().start(ApplicationController.getStage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

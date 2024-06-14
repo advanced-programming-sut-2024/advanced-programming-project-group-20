@@ -24,7 +24,7 @@ public class LoginController {
             User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
             MainMenu mainMenu = new MainMenu();
             try {
-                mainMenu.start(RegisterMenu.stage);
+                mainMenu.start(ApplicationController.getStage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

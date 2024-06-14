@@ -31,7 +31,7 @@ public class MainMenu extends Application {
     public void goToProfileMenu(MouseEvent mouseEvent) {
         ProfileMenu profileMenu = new ProfileMenu();
         try {
-            profileMenu.start(RegisterMenu.stage);
+            profileMenu.start(ApplicationController.getStage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +40,7 @@ public class MainMenu extends Application {
     public void goToRegisterMenu(MouseEvent mouseEvent) {
         RegisterMenu registerMenu = new RegisterMenu();
         try {
-            registerMenu.start(RegisterMenu.stage);
+            registerMenu.start(ApplicationController.getStage());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
