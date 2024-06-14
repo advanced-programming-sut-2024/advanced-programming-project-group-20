@@ -28,14 +28,21 @@ public class User {
     private static User turnUser;
     private double maxPoint;
 
-    public User(String username, String password, String nickName, String faction, String email, int questionNumber, String answer) {
+    public User(String username, String password, String nickName, String email) {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = faction;
+//        this.faction = faction;
         this.email = email;
-        this.questionNumber = questionNumber;
-        this.answer = answer;
+    }
+
+    public static User giveUserByUsername(String username) {
+        for (User user : allUsers){
+            if (user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
     }
 
     public int getRank() {

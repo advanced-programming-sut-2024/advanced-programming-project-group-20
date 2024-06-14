@@ -3,7 +3,9 @@ package Controller;
 import Model.Card;
 import Model.CardBuilder;
 import Model.Factions.Skellige;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,8 +26,14 @@ public class PreGameController {
         for (int i = 1; i < 11; i++) {
             ImageView imageView = new ImageView(new Image(String.valueOf(PreGameController.class.getResource("/" + i + ".jpg"))));
             imageView.setFitHeight(200);
-            imageView.setFitWidth(100);
+            imageView.setFitWidth(90);
+            Button imageButton = new Button();
+            imageButton.setGraphic(imageView);
+            imageButton.setOnAction(event -> {
+//                System.out.println("fds");
+            });
             vBox.getChildren().add(imageView);
+            vBox.getChildren().add(imageButton);
         }
         scroolpane.setContent(vBox);
     }

@@ -1,9 +1,9 @@
 package Controller;
 
-public class MainController extends Menu {
+public class MainController {
 
 
-    public static void interMenu(String menuName) {
+    public void interMenu(String menuName) {
 
     }
 
