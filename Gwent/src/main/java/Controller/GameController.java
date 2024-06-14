@@ -1,8 +1,23 @@
 package Controller;
 
+import Model.Board;
 import Model.Card;
+import Model.User;
+import javafx.fxml.FXML;
+import javafx.scene.layout.HBox;
 
 public class GameController {
+    public HBox deckHbox;
+
+    @FXML
+    public void initialize() {
+        User player;
+        User.setLoggedUser(player=new User("ali","123","reza","Nilfgaard","a@.com",2,"yes"));
+       player.setOpponentUser(new User("ali","123","reza","Nilfgaard","a@.com",2,"yes"));
+       User.setTurnUser(player);
+       player.getDeck().add();
+
+    }
 public static String  vetoCard(Card card){
     return null;
 }
