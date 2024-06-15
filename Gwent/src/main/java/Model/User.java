@@ -9,7 +9,7 @@ public class User {
     private String nickName;
     private int numberOfGames;
     private int numberOfWins;
-    private String faction;
+    private Faction faction;
     private Leader leader;
     private User opponentUser;
     private ArrayList<Card> totalCards= new ArrayList<>();
@@ -109,11 +109,11 @@ public class User {
         this.numberOfWins = numberOfWins;
     }
 
-    public String getFaction() {
+    public Faction getFaction() {
         return faction;
     }
 
-    public void setFaction(String faction) {
+    public void setFaction(Faction faction) {
         this.faction = faction;
     }
 

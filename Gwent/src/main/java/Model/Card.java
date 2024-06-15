@@ -1,9 +1,11 @@
 package Model;
 
 import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 
 
-public class Card {
+public class Card extends Rectangle {
     private String name;
     private String type;
     private String ability;
@@ -12,6 +14,8 @@ public class Card {
     private Faction faction;
     private int numberOfCartInGame;
     private Image image;
+    private boolean isSelect =false;
+    private boolean isInDeck = true;
 
 
     public Card(String name, String type, String ability, boolean description
@@ -23,7 +27,11 @@ public class Card {
         this.power = power;
         this.faction = faction;
         this.numberOfCartInGame = numberOfCartInGame;
+        System.out.println("/" + faction.getName() + "/" + name + ".jpg");
         this.image = new Image(String.valueOf(Card.class.getResource("/" + faction.getName() + "/" + name + ".jpg")));
+        this.setFill(new ImagePattern(image));
+        this.setHeight(100);
+        this.setWidth(70);
     }
 
     public void abilityAction(){
@@ -89,6 +97,27 @@ public class Card {
     public void setNumberOfCartInGame(int numberOfCartInGame) {
         this.numberOfCartInGame = numberOfCartInGame;
     }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public boolean isInDeck() {
+        return isInDeck;
+    }
+
+    public void setInDeck(boolean inDeck) {
+        isInDeck = inDeck;
+    }
+
     public boolean hasAbility(Card card){
         return false;
     }

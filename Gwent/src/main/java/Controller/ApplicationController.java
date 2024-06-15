@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 
 public class ApplicationController {
    private static Stage stage ;
+
+    private static Pane root ;
    public static final int WIDTH =1280;
    public static final int HEIGHT =720;
 private static MediaPlayer mediaPlayer;
@@ -26,6 +28,13 @@ private static MediaPlayer mediaPlayer;
         ApplicationController.stage = stage;
     }
 
+    public static Pane getRoot() {
+        return root;
+    }
+
+    public static void setRoot(Pane root) {
+        ApplicationController.root = root;
+    }
 
     public static void setRootSize(Pane pane){
         pane.setPrefHeight(HEIGHT);
@@ -40,7 +49,7 @@ private static MediaPlayer mediaPlayer;
              MediaPlayer mediaPlayer = new MediaPlayer(media);
              mediaPlayer.play();
              mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-             mediaPlayer.setVolume(0.1);
+             mediaPlayer.setVolume(0.5);
              ApplicationController.mediaPlayer =mediaPlayer;
          }
      }

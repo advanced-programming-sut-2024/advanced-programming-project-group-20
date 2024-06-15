@@ -6,7 +6,7 @@ public class CardBuilder {
     public static Card factionChooser(String factionName, String cardName) {
         return switch (factionName) {
             case "Skellige" -> skellige(cardName);
-            case "ScoiaTeal" -> scoiaTeal(cardName);
+            case "ScoiaTael" -> scoiaTeal(cardName);
             case "NorthernRealms" -> northernRealms(cardName);
             case "Nilfgaard" -> nilfgaard(cardName);
             case "Monsters" -> monsters(cardName);

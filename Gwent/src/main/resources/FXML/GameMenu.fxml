@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
+<AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GameMenu">
+   <ImageView fitHeight="890" fitWidth="1540">
+      <Image url="@../someImages/board.jpg">
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.GameController">
-   <children>
-      <HBox fx:id="deckHbox" layoutX="84.0" layoutY="582.0" prefHeight="118.0" prefWidth="615.0" />
-   </children>
+      </Image>
+   </ImageView>
+   <ImageView fx:id="activeLeader" fitHeight="35.0" fitWidth="33.0" layoutX="206.0" layoutY="727.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../someImages/icon_leader_active.png" />
+      </image></ImageView>
+   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="256.0" layoutY="711.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="42.0" prefWidth="95.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="pass" textAlignment="CENTER" textFill="#d0ef04">
+      <font>
+         <Font name="Agency FB Bold" size="30.0" />
+      </font>
+   </Button>
+   <Label fx:id="passedLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="325.0" layoutY="631.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+      <font>
+         <Font name="Book Antiqua" size="20.0" />
+      </font>
+   </Label>
+   <Label layoutX="81.0" layoutY="199.0" prefHeight="134.0" prefWidth="235.0" style="-fx-background-color: #11111190;" />
+   <Label layoutX="81.0" layoutY="520.0" prefHeight="134.0" prefWidth="235.0" style="-fx-background-color: #11111190;" />
+   <HBox fx:id="deckHbox" alignment="CENTER" layoutX="456.0" layoutY="693.0" prefHeight="100.0" prefWidth="767.0" />
+   <ImageView fx:id="biggerCardImage" fitHeight="439.0" fitWidth="256.0" layoutX="1223.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true" />
+   <HBox fx:id="turnRanged" alignment="CENTER" layoutX="574.0" layoutY="470.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="turnSiege" alignment="CENTER" layoutX="574.0" layoutY="582.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="opponentCombat" alignment="CENTER" layoutX="574.0" layoutY="233.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="opponentSiege" alignment="CENTER" layoutX="574.0" layoutY="14.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="opponentRanged" alignment="CENTER" layoutX="574.0" layoutY="121.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="turnCombat" layoutX="569.0" layoutY="363.0" prefHeight="100.0" prefWidth="644.0" />
+
 </AnchorPane>
