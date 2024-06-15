@@ -6,7 +6,7 @@ public class Board {
     private ArrayList<Card> siege =new ArrayList<>();
     private ArrayList<Card> ranged =new ArrayList<>();
     private ArrayList<Card> closeCombat =new ArrayList<>();
-    private ArrayList<Card> burnedCart =new ArrayList<>();
+    private ArrayList<Card> burnedCard =new ArrayList<>();
     private ArrayList<Card> hand =new ArrayList<>();
     private Card spell;
     private Leader leader;
@@ -37,12 +37,12 @@ public class Board {
         this.closeCombat = closeCombat;
     }
 
-    public ArrayList<Card> getBurnedCart() {
-        return burnedCart;
+    public ArrayList<Card> getBurnedCard() {
+        return burnedCard;
     }
 
-    public void setBurnedCart(ArrayList<Card> burnedCart) {
-        this.burnedCart = burnedCart;
+    public void setBurnedCard(ArrayList<Card> burnedCard) {
+        this.burnedCard = burnedCard;
     }
 
     public ArrayList<Card> getHand() {
