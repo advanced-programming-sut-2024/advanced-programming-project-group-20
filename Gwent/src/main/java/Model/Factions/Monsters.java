@@ -49,6 +49,5 @@ public class Monsters extends Faction {
         Collection.add(CardBuilder.monsters("Ghoul", this));
         Collection.add(CardBuilder.monsters("Ghoul", this));
         Collection.add(CardBuilder.monsters("Ghoul", this));
-
     }
 }

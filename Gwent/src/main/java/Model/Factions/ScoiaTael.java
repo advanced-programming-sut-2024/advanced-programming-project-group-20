@@ -45,4 +45,4 @@ public class ScoiaTael extends Faction {
         Collection.add(CardBuilder.scoiaTael("IsengrimFaoiltiarna", this));
 
     }
-    }
+}

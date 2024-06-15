@@ -1,19 +1,8 @@
 package Model;
 
-import Model.Factions.*;
 
 public class CardBuilder {
-    public static Card factionChooser(String factionName, String cardName) {
-        return switch (factionName) {
-//            case "Skellige" -> skellige(cardName, );
-//            case "ScoiaTeal" -> scoiaTeal(cardName);
-//            case "NorthernRealms" -> northernRealms(cardName);
-//            case "Nilfgaard" -> nilfgaard(cardName);
-//            case "Monsters" -> monsters(cardName);
-//            case "Neutral" -> neutral(cardName);
-            default -> null;
-        };
-    }
+
 
     public static Card skellige(String cardName, Faction faction) {
         return switch (cardName) {
