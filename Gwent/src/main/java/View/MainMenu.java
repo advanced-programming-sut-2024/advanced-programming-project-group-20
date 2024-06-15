@@ -2,9 +2,12 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.RegisterController;
+import Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
@@ -13,12 +16,16 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 public class MainMenu extends Application {
+    public TextField opponentName;
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setHeight(720);
+        stage.setWidth(900);
         URL url = RegisterMenu.class.getResource("/FXML/MainMenu.fxml");
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
@@ -46,7 +53,16 @@ public class MainMenu extends Application {
         }
     }
 
-    public void goToGameMenu(MouseEvent mouseEvent) {
-
+    public void goToGameMenu(MouseEvent mouseEvent) throws Exception {
+        User user = User.getUserByName(opponentName.getText());
+        if (user == null) {
+            ApplicationController.alert("Wrong Username","There is no user with this username");
+        } else {
+            User.setTurnUser(User.getLoggedUser());
+            User.getLoggedUser().setOpponentUser(user);
+            user.setOpponentUser(User.getLoggedUser());
+            PreGameMenu preGameMenu = new PreGameMenu();
+            preGameMenu.start(ApplicationController.getStage());
+        }
     }
 }

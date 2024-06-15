@@ -71,8 +71,6 @@ public class RegisterController {
     }
 
     public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField, TextField nickNameField) {
-        User.getAllUsers().add(new User(usernameField.getText()
-                , passwordField.getText(), nickNameField.getText(), emailField.getText()));
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

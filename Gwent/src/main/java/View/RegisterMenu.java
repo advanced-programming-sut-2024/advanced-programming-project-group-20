@@ -27,6 +27,7 @@ public class RegisterMenu extends Application {
     private TextField emailField;
     @FXML
     private TextField nickNameField;
+
     @FXML
     private TextField passwordField;
     @FXML
@@ -43,7 +44,7 @@ public class RegisterMenu extends Application {
         ApplicationController.setStage(stage);
         stage.setHeight(720);
         stage.setWidth(900);
-//        SetHeightAndWidth(stage);
+        SetHeightAndWidth(stage);
         URL url = RegisterMenu.class.getResource("/FXML/RegisterMenu.fxml");
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
@@ -66,5 +67,19 @@ public class RegisterMenu extends Application {
     }
     public void register(MouseEvent mouseEvent) {
         RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
+    }
+
+    //TODO delete this later
+    public void gotoMainMenu(MouseEvent mouseEvent) {
+        User user = new User("hamid", "1" ,"1" , "1");
+        User user1 = new User("ali", "1" ,"1" , "1");
+        User.setLoggedUser(user);
+        try {
+            new MainMenu().start(ApplicationController.getStage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ApplicationController.getStage().setWidth(900);
+//        ApplicationController.getStage().setHeight();
     }
 }

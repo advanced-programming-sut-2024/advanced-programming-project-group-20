@@ -7,7 +7,7 @@
 <AnchorPane prefHeight="720.0" prefWidth="900.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainMenu">
     <children>
         <Button id="ProfileTransmit" layoutX="379.0" layoutY="310.0" onMouseClicked="#goToProfileMenu" prefWidth="172.0" styleClass="button" text="Profile menu" />
-        <Button id="GameTransmit" layoutX="379.0" layoutY="244.0" onMouseClicked="#goToGameMenu" prefWidth="172.0" styleClass="button" text="Game menu" />
+        <Button id="GameTransmit" layoutX="379.0" layoutY="211.0" onMouseClicked="#goToGameMenu" prefWidth="172.0" styleClass="button" text="Game menu" />
 
         <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" text="Main menu">
             <font>
@@ -15,5 +15,6 @@
             </font>
         </Label>
         <Button layoutX="406.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
+      <TextField alignment="TOP_CENTER" layoutX="380.0" layoutY="251.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" fx:id="opponentName"/>
     </children>
 </AnchorPane>

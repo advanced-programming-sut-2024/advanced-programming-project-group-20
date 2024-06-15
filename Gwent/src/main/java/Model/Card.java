@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.PreGameController;
 import javafx.scene.image.Image;
 
 
@@ -23,7 +24,15 @@ public class Card {
         this.power = power;
         this.faction = faction;
         this.numberOfCartInGame = numberOfCartInGame;
-        this.image = new Image(String.valueOf(Card.class.getResource("/" + faction.getName() + "/" + name + ".jpg")));
+        if (faction != null) {
+            this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + faction.getName() + "/" + name + ".jpg")));
+        } else {
+            this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + "Neutral" + "/" + name + ".jpg")));
+        }
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public void abilityAction(){
