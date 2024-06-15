@@ -1,16 +1,20 @@
 package Model;
 
-public abstract class Faction {
-    private String name;
+import javafx.scene.image.Image;
 
-    public static void getFactionByName(String name){}
+import java.util.ArrayList;
+
+public abstract class Faction {
+    protected String name;
+    protected ArrayList<Card> Collection = new ArrayList<>();
+
     public void ability(){}
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public ArrayList<Card> getCollection() {
+        return Collection;
     }
 }

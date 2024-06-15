@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Factions.Nilfgaard;
+
 import java.util.ArrayList;
 
 public class User {
@@ -32,13 +34,24 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-//        this.faction = faction;
+        this.faction = new Nilfgaard();
+        this.leader = new Leader(new Nilfgaard(), "nilfgaard_emhyr_copper");
         this.email = email;
+        allUsers.add(this);
     }
 
     public static User giveUserByUsername(String username) {
         for (User user : allUsers){
             if (user.getUsername().equals(username)){
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static User getUserByName(String username) {
+        for (User user: allUsers) {
+            if (username.equals(user.getUsername())){
                 return user;
             }
         }

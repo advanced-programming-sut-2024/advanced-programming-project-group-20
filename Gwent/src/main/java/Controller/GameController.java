@@ -165,15 +165,15 @@ public class GameController {
         pane.getChildren().remove(passedLabel);
         // todo nesbat dadan aks be cart
         ArrayList<Card> cards = new ArrayList<>();
-        cards.add(CardBuilder.scoiaTeal("ElvenSkirmisher"));
-        cards.add(CardBuilder.scoiaTeal("Yaevinn"));
-        cards.add(CardBuilder.scoiaTeal("Ciaranaep"));
-        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
-        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
-        cards.add(CardBuilder.scoiaTeal("DolBlathannaArcher"));
-        cards.add(CardBuilder.scoiaTeal("DwarvenSkirmisher"));
-        cards.add(CardBuilder.scoiaTeal("HavekarHealer"));
-        cards.add(CardBuilder.scoiaTeal("HavekarSmuggler"));
+//        cards.add(CardBuilder.scoiaTeal("ElvenSkirmisher"));
+//        cards.add(CardBuilder.scoiaTeal("Yaevinn"));
+//        cards.add(CardBuilder.scoiaTeal("Ciaranaep"));
+//        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
+//        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
+//        cards.add(CardBuilder.scoiaTeal("DolBlathannaArcher"));
+//        cards.add(CardBuilder.scoiaTeal("DwarvenSkirmisher"));
+//        cards.add(CardBuilder.scoiaTeal("HavekarHealer"));
+//        cards.add(CardBuilder.scoiaTeal("HavekarSmuggler"));
 
         for (int i = 0; i < 9; i++) {
             deckHbox.getChildren().add(cards.get(i));

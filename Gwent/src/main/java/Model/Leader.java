@@ -1,9 +1,14 @@
 package Model;
 
-public abstract class Leader{
-    Faction faction;
-    String name;
-    boolean isUsed;
+import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
+
+public class Leader extends Rectangle {
+    private Faction faction;
+    private String name;
+
+    private boolean isUsed;
+    private Image image;
     public void action() {
 
     }

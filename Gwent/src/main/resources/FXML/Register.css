@@ -10,7 +10,6 @@
 #loginButton {
     -fx-background-color: #412906;
     -fx-text-fill: white;
-    /*-fx-font-size: 14px;*/
     -fx-pref-width: 200px;
     -fx-pref-height: 40px;
     -fx-border-radius: 5px;

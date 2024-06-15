@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.PreGameController;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
@@ -27,12 +28,17 @@ public class Card extends Rectangle {
         this.power = power;
         this.faction = faction;
         this.numberOfCartInGame = numberOfCartInGame;
-        System.out.println("/" + faction.getName() + "/" + name + ".jpg");
-        this.image = new Image(String.valueOf(Card.class.getResource("/" + faction.getName() + "/" + name + ".jpg")));
+        if (faction != null) {
+            this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + faction.getName() + "/" + name + ".jpg")));
+        } else {
+            this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + "Neutral" + "/" + name + ".jpg")));
+        }
         this.setFill(new ImagePattern(image));
         this.setHeight(100);
         this.setWidth(70);
     }
+
+
 
     public void abilityAction(){
 

@@ -23,13 +23,6 @@
     </VBox>
     <Label layoutY="1.0" prefHeight="26.0" prefWidth="123.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="Register menu" textAlignment="CENTER" />
     <Label alignment="CENTER" contentDisplay="CENTER" layoutX="356.0" layoutY="216.0" prefHeight="26.0" prefWidth="147.0" text="Welcome!" />
-    <!--   <ScrollPane layoutX="44.0" layoutY="55.0" prefHeight="200.0" fitToWidth="true" prefWidth="200.0">-->
-    <!--     <content>-->
-    <!--       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="427.0" prefWidth="200.0">-->
-    <!--            <children>-->
-    <!--               <Button layoutX="74.0" layoutY="274.0" mnemonicParsing="false" text="hillo44" />-->
-    <!--            </children></AnchorPane>-->
-    <!--     </content>-->
-    <!--   </ScrollPane>-->
+   <Button layoutX="173.0" layoutY="134.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="147.0" text="go to main menu!" onMouseClicked="#gotoMainMenu"/>
 
 </AnchorPane>

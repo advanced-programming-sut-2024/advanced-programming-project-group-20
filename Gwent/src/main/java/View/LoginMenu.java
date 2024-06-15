@@ -30,6 +30,8 @@ public class LoginMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setHeight(720);
+        stage.setWidth(900);
         URL url = RegisterMenu.class.getResource("/FXML/LoginMenu.fxml");
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
