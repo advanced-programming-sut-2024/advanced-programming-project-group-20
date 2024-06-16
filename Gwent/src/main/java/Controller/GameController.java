@@ -1,11 +1,10 @@
 package Controller;
 
+import Model.Board;
 import Model.Card;
-import Model.CardBuilder;
 import Model.Factions.Monsters;
 import Model.Factions.Nilfgaard;
 import Model.User;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,25 +13,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameController {
 
 
-
     public static void initializeFromMenu() {
 
-        User player;
-        User opponent;
-        User.setLoggedUser(player = new User("ali", "123", "reza", "a.@1"));
-        player.setOpponentUser(opponent = new User("ali", "123", "reza", "a.@1"));
-        User.setTurnUser(player);
-        player.setFaction(new Nilfgaard());
-        opponent.setFaction(new Monsters());
         setImagesOfBoard(User.getLoggedUser());
 
     }
-
 
 
     private static void setImagesOfBoard(User user) {
@@ -56,12 +45,12 @@ public class GameController {
     }
 
     public static void setActiveLeader(User turnUser) {
-        ImageView activeLeader =new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/icon_leader_active.png")));
+        ImageView activeLeader = new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/icon_leader_active.png")));
         ApplicationController.getRoot().getChildren().add(activeLeader);
         // todo if for avtive
         activeLeader.setX(207);
-        if(0==1)
-        activeLeader.setY(108);
+        if (0 == 1)
+            activeLeader.setY(108);
         else
             activeLeader.setY(727);
 
@@ -163,35 +152,44 @@ public class GameController {
 
     public static void putCardInDeck(AnchorPane pane, ArrayList<HBox> hBoxes, Label passedLabel, ImageView biggerCardImage, HBox deckHbox) {
         pane.getChildren().remove(passedLabel);
-        // todo nesbat dadan aks be cart
+        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
+        // todo get carda from deck not by code
+        // to remove here
         ArrayList<Card> cards = new ArrayList<>();
-//        cards.add(CardBuilder.scoiaTeal("ElvenSkirmisher"));
-//        cards.add(CardBuilder.scoiaTeal("Yaevinn"));
-//        cards.add(CardBuilder.scoiaTeal("Ciaranaep"));
-//        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
-//        cards.add(CardBuilder.scoiaTeal("DennisCranmer"));
-//        cards.add(CardBuilder.scoiaTeal("DolBlathannaArcher"));
-//        cards.add(CardBuilder.scoiaTeal("DwarvenSkirmisher"));
-//        cards.add(CardBuilder.scoiaTeal("HavekarHealer"));
-//        cards.add(CardBuilder.scoiaTeal("HavekarSmuggler"));
-
-        for (int i = 0; i < 9; i++) {
-            deckHbox.getChildren().add(cards.get(i));
-            Card card =cards.get(i);
-            cards.get(i).setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-
-            cards.get(i).setOnMouseExited(event -> biggerCardImage.setImage(null));
-
-            cards.get(i).setOnMouseClicked(event ->{
-                System.out.println(card.getName());
-                if (!card.isSelect()&&card.isInDeck()) {
-                    hBoxes.get(getHbox(card.getType())).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                    deckHbox.setLayoutY(deckHbox.getLayoutY() - 20);
-                    card.setWidth(card.getWidth() * 1.5);
-                    card.setHeight(card.getHeight() * 1.5);
-                    card.setSelect(true);
-                }
-                else {
+        Nilfgaard nilfgaard = new Nilfgaard();
+        cards.add(nilfgaard.getCollection().get(0));
+        cards.add(nilfgaard.getCollection().get(1));
+        cards.add(nilfgaard.getCollection().get(2));
+        cards.add(nilfgaard.getCollection().get(3));
+        cards.add(nilfgaard.getCollection().get(4));
+        cards.add(nilfgaard.getCollection().get(5));
+        cards.add(nilfgaard.getCollection().get(6));
+        cards.add(nilfgaard.getCollection().get(7));
+        cards.add(nilfgaard.getCollection().get(8));
+        cards.add(nilfgaard.getCollection().get(9));
+        for (int i = 0; i < 10; i++)
+            hand.add(cards.get(i));
+        // until here
+        for (Card card : User.getTurnUser().getBoard().getHand()) {
+            deckHbox.getChildren().add(card);
+            showCardInfo(card,biggerCardImage);
+            card.setOnMouseClicked(event -> {
+                if (!card.isSelect() && card.isInDeck()) {
+                    boolean isAnySelected = false;
+                    for (Card card1 : hand){
+                        if (card1.isSelect()) {
+                            isAnySelected = true;
+                            break;
+                        }
+                    }
+                        if (!isAnySelected) {
+                            hBoxes.get(getHbox(card.getType())).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                            deckHbox.setLayoutY(deckHbox.getLayoutY() - 20);
+                            card.setWidth(card.getWidth() * 1.5);
+                            card.setHeight(card.getHeight() * 1.5);
+                            card.setSelect(true);
+                        }
+                } else {
                     if (card.isSelect()) {
                         hBoxes.get(getHbox(card.getType())).setStyle(null);
                         deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
@@ -202,24 +200,6 @@ public class GameController {
                 }
             });
 
-
-        }
-        for (HBox hBox:hBoxes) {
-            hBox.setOnMouseClicked(event -> {
-                for (Card card :cards) {
-                    System.out.println(card.getName());
-                    if (card.isSelect() && card.isInDeck()) {
-                        deckHbox.getChildren().remove(card);
-                        hBox.getChildren().add(card);
-                        hBox.setStyle(null);
-                        deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
-                        card.setWidth(card.getWidth() / 1.5);
-                        card.setHeight(card.getHeight() / 1.5);
-                        card.setSelect(false);
-                        card.setInDeck(false);
-                    }
-                }
-            });
         }
 
     }
@@ -239,8 +219,9 @@ public class GameController {
         return null;
     }
 
-    public static void showCardInfo(Card card) {
-
+    public static void showCardInfo(Card card, ImageView biggerCardImage) {
+        card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+        card.setOnMouseExited(event -> biggerCardImage.setImage(null));
     }
 
     public static void showRemainingCard(Card card) {
@@ -302,6 +283,26 @@ public class GameController {
 
     private static void killCard(Card card) {
 
+    }
+
+    public static void placeCard(AnchorPane pane, ArrayList<HBox> hBoxes,  HBox deckHbox) {
+        for (HBox hBox : hBoxes) {
+            hBox.setOnMouseClicked(event -> {
+                for (Card card : User.getTurnUser().getBoard().getHand()) {
+                    System.out.println(card.getName());
+                    if (card.isSelect() && card.isInDeck()) {
+                        deckHbox.getChildren().remove(card);
+                        hBox.getChildren().add(card);
+                        hBox.setStyle(null);
+                        deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
+                        card.setWidth(card.getWidth() / 1.5);
+                        card.setHeight(card.getHeight() / 1.5);
+                        card.setSelect(false);
+                        card.setInDeck(false);
+                    }
+                }
+            });
+        }
     }
 
     ;

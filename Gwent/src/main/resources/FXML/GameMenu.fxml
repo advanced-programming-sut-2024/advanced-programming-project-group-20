@@ -34,6 +34,6 @@
    <HBox fx:id="opponentCombat" alignment="CENTER" layoutX="574.0" layoutY="233.0" prefHeight="100.0" prefWidth="644.0" />
    <HBox fx:id="opponentSiege" alignment="CENTER" layoutX="574.0" layoutY="14.0" prefHeight="100.0" prefWidth="644.0" />
    <HBox fx:id="opponentRanged" alignment="CENTER" layoutX="574.0" layoutY="121.0" prefHeight="100.0" prefWidth="644.0" />
-   <HBox fx:id="turnCombat" layoutX="569.0" layoutY="363.0" prefHeight="100.0" prefWidth="644.0" />
+   <HBox fx:id="turnCombat" alignment="CENTER" layoutX="569.0" layoutY="363.0" prefHeight="100.0" prefWidth="644.0" />
 
 </AnchorPane>

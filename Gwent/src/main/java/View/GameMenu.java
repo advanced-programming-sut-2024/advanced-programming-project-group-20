@@ -2,8 +2,11 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.GameController;
+import Model.Board;
 import Model.Card;
 import Model.CardBuilder;
+import Model.Factions.Monsters;
+import Model.Factions.Nilfgaard;
 import Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -43,6 +46,16 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        User player;
+        User opponent;
+        User.setLoggedUser(player = new User("ali", "123", "reza", "a.@1"));
+        player.setOpponentUser(opponent = new User("ali", "123", "reza", "a.@1"));
+        User.setTurnUser(player);
+        player.setFaction(new Nilfgaard());
+        opponent.setFaction(new Monsters());
+        player.setBoard(new Board());
+        opponent.setBoard(new Board());
+
         ApplicationController.setStage(stage);
         ApplicationController.setIcon();
        ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
@@ -52,13 +65,7 @@ public class GameMenu extends Application {
         ApplicationController.setRootSize(root);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-
-        // Set the stage in the center of the screen
-         ApplicationController.getStage().setX((primScreenBounds.getWidth() -  ApplicationController.getStage().getWidth()) / 2);
-         ApplicationController.getStage().setY((primScreenBounds.getHeight() -  ApplicationController.getStage().getHeight()) / 2);
         ApplicationController.setStage(stage);
-//        root.setBackground(new Background(ApplicationController.setBackGround("/someImages/board.jpg")));
         stage.show();
         stage.centerOnScreen();
         stage.setHeight(900);
@@ -77,9 +84,10 @@ public class GameMenu extends Application {
         hBoxes.add(turnRanged);
         hBoxes.add(turnCombat);
         hBoxes.add(opponentCombat);
-        hBoxes.add(opponentSiege);
         hBoxes.add(opponentRanged);
+        hBoxes.add(opponentSiege);
         GameController.putCardInDeck(pane,hBoxes,passedLabel,biggerCardImage,deckHbox);
+        GameController.placeCard(pane,hBoxes,deckHbox);
 
 
     }
