@@ -53,16 +53,6 @@ private static MediaPlayer mediaPlayer;
              ApplicationController.mediaPlayer =mediaPlayer;
          }
      }
-     public static BackgroundImage setBackGround(String imagesAddress){
-         Image image = new Image(ApplicationController.class.getResourceAsStream(imagesAddress), WIDTH, HEIGHT, false, false);
-         BackgroundImage backgroundImage = new BackgroundImage(image,
-                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                 BackgroundPosition.CENTER,
-                 new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
-         return backgroundImage;
-     }
-
-
 
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
