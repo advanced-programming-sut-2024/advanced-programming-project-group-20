@@ -54,6 +54,7 @@ public class ApplicationController {
         }
     }
 
+
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
         BackgroundImage backgroundImage = new BackgroundImage(image,
