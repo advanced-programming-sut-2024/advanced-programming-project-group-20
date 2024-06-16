@@ -9,15 +9,13 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 
-
 public class ApplicationController {
-   private static Stage stage ;
+    private static Stage stage;
 
-    private static Pane root ;
-   public static final int WIDTH =1280;
-   public static final int HEIGHT =720;
-private static MediaPlayer mediaPlayer;
-
+    private static Pane root;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+    private static MediaPlayer mediaPlayer;
 
 
     public static Stage getStage() {
@@ -36,23 +34,26 @@ private static MediaPlayer mediaPlayer;
         ApplicationController.root = root;
     }
 
-    public static void setRootSize(Pane pane){
+    public static void setRootSize(Pane pane) {
         pane.setPrefHeight(HEIGHT);
         pane.setPrefWidth(WIDTH);
-     }
-     public static void setIcon(){
-         stage.getIcons().add(new Image(ApplicationController.class.getResourceAsStream("/someImages/icon.png")));
-     }
-     public static void setMedia(String mediaAddress){
-         if (ApplicationController.mediaPlayer == null) {
-             Media media = new Media(ApplicationController.class.getResource(mediaAddress).toExternalForm());
-             MediaPlayer mediaPlayer = new MediaPlayer(media);
-             mediaPlayer.play();
-             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-             mediaPlayer.setVolume(0.5);
-             ApplicationController.mediaPlayer =mediaPlayer;
-         }
-     }
+    }
+
+    public static void setIcon() {
+        stage.getIcons().add(new Image(ApplicationController.class.getResourceAsStream("/someImages/icon.png")));
+    }
+
+    public static void setMedia(String mediaAddress) {
+        if (ApplicationController.mediaPlayer == null) {
+            Media media = new Media(ApplicationController.class.getResource(mediaAddress).toExternalForm());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            mediaPlayer.setVolume(0.5);
+            ApplicationController.mediaPlayer = mediaPlayer;
+        }
+    }
+
 
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
