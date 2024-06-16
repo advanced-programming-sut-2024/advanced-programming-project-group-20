@@ -67,8 +67,6 @@ public class GameMenu extends Application {
         GameController.setActiveLeader(User.getTurnUser());
 
 
-
-
     }
     @FXML
     public  void initialize(){

@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Model.Factions.*;
+import View.GameMenu;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -10,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
@@ -82,16 +84,23 @@ public class PreGameController {
     private static void setRandomHand() {
     }
 
-    public static void startGame() {
+    public void startGame() throws Exception {
+        User.setTurnUser(User.getLoggedUser());
+        GameMenu gameMenu = new GameMenu();
+        gameMenu.start(ApplicationController.getStage());
     }
 
     public void showCards() {
         Neutral neutral = new Neutral();
         Faction faction = User.getTurnUser().getFaction();
-        TilePane collectionContent = new TilePane(0, 0);
-        collectionContent.setMaxWidth(406);
-        TilePane deckContent = new TilePane(0, 0);
-        deckContent.setMaxWidth(406);
+        TilePane collectionContent = new TilePane(5, 5);
+        collectionContent.setPrefWidth(418);
+        collectionContent.setMinHeight(600);
+        collectionContent.setStyle("-fx-background-color: #c0f305");
+        TilePane deckContent = new TilePane(5, 5);
+        deckContent.setMinHeight(600);
+        deckContent.setPrefWidth(418);
+        deckContent.setStyle("-fx-background-color: #05f3b4");
         ArrayList<Card> allCards = neutral.getCollection();
         allCards.addAll(faction.getCollection());
         for (Card card : allCards) {
@@ -155,7 +164,21 @@ public class PreGameController {
     public static void delete(String cardName, int count) {
     }
 
-    public static void changeTurn() {
+    public void changeTurn() throws Exception {
+        if (unitCard < 22) {
+            ApplicationController.alert("Low Unit Card","You should choose at least 22 unit card");
+            return;
+        } else if (specialCard > 10) {
+            ApplicationController.alert("Extra Special Card", "You can't have more than 10 special card");
+            return;
+        }
+        if (User.getTurnUser().equals(User.getLoggedUser())) {
+            User.setTurnUser(User.getTurnUser().getOpponentUser());
+            setContents();
+            updateData();
+        } else {
+            startGame();
+        }
     }
 
     public void chooseFaction(MouseEvent mouseEvent) {
@@ -235,14 +258,6 @@ public class PreGameController {
         root.getChildren().add(scoiaTael);
         User.getTurnUser().setDeck(new ArrayList<>());
         updateData();
-    }
-
-    public ArrayList<ImageView> getCards() {
-        return cards;
-    }
-
-    public void setCards(ArrayList<ImageView> cards) {
-        this.cards = cards;
     }
 
     public void chooseLeaders(MouseEvent mouseEvent) {
@@ -394,4 +409,5 @@ public class PreGameController {
             User.getTurnUser().setLeader(new Leader(new NorthernRealms(), leaderName));
         }
     }
+
 }
