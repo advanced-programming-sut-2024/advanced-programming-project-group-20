@@ -29,6 +29,8 @@ public class User {
     private static User loggedUser;
     private static User turnUser;
     private double maxPoint;
+    private boolean isPassed =false;
+    private boolean isFullHealth = true;
 
     public User(String username, String password, String nickName, String email) {
         this.username = username;
@@ -264,5 +266,21 @@ public class User {
 
     public void setMaxPoint(double maxPoint) {
         this.maxPoint = maxPoint;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
+
+    public boolean isFullHealth() {
+        return isFullHealth;
+    }
+
+    public void setFullHealth(boolean fullHealth) {
+        isFullHealth = fullHealth;
     }
 }

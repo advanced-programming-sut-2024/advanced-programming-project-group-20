@@ -4,28 +4,20 @@ import Controller.ApplicationController;
 import Controller.GameController;
 import Model.Board;
 import Model.Card;
-import Model.CardBuilder;
-import Model.Factions.Monsters;
-import Model.Factions.Nilfgaard;
 import Model.User;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -43,22 +35,21 @@ public class GameMenu extends Application {
     public HBox opponentSiege;
     public HBox opponentRanged;
     public HBox turnCombat;
+    public HBox spellHbox;
+    public ImageView highScoreImage;
+    public Label turnLabel;
+
+    ArrayList<HBox> hBoxes = new ArrayList<>();
+
 
     @Override
     public void start(Stage stage) throws Exception {
-        User player;
-        User opponent;
-        User.setLoggedUser(player = new User("ali", "123", "reza", "a.@1"));
-        player.setOpponentUser(opponent = new User("ali", "123", "reza", "a.@1"));
-        User.setTurnUser(player);
-        player.setFaction(new Nilfgaard());
-        opponent.setFaction(new Monsters());
-        player.setBoard(new Board());
-        opponent.setBoard(new Board());
 
+        User.getTurnUser().setBoard(new Board());
+        User.getTurnUser().getOpponentUser().setBoard(new Board());
         ApplicationController.setStage(stage);
         ApplicationController.setIcon();
-       ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
+        ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
         URL url = PreGameMenu.class.getResource("/FXML/GameMenu.fxml");
         Pane root = FXMLLoader.load(url);
         ApplicationController.setRoot(root);
@@ -70,27 +61,89 @@ public class GameMenu extends Application {
         stage.centerOnScreen();
         stage.setHeight(900);
         stage.setWidth(1600);
-        GameController.initializeFromMenu();
         GameController.setActiveLeader(User.getTurnUser());
 
 
     }
+
     @FXML
-    public  void initialize(){
-        ArrayList<HBox> hBoxes =new ArrayList<>();
+    public void initialize() {
+        pane.getChildren().remove(passedLabel);
+        pane.getChildren().remove(turnLabel);
+        passedLabel.setId("no");
+        turnLabel.setId("no");
+        setHboxes();
+        ApplicationController.setRoot(pane);
+        GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreImage);
+        GameController.setRandomHand(User.getTurnUser());
+        GameController.setRandomHand(User.getTurnUser().getOpponentUser());
+        putCardInDeck();
+        placeCard();
+    }
+
+    private void setHboxes() {
         hBoxes.add(turnSiege);
         hBoxes.add(turnRanged);
         hBoxes.add(turnCombat);
         hBoxes.add(opponentCombat);
         hBoxes.add(opponentRanged);
         hBoxes.add(opponentSiege);
-        GameController.putCardInDeck(pane,hBoxes,passedLabel,biggerCardImage,deckHbox);
-        GameController.placeCard(pane,hBoxes,deckHbox);
-
-
+        hBoxes.add(spellHbox);
+        User.getTurnUser().getBoard().setSiege(turnSiege);
+        User.getTurnUser().getBoard().setRanged(turnRanged);
+        User.getTurnUser().getBoard().setCloseCombat(turnCombat);
+        User.getTurnUser().getOpponentUser().getBoard().setSiege(opponentSiege);
+        User.getTurnUser().getOpponentUser().getBoard().setRanged(opponentRanged);
+        User.getTurnUser().getOpponentUser().getBoard().setCloseCombat(opponentCombat);
     }
 
-    public void passTurn(MouseEvent mouseEvent) {
-        ApplicationController.getRoot().getChildren().add(passedLabel);
+    public void putCardInDeck() {
+ApplicationController.getRoot().getChildren().remove(turnLabel);
+        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
+        for (Card card : User.getTurnUser().getBoard().getHand()) {
+            deckHbox.getChildren().add(card);
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+            card.setOnMouseClicked(event -> {
+                GameController.putCardInDeck(hBoxes, deckHbox, card, hand);
+            });
+
+        }
+    }
+
+
+    public void placeCard() {
+        for (HBox hBox : hBoxes) {
+            hBox.setOnMouseClicked(event -> {
+                GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage);
+                if (!User.getTurnUser().getOpponentUser().isPassed()) {
+                    GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+                    Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2),actionEvent->putCardInDeck()));
+                    waitForChangeTurn.setCycleCount(1);
+                    waitForChangeTurn.play();
+
+                }
+            });
+        }
+    }
+
+
+    public void passTurn() {
+        if (!User.getTurnUser().getOpponentUser().isPassed()) {
+            User.getTurnUser().setPassed(true);
+            GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+            ApplicationController.getRoot().getChildren().add(passedLabel);
+            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2)));
+            waitForChangeTurn.setCycleCount(1);
+            waitForChangeTurn.play();
+
+            if (waitForChangeTurn.getCurrentRate() == 0)
+                putCardInDeck();
+        } else {
+            ApplicationController.getRoot().getChildren().remove(passedLabel);
+            User.getTurnUser().getOpponentUser().setPassed(false);
+            User.getTurnUser().setPassed(false);
+            GameController.nextRound(hBoxes, highScoreImage);
+        }
     }
 }
