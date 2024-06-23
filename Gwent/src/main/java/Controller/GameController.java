@@ -3,12 +3,13 @@ package Controller;
 import Model.Board;
 import Model.Card;
 import Model.User;
+import View.RegisterMenu;
 import javafx.animation.FadeTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -210,7 +211,7 @@ public class GameController {
     }
 
     private static int getHbox(Card card) {
-        if (card.getAbility().equals("spy")) {
+        if (card.getAbility()!=null&&card.getAbility().equals("spy")) {
             return switch (card.getType()) {
                 case "closeCombatUnit" -> 3;
                 case "rangedUnit" -> 4;
@@ -312,9 +313,8 @@ public class GameController {
             System.out.println(card.getName());
             System.out.println(card.isSelect());
             System.out.println(card.isInDeck());
-            System.out.println(hBox.getStyle()==null);
-            if (card.isSelect() && card.isInDeck() && hBox.getStyle() != null) {
-//                addToBoard(card , hBox,hBoxes);
+            System.out.println(hBox.getStyle());
+            if (card.isSelect() && card.isInDeck() && hBox.getStyle().equals("-fx-background-color: rgba(252,237,6,0.13);")) {
                 deckHbox.getChildren().remove(card);
                 hBox.getChildren().add(card);
                 hBox.setStyle(null);
@@ -331,6 +331,7 @@ public class GameController {
             }
         }
     }
+
 
 //public static void addToBoard (Card card, HBox hBox, ArrayList<HBox> hBoxes){
 //        switch (hBoxes.indexOf(hBox)){

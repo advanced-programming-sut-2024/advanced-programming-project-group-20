@@ -68,6 +68,12 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        //todo remove
+//        Card card=User.getTurnUser().getDeck().getFirst();
+//        card.setLayoutX(1000);
+//        card.setLayoutY(500);
+//        pane.getChildren().add(card);
+        //todo remove
         pane.getChildren().remove(passedLabel);
         pane.getChildren().remove(turnLabel);
         passedLabel.setId("no");
