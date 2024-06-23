@@ -29,7 +29,12 @@ public class User {
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
     private static User turnUser;
+
     private int maxPoint;
+
+    private boolean isPassed =false;
+    private boolean isFullHealth = true;
+
 
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
@@ -277,6 +282,22 @@ public class User {
 
     public void setSecureAnswer(String secureAnswer) {
         this.secureAnswer = secureAnswer;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
+
+    public boolean isFullHealth() {
+        return isFullHealth;
+    }
+
+    public void setFullHealth(boolean fullHealth) {
+        isFullHealth = fullHealth;
     }
 
 }

@@ -15,7 +15,9 @@
             </font>
         </Label>
         <Button layoutX="406.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
-      <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="380.0" layoutY="251.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
-      <Button layoutX="109.0" onMouseClicked="#directToGameMenu" layoutY="88.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="221.0" text="Mohandes Go to Game Directly:)" />
+
+
+      <TextField alignment="TOP_CENTER" layoutX="380.0" layoutY="251.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" fx:id="opponentName"/>
+        <Button layoutX="109.0" onMouseClicked="#directToGameMenu" layoutY="88.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="221.0" text="Mohandes Go to Game Directly:)" />
     </children>
 </AnchorPane>

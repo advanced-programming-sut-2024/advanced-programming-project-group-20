@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PreGameController {
     public AnchorPane root;
@@ -79,8 +80,6 @@ public class PreGameController {
     }
 
 
-    private static void setRandomHand() {
-    }
 
     public void startGame() throws Exception {
         User.setTurnUser(User.getLoggedUser());

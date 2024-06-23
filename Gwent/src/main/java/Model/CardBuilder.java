@@ -192,62 +192,40 @@ public class CardBuilder {
 
     public static Card monsters(String cardName, Faction faction) {
         return switch (cardName) {
-            case "Draug" -> new Card(cardName, "closeCombatUnit", "hero",
+            case "Draug", "Leshen" -> new Card(cardName, "closeCombatUnit", "hero",
                     false, 10, faction, 1);
-            case "Leshen" -> new Card(cardName, "closeCombatUnit", "hero",
-                    false, 10, faction, 1);
-            case "Kayran" -> new Card(cardName, "agile", "MoraleBoostAndHero",
+            case "Kayran" -> new Card(cardName, "agileUnit", "MoraleBoostAndHero",
                     false, 8, faction, 1);
             case "Toad" -> new Card(cardName, "rangedUnit", "Scorch",
                     true, 7, faction, 1);
             case "ArachasBehemoth" -> new Card(cardName, "siegeUnit", "muster",
                     false, 6, faction, 1);
-            case "CroneWeavess" -> new Card(cardName, "closeCombatUnit", "muster",
+            case "CroneWeavess", "CroneWhispess" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 6, faction, 1);
-            case "CroneWhispess" -> new Card(cardName, "closeCombatUnit", "muster",
-                    false, 6, faction, 1);
-            case "EarthElemental" -> new Card(cardName, "siegeUnit", null,
+            case "EarthElemental", "FireElemental" -> new Card(cardName, "siegeUnit", null,
                     false, 6, faction, 1);
             case "Fiend" -> new Card(cardName, "closeCombatUnit", null,
                     false, 6, faction, 1);
-            case "FireElemental" -> new Card(cardName, "siegeUnit", null,
-                    false, 6, faction, 1);
-            case "Forktail" -> new Card(cardName, "closeCombatUnit", null,
+            case "Forktail", "Werewolf", "PlagueMaiden", "Griffin" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, faction, 1);
             case "GraveHag" -> new Card(cardName, "rangedUnit", null,
                     false, 5, faction, 1);
-            case "Griffin" -> new Card(cardName, "closeCombatUnit", null,
-                    false, 5, faction, 1);
             case "IceGiant" -> new Card(cardName, "siegeUnit", null,
-                    false, 5, faction, 1);
-            case "PlagueMaiden" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, faction, 1);
             case "VampireKatakan" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 5, faction, 1);
-            case "Werewolf" -> new Card(cardName, "closeCombatUnit", null,
-                    false, 5, faction, 1);
             case "Arachas" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 4, faction, 3);
-            case "VampireBruxa" -> new Card(cardName, "closeCombatUnit", "muster",
+            case "VampireBruxa", "VampireEkimmara", "VampireFleder", "VampireGarkain" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 4, faction, 1);
-            case "VampireEkimmara" -> new Card(cardName, "closeCombatUnit", "muster",
-                    false, 4, faction, 1);
-            case "VampireFleder" -> new Card(cardName, "closeCombatUnit", "muster",
-                    false, 4, faction, 1);
-            case "VampireGarkain" -> new Card(cardName, "closeCombatUnit", "muster",
-                    false, 4, faction, 1);
-            case "Cockatrice" -> new Card(cardName, "rangedUnit", null,
-                    false, 2, faction, 1);
-            case "Endrega" -> new Card(cardName, "rangedUnit", null,
+            case "Cockatrice", "Endrega", "Wyvern" -> new Card(cardName, "rangedUnit", null,
                     false, 2, faction, 1);
             case "Foglet" -> new Card(cardName, "closeCombatUnit", null,
                     false, 2, faction, 1);
-            case "Harpy" -> new Card(cardName, "agile", null,
+            case "Harpy" -> new Card(cardName, "agileUnit", null,
                     false, 2, faction, 1);
             case "Nekker" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 2, faction, 3);
-            case "Wyvern" -> new Card(cardName, "rangedUnit", null,
-                    false, 2, faction, 1);
             case "Ghoul" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 1, faction, 3);
             default -> null;
@@ -256,17 +234,13 @@ public class CardBuilder {
 
     public static Card neutral(String cardName) {
         return switch (cardName) {
-            case "BitingFrost" -> new Card(cardName, "weather", null,
-                    true, 0, null, 3);
-            case "ImpenetrableFog" -> new Card(cardName, "weather", null,
-                    true, 0, null, 3);
-            case "TorrentialRain" -> new Card(cardName, "weather", null,
+            case "BitingFrost", "ImpenetrableFog", "TorrentialRain" -> new Card(cardName, "weather", null,
                     true, 0, null, 3);
             case "Decoy" -> new Card(cardName, "spell", null,
                     true, 0, null, 3);
             case "Dandelion" -> new Card(cardName, "closeCombatUnit", "Commander’sHorn",
                     true, 2, null, 1);
-            case "EmielRegis" -> new Card(cardName, "closeCombatUnit", null,
+            case "EmielRegis", "ZoltanChivay" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, null, 1);
             case "GaunterO,Dimm" -> new Card(cardName, "siegeUnit", "muster",
                     false, 2, null, 1);
@@ -282,8 +256,6 @@ public class CardBuilder {
                     true, 7, null, 1);
             case "YenneferofVengerberg" -> new Card(cardName, "rangedUnit", "hero&medic",
                     false, 7, null, 1);
-            case "ZoltanChivay" -> new Card(cardName, "closeCombatUnit", null,
-                    false, 5, null, 1);
             default -> null;
         };
     }

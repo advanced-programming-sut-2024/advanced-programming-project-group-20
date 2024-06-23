@@ -2,9 +2,11 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.RegisterController;
+
 import Model.Card;
 import Model.CardBuilder;
 import Model.Faction;
+import Model.CardBuilder;
 import Model.Factions.Monsters;
 import Model.Factions.Skellige;
 import Model.User;
@@ -61,7 +63,7 @@ public class MainMenu extends Application {
     public void goToPreGameMenu(MouseEvent mouseEvent) throws Exception {
         User user = User.getUserByName(opponentName.getText());
         if (user == null) {
-            ApplicationController.alert("Wrong Username","There is no user with this username");
+            ApplicationController.alert("Wrong Username", "There is no user with this username");
         } else {
             User.setTurnUser(User.getLoggedUser());
             User.getLoggedUser().setOpponentUser(user);
@@ -70,7 +72,11 @@ public class MainMenu extends Application {
             preGameMenu.start(ApplicationController.getStage());
         }
     }
+
     // TODO delete method below later
+
+
+
     public void directToGameMenu(MouseEvent mouseEvent) {
         Skellige skellige = new Skellige();
         User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
@@ -87,9 +93,10 @@ public class MainMenu extends Application {
         User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
         User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
         User.getLoggedUser().getDeck().add(CardBuilder.skellige("DraigBon-Dhu", skellige));
-/////////////////
+
         Monsters monsters = new Monsters();
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
+        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1","1","1"));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Draug", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Leshen", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Kayran", monsters));
@@ -105,9 +112,10 @@ public class MainMenu extends Application {
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
         User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+        User.setTurnUser(User.getLoggedUser());
         try {
             new GameMenu().start(ApplicationController.getStage());
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

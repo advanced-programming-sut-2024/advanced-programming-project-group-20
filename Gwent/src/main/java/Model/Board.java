@@ -1,47 +1,49 @@
 package Model;
 
+import javafx.scene.layout.HBox;
+
 import java.util.ArrayList;
 
 public class Board {
-    private ArrayList<Card> siege =new ArrayList<>();
-    private ArrayList<Card> ranged =new ArrayList<>();
-    private ArrayList<Card> closeCombat =new ArrayList<>();
-    private ArrayList<Card> burnedCard =new ArrayList<>();
+    private HBox siege ;
+    private HBox ranged ;
+    private HBox closeCombat ;
+    private HBox burnedCard ;
     private ArrayList<Card> hand =new ArrayList<>();
     private Card spell;
     private Leader leader;
     private Card weatherCard;
 
 
-    public ArrayList<Card> getSiege() {
+    public HBox getSiege() {
         return siege;
     }
 
-    public void setSiege(ArrayList<Card> siege) {
+    public void setSiege(HBox siege) {
         this.siege = siege;
     }
 
-    public ArrayList<Card> getRanged() {
+    public HBox getRanged() {
         return ranged;
     }
 
-    public void setRanged(ArrayList<Card> ranged) {
+    public void setRanged(HBox ranged) {
         this.ranged = ranged;
     }
 
-    public ArrayList<Card> getCloseCombat() {
+    public HBox getCloseCombat() {
         return closeCombat;
     }
 
-    public void setCloseCombat(ArrayList<Card> closeCombat) {
+    public void setCloseCombat(HBox closeCombat) {
         this.closeCombat = closeCombat;
     }
 
-    public ArrayList<Card> getBurnedCard() {
+    public HBox getBurnedCard() {
         return burnedCard;
     }
 
-    public void setBurnedCard(ArrayList<Card> burnedCard) {
+    public void setBurnedCard(HBox burnedCard) {
         this.burnedCard = burnedCard;
     }
 
