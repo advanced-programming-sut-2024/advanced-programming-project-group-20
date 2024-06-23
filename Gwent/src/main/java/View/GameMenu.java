@@ -64,8 +64,8 @@ public class GameMenu extends Application {
         stage.centerOnScreen();
         stage.setHeight(900);
         stage.setWidth(1600);
+        ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
-
 
     }
 
@@ -107,7 +107,7 @@ public class GameMenu extends Application {
     }
 
     public void putCardInDeck() {
-ApplicationController.getRoot().getChildren().remove(turnLabel);
+        ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         for (Card card : User.getTurnUser().getBoard().getHand()) {
             deckHbox.getChildren().add(card);
@@ -124,8 +124,8 @@ ApplicationController.getRoot().getChildren().remove(turnLabel);
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-                GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage);
-                if (!User.getTurnUser().getOpponentUser().isPassed()) {
+
+                if (!User.getTurnUser().getOpponentUser().isPassed()&& GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
                     GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
                     Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2),actionEvent->putCardInDeck()));
                     waitForChangeTurn.setCycleCount(1);

@@ -8,7 +8,7 @@ public class Board {
     private HBox siege ;
     private HBox ranged ;
     private HBox closeCombat ;
-    private HBox burnedCard ;
+    private ArrayList<Card> burnedCard = new ArrayList<>();
     private ArrayList<Card> hand =new ArrayList<>();
     private Card spell;
     private Leader leader;
@@ -39,11 +39,11 @@ public class Board {
         this.closeCombat = closeCombat;
     }
 
-    public HBox getBurnedCard() {
+    public ArrayList<Card> getBurnedCard() {
         return burnedCard;
     }
 
-    public void setBurnedCard(HBox burnedCard) {
+    public void setBurnedCard(ArrayList<Card> burnedCard) {
         this.burnedCard = burnedCard;
     }
 

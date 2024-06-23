@@ -1,0 +1,38 @@
+#registerButton {
+    -fx-background-color: #323d04;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+
+#loginButton {
+    -fx-background-color: #573401;
+    -fx-text-fill: white;
+    -fx-pref-width: 200px;
+    -fx-pref-height: 40px;
+    -fx-border-radius: 5px;
+}
+.button {
+    -fx-background-color: #066583;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-border-radius: 5px;
+}
+/* Style for the text fields */
+.text-field {
+    -fx-background-color: #cdeaf3;
+    -fx-border-color: #a29797;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+    -fx-font-size: 14px;
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 5px;
+    -fx-prompt-text-fill: #4d4a4a;
+}
+
+/* Style for the labels */
+.label {
+    -fx-border-radius: 20px;
+    -fx-font-size: 16px;
+    -fx-font-weight: 900;
+}

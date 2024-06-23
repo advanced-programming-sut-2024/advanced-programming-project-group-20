@@ -42,7 +42,7 @@ public class User {
         this.password = password;
         this.nickName = nickName;
         this.faction = new Nilfgaard();
-        this.leader = new Leader(new Nilfgaard(), "nilfgaard_emhyr_copper");
+        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;

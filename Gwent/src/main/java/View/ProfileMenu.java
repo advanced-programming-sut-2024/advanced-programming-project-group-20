@@ -97,7 +97,7 @@ public class ProfileMenu extends Application {
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
 
         for (GameHistory gameHistory: GameHistory.getGameHistories()){
-            tableView.setItems();
+            tableView.setItems(null);
         }
         collectionContent.getChildren().add(tableView);
 

@@ -5,11 +5,14 @@ import Model.Card;
 import Model.User;
 import View.RegisterMenu;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
@@ -22,6 +25,12 @@ public class GameController {
 
 
     public static void setImagesOfBoard(User user, ArrayList<HBox> hBoxes, ImageView highScoreIcon) {
+        // todo remove
+        System.out.println(user.getUsername());
+        System.out.println(user.getFaction().getName());
+        System.out.println(user.getOpponentUser().getUsername());
+        System.out.println(user.getOpponentUser().getFaction().getName());
+        // todo
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
         // image and lable of deck back
         setImageOfDeckBack(user, 686);
@@ -45,8 +54,12 @@ public class GameController {
     }
 
     private static void setLeaderImage(User user, int height) {
-        //  i dont have lider please make it
-        ImageView leader = new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/deck_back_" + user.getFaction().getName() + ".jpg")));
+        ImageView leader = new ImageView();
+        leader.setImage(user.getLeader().getImage());
+        leader.setOnMouseClicked(mouseEvent -> {
+            User.getTurnUser().getLeader().action();
+            User.getTurnUser().getLeader().setUsed(true);
+        });
         ApplicationController.getRoot().getChildren().add(leader);
         leader.setY(height);
         leader.setX(113);
@@ -181,9 +194,11 @@ public class GameController {
                     hBoxes.get(getHbox(card) / 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
 
                 hBoxes.get(getHbox(card) % 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                deckHbox.setLayoutY(deckHbox.getLayoutY() - 20);
-                card.setWidth(card.getWidth() * 1.5);
-                card.setHeight(card.getHeight() * 1.5);
+//                deckHbox.setLayoutY(deckHbox.getLayoutY() - 20);
+                card.setPrefWidth(card.getWidth() * 1.5);
+                card.setPrefHeight(card.getHeight() * 1.5);
+                ((Rectangle)card.getChildren().get(0)).setHeight(((Rectangle)card.getChildren().get(0)).getHeight()*1.5);
+                ((Rectangle)card.getChildren().get(0)).setWidth(((Rectangle)card.getChildren().get(0)).getWidth()*1.5);
                 card.setSelect(true);
             }
         } else {
@@ -191,10 +206,8 @@ public class GameController {
                 if (getHbox(card) >= 10)
                     hBoxes.get(getHbox(card) / 10).setStyle(null);
                 hBoxes.get(getHbox(card) % 10).setStyle(null);
-                deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
-                card.setWidth(card.getWidth() / 1.5);
-                card.setHeight(card.getHeight() / 1.5);
-                card.setSelect(false);
+//                deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
+                setSizeSmaller(card);
             }
         }
     }
@@ -277,13 +290,16 @@ public class GameController {
         fadeTransition.setToValue(0);
         fadeTransition.setCycleCount(1);
         fadeTransition.play();
-        User.setTurnUser(User.getTurnUser().getOpponentUser());
-        deckHbox.getChildren().clear();
-        swapHboxes(0, 5, hBoxes);
-        swapHboxes(1, 4, hBoxes);
-        swapHboxes(2, 3, hBoxes);
-        GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
-
+        Timeline waitForChange = new Timeline(new KeyFrame(Duration.seconds(1.8),actionEvent -> {
+            User.setTurnUser(User.getTurnUser().getOpponentUser());
+            deckHbox.getChildren().clear();
+            swapHboxes(0, 5, hBoxes);
+            swapHboxes(1, 4, hBoxes);
+            swapHboxes(2, 3, hBoxes);
+            GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
+        }));
+        waitForChange.setCycleCount(1);
+        waitForChange.play();
     }
 
     private static void swapHboxes(int hbox1, int hbox2, ArrayList<HBox> hBoxes) {
@@ -307,29 +323,41 @@ public class GameController {
     }
 
 
-    public static void placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon) {
+    public static boolean placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
             Card card = cardIterator.next();
             System.out.println(card.getName());
-            System.out.println(card.isSelect());
-            System.out.println(card.isInDeck());
-            System.out.println(hBox.getStyle());
-            if (card.isSelect() && card.isInDeck() && hBox.getStyle().equals("-fx-background-color: rgba(252,237,6,0.13);")) {
+            System.out.println(card.getLayoutX());
+            System.out.println(card.getLayoutY());
+
+
+//            System.out.println(card.isSelect());
+//            System.out.println(card.isInDeck());
+//            System.out.println(hBox.getStyle());
+            if (card.isSelect() && card.isInDeck() && !hBox.getStyle().isEmpty()) {
                 deckHbox.getChildren().remove(card);
                 hBox.getChildren().add(card);
                 hBox.setStyle(null);
-                deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
-                card.setWidth(card.getWidth() / 1.5);
-                card.setHeight(card.getHeight() / 1.5);
-                card.setSelect(false);
+//                deckHbox.setLayoutY(deckHbox.getLayoutY() + 20);
+                setSizeSmaller(card);
                 card.setInDeck(false);
                 cardIterator.remove();
                 setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
                 card.abilityAction();
+                return true;
             }
         }
+        return false;
+    }
+
+    private static void setSizeSmaller(Card card) {
+        card.setPrefWidth(card.getWidth() / 1.5);
+        card.setPrefHeight(card.getHeight() / 1.5);
+        ((Rectangle)card.getChildren().get(0)).setHeight(((Rectangle)card.getChildren().get(0)).getHeight()/1.5);
+        ((Rectangle)card.getChildren().get(0)).setWidth(((Rectangle)card.getChildren().get(0)).getWidth()/1.5);
+        card.setSelect(false);
     }
 
 
