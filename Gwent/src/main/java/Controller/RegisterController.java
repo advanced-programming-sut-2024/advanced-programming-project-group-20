@@ -3,14 +3,10 @@ package Controller;
 import Model.User;
 import View.LoginMenu;
 import View.RegisterMenu;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -149,124 +145,82 @@ public class RegisterController {
         RegisterMenu.root.getChildren().add(button1);
     }
 
-    private static void saveTheUserInGson(User user) {
+    private static void saveTheUserInGson(ArrayList<User> list) {
+//        File file = new File("users.json");
 //        try {
-//            Gson gson = new Gson();
-//
-//            // Load existing data from JSON file into ArrayList
-//            String fileName = "users.json";
-//
-//            try {
-//                File file = new File(fileName);
-//
+//            if (!file.exists()) {
 //                if (file.createNewFile()) {
-//                    System.out.println("f");
+//                    System.out.println("File '" + file.getName() + "' created successfully");
+//                } else {
+//                    System.out.println("Failed to create file '" + file.getName() + "'");
 //                }
-//            } catch (Exception e){
-//                e.printStackTrace();
 //            }
-//            Type userListType = new TypeToken<ArrayList<User>>(){}.getType();
-//            ArrayList<User> userList = gson.fromJson(new FileReader("users.json"), userListType);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 //
-//            if (userList == null) {
-//                userList = new ArrayList<>();
-//            }
-//
-//            // Add new User object to the ArrayList
-//            userList.add(user);
-//
-//            // Write the updated ArrayList back to the JSON file
-//            FileWriter writer = new FileWriter("users.json");
-//            gson.toJson(userList, writer);
-//            writer.close();
+//        Gson gson = new GsonBuilder()
+//                .registerTypeAdapter(User.class, new UserSerializer())
+//                .create();
+//        String json = gson.toJson(list);
+//        try {
+//            if (Files.readString(file.toPath()).equals(json)) return;
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-        Gson gson = new Gson();
+//        try (PrintWriter pw = new PrintWriter(file)) {
+//            pw.write(json);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+    }
 
-        // Load existing data from JSON file into ArrayList
-        String fileName = "users.json";
 
-        ArrayList<User> userList;
 
+    public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
+            , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
+        System.out.println(secureAnswer.getText());
+        User user = new User(usernameField.getText(), passwordField.getText(),
+                nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
+        saveTheUserInGson(User.getAllUsers());
+        User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
+        LoginMenu loginMenu = new LoginMenu();
         try {
-            File file = new File(fileName);
+            loginMenu.start(ApplicationController.getStage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            if (!file.exists()) {
-                if (file.createNewFile()) {
-                    System.out.println("File created: " + fileName);
-                }
-                userList = new ArrayList<>();
-            } else {
-                Type userListType = new TypeToken<ArrayList<User>>() {
-                }.getType();
-                BufferedReader reader = new BufferedReader(new FileReader(fileName));
-                userList = gson.fromJson(reader, userListType);
-                if (userList == null) {
-                    userList = new ArrayList<>();
-                }
-                reader.close();
+    public static void randomPassword(TextField passwordField, TextField repeatedPasswordField) {
+        Random random = new Random();
+        String uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowercase = "abcdefghijklmnopqrstuvwxyz";
+        String digits = "0123456789";
+        String specialChars = "!@#$%^&*()-_=+[]{},.<>?";
+        StringBuilder randomPassword = new StringBuilder(8);
+
+        randomPassword.append(uppercase.charAt(random.nextInt(uppercase.length())));
+        randomPassword.append(digits.charAt(random.nextInt(digits.length())));
+        randomPassword.append(lowercase.charAt(random.nextInt(lowercase.length())));
+        randomPassword.append(specialChars.charAt(random.nextInt(specialChars.length())));
+        String validChars = uppercase + lowercase + digits + specialChars;
+        for (int i = 4; i < 8; i++) {
+            randomPassword.append(validChars.charAt(random.nextInt(validChars.length())));
+        }
+        //showing confirmation alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation Dialog");
+        alert.setHeaderText("your password: " + randomPassword);
+        alert.setContentText("do you want to set this for your password");
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                passwordField.setText(String.valueOf(randomPassword));
+                repeatedPasswordField.setText(String.valueOf(randomPassword));
             }
-
-            // Add new User object to the ArrayList
-            userList.add(user);
-
-            // Write the updated ArrayList back to the JSON file
-            FileWriter writer = new FileWriter(fileName);
-            gson.toJson(userList, writer);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
-
-
-public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
-        , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
-    System.out.println(secureAnswer.getText());
-    User user = new User(usernameField.getText(), passwordField.getText(),
-            nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-//    saveTheUserInGson(user);
-//        saveTheUserInGson();
-    User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
-    LoginMenu loginMenu = new LoginMenu();
-    try {
-        loginMenu.start(ApplicationController.getStage());
-    } catch (Exception e) {
-        throw new RuntimeException(e);
-    }
-}
-
-public static void randomPassword(TextField passwordField, TextField repeatedPasswordField) {
-    Random random = new Random();
-    String uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    String lowercase = "abcdefghijklmnopqrstuvwxyz";
-    String digits = "0123456789";
-    String specialChars = "!@#$%^&*()-_=+[]{},.<>?";
-    StringBuilder randomPassword = new StringBuilder(8);
-
-    randomPassword.append(uppercase.charAt(random.nextInt(uppercase.length())));
-    randomPassword.append(digits.charAt(random.nextInt(digits.length())));
-    randomPassword.append(lowercase.charAt(random.nextInt(lowercase.length())));
-    randomPassword.append(specialChars.charAt(random.nextInt(specialChars.length())));
-    String validChars = uppercase + lowercase + digits + specialChars;
-    for (int i = 4; i < 8; i++) {
-        randomPassword.append(validChars.charAt(random.nextInt(validChars.length())));
-    }
-    //showing confirmation alert
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Confirmation Dialog");
-    alert.setHeaderText("your password: " + randomPassword);
-    alert.setContentText("do you want to set this for your password");
-
-    alert.showAndWait().ifPresent(response -> {
-        if (response == ButtonType.OK) {
-            passwordField.setText(String.valueOf(randomPassword));
-            repeatedPasswordField.setText(String.valueOf(randomPassword));
-        }
-    });
-}
 
 
 }

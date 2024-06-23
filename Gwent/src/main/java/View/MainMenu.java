@@ -76,7 +76,6 @@ public class MainMenu extends Application {
     // TODO delete method below later
 
 
-
     public void directToGameMenu(MouseEvent mouseEvent) {
         Skellige skellige = new Skellige();
         User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
@@ -96,7 +95,7 @@ public class MainMenu extends Application {
 
         Monsters monsters = new Monsters();
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
-        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1","1","1"));
+        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Draug", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Leshen", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Kayran", monsters));
