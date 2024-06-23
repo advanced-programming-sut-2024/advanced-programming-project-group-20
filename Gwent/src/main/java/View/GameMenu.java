@@ -121,8 +121,8 @@ ApplicationController.getRoot().getChildren().remove(turnLabel);
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-                GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage);
-                if (!User.getTurnUser().getOpponentUser().isPassed()) {
+
+                if (!User.getTurnUser().getOpponentUser().isPassed()&& GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
                     GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
                     Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2),actionEvent->putCardInDeck()));
                     waitForChangeTurn.setCycleCount(1);

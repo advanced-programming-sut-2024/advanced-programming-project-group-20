@@ -3,13 +3,16 @@ package Model;
 import Controller.ApplicationController;
 import Controller.PreGameController;
 import View.RegisterMenu;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 
-public class Card extends Rectangle {
+public class Card extends Pane {
     private String name;
     private String type;
     private String ability;
@@ -36,10 +39,13 @@ public class Card extends Rectangle {
         } else {
             this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + "Neutral" + "/" + name + ".jpg")));
         }
-//        this.setBackground(new Background(createBackGroundImage(image)));
-        this.setFill(new ImagePattern(image));
-        this.setHeight(100);
-        this.setWidth(70);
+        Rectangle rectangle = new Rectangle(70,100,new ImagePattern(image));
+        this.getChildren().add(rectangle);
+        this.getChildren().add(new Label(String.valueOf(this.getPower())));
+        ((Label)this.getChildren().get(1)).setFont(new Font("Agency FB Bold",20));
+        ((Label)this.getChildren().get(1)).setTextFill(Color.RED);
+        this.setPrefHeight(100);
+        this.setPrefWidth(70);
     }
 
 
