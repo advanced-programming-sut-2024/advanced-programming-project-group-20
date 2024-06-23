@@ -6,23 +6,28 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="900.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.RegisterMenu">
 
-    <Button id="registerButton" layoutX="273.0" layoutY="465.0" onMouseClicked="#register" text="Register">
+    <Button id="registerButton" layoutX="224.0" layoutY="474.0" onMouseClicked="#register" prefHeight="40.0" prefWidth="200.0" stylesheets="@Register.css" text="Register">
         <font>
             <Font size="21.0" />
         </font></Button>
-    <Button id="loginButton" layoutX="475.0" layoutY="465.0" onMouseClicked="#goToLoginMenu" prefHeight="58.0" prefWidth="147.0" text="Have account? Login" />
+    <Button id="loginButton" layoutX="473.0" layoutY="473.0" onMouseClicked="#goToLoginMenu" prefHeight="58.0" prefWidth="181.0" stylesheets="@Register.css" text="Have account? Login" />
 
 
-    <VBox layoutX="314.0" layoutY="267.0" prefHeight="178.0" prefWidth="232.0" spacing="3">
-        <TextField fx:id="usernameField" promptText="username" styleClass="text-field" />
+    <VBox layoutX="327.0" layoutY="231.0" prefHeight="178.0" prefWidth="227.0" spacing="10" stylesheets="@Register.css">
+        <TextField fx:id="usernameField" prefHeight="33.0" prefWidth="228.0" promptText="username" styleClass="text-field" />
         <TextField fx:id="nickNameField" promptText="nickname" styleClass="text-field" />
-        <TextField fx:id="emailField" promptText="email" styleClass="text-field" />
-        <TextField fx:id="passwordField" promptText="password" styleClass="text-field" />
-        <TextField fx:id="repeatedPasswordField" promptText="repeat passoword" />
+        <TextField fx:id="emailField" prefHeight="33.0" prefWidth="147.0" promptText="email" styleClass="text-field" />
+        <TextField fx:id="passwordField" prefHeight="33.0" prefWidth="172.0" promptText="password" styleClass="text-field" />
+        <TextField fx:id="repeatedPasswordField" prefHeight="33.0" prefWidth="172.0" promptText="repeat passoword" />
 
     </VBox>
-    <Label layoutY="1.0" prefHeight="26.0" prefWidth="123.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="Register menu" textAlignment="CENTER" />
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="356.0" layoutY="216.0" prefHeight="26.0" prefWidth="147.0" text="Welcome!" />
-   <Button layoutX="173.0" layoutY="134.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="147.0" text="go to main menu!" onMouseClicked="#gotoMainMenu"/>
+    
+    <Label layoutY="1.0" prefHeight="26.0" prefWidth="156.0" style="-fx-text-fill: #066007;" text="Register menu" textAlignment="CENTER">
+      <font>
+         <Font size="22.0" />
+      </font></Label>
+    <Label layoutX="390.0" layoutY="195.0" style="-fx-background-color: yellow; -fx-background-radius: 10px;" text=" Welcome! " />
+   <Button layoutX="170.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#gotoMainMenu" prefHeight="30.0" prefWidth="147.0" stylesheets="@Register.css" text="go to main menu!" />
+   <Button layoutX="192.0" layoutY="383.0" mnemonicParsing="false" onMouseClicked="#makeRandomPassword" stylesheets="@Register.css" text="Random password" />
 
 </AnchorPane>

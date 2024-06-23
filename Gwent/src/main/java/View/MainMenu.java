@@ -2,6 +2,11 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.RegisterController;
+import Model.Card;
+import Model.CardBuilder;
+import Model.Faction;
+import Model.Factions.Monsters;
+import Model.Factions.Skellige;
 import Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -53,7 +58,7 @@ public class MainMenu extends Application {
         }
     }
 
-    public void goToGameMenu(MouseEvent mouseEvent) throws Exception {
+    public void goToPreGameMenu(MouseEvent mouseEvent) throws Exception {
         User user = User.getUserByName(opponentName.getText());
         if (user == null) {
             ApplicationController.alert("Wrong Username","There is no user with this username");
@@ -65,4 +70,46 @@ public class MainMenu extends Application {
             preGameMenu.start(ApplicationController.getStage());
         }
     }
+    // TODO delete method below later
+    public void directToGameMenu(MouseEvent mouseEvent) {
+        Skellige skellige = new Skellige();
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Svanrige", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Udalryk", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("DonarAnHindar", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
+        User.getLoggedUser().getDeck().add(CardBuilder.skellige("DraigBon-Dhu", skellige));
+/////////////////
+        Monsters monsters = new Monsters();
+        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Draug", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Leshen", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Kayran", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Toad", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("ArachasBehemoth", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("CroneWeavess", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("CroneWhispess", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("EarthElemental", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Fiend", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("FireElemental", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Wyvern", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
+        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+        try {
+            new GameMenu().start(ApplicationController.getStage());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

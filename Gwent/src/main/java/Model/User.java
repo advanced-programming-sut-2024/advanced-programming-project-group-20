@@ -9,8 +9,8 @@ public class User {
     private String username;
     private String password;
     private String nickName;
-    private int numberOfGames;
-    private int numberOfWins;
+    private String secureQuestion;
+    private String secureAnswer;
     private Faction faction;
     private Leader leader;
     private User opponentUser;
@@ -22,22 +22,27 @@ public class User {
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
+    private int numberOfWins;
+    private int numberOfGames;
     private String email;
-    private int questionNumber;
     private String answer;
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
     private static User turnUser;
-    private double maxPoint;
+    private int maxPoint;
 
-    public User(String username, String password, String nickName, String email) {
+
+    public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
         this.faction = new Nilfgaard();
         this.leader = new Leader(new Nilfgaard(), "nilfgaard_emhyr_copper");
         this.email = email;
+        this.secureQuestion = secureQuestion;
+        this.secureAnswer = secureAnswer;
         allUsers.add(this);
+        numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
     }
 
     public static User giveUserByUsername(String username) {
@@ -218,14 +223,6 @@ public class User {
         this.email = email;
     }
 
-    public int getQuestionNumber() {
-        return questionNumber;
-    }
-
-    public void setQuestionNumber(int questionNumber) {
-        this.questionNumber = questionNumber;
-    }
-
     public String getAnswer() {
         return answer;
     }
@@ -262,7 +259,24 @@ public class User {
         return maxPoint;
     }
 
-    public void setMaxPoint(double maxPoint) {
+    public void setMaxPoint(int maxPoint) {
         this.maxPoint = maxPoint;
     }
+
+    public String getSecureQuestion() {
+        return secureQuestion;
+    }
+
+    public void setSecureQuestion(String secureQuestion) {
+        this.secureQuestion = secureQuestion;
+    }
+
+    public String getSecureAnswer() {
+        return secureAnswer;
+    }
+
+    public void setSecureAnswer(String secureAnswer) {
+        this.secureAnswer = secureAnswer;
+    }
+
 }

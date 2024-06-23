@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.User;
-import View.RegisterMenu;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
@@ -34,43 +33,41 @@ public class ProfileController {
                 && User.getLoggedUser().getNickName().equals(nickname.getText())) {
             ApplicationController.alert("no changes!", "change at least one parameter");
         } else {
-            changeInformation(username, password, email, nickname);
+            changeInformation(username.getText(), password.getText(), email.getText(), nickname.getText());
         }
     }
-    public static void changeInformation(TextField usernameField, TextField passwordField, TextField emailField, TextField nickNameField) {
-        if (usernameField.getText().isEmpty()) {
+    public static void changeInformation(String usernameField, String passwordField, String emailField, String nickNameField) {
+        if (usernameField.isEmpty()) {
             ApplicationController.alert("invalid username", "username section is empty!");
 
-        } else if (passwordField.getText().isEmpty()) {
+        } else if (passwordField.isEmpty()) {
             ApplicationController.alert("invalid password", "password section is empty!");
 
-        } else if (emailField.getText().isEmpty()) {
+        } else if (emailField.isEmpty()) {
             ApplicationController.alert("invalid email", "email section is empty!");
 
-        } else if (nickNameField.getText().isEmpty()) {
+        } else if (nickNameField.isEmpty()) {
             ApplicationController.alert("invalid nickname", "nickname section is empty!");
 
-        } else if (User.giveUserByUsername(usernameField.getText()) != null
-                && !User.getLoggedUser().getUsername().equals(usernameField.getText())) {
+        } else if (User.giveUserByUsername(usernameField) != null
+                && !User.getLoggedUser().getUsername().equals(usernameField)) {
             ApplicationController.alert("invalid username", "this username already given");
 
-        } else if (!usernameField.getText().matches("[-a-zA-Z0-9]+")) {
+        } else if (!usernameField.matches("[-a-zA-Z0-9]+")) {
             ApplicationController.alert("invalid username", "username should contains a-z,A-Z,numbers and -");
 
-        } else if (!emailField.getText().matches("[-a-zA-Z0-9]+")) {
+        } else if (!emailField.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
             ApplicationController.alert("invalid email", "");
-//Todo
-        } else if (!passwordField.getText().matches("\\S+")) {
+
+        } else if (!passwordField.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9\\s]).+$")) {
             ApplicationController.alert("invalid password", "password should contains a-z,A-Z,numbers and special characters");
 
-        } else if (!passwordField.getText().matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9\\s]).+$")) {
-            ApplicationController.alert("invalid password", "password should contains a-z,A-Z,numbers and special characters");
         } else {
             // set the new information
-            changeUserName(usernameField.getText());
-            changePassword(passwordField.getText());
-            changeEmail(emailField.getText());
-            changeNickName(nickNameField.getText());
+            changeUserName(usernameField);
+            changePassword(passwordField);
+            changeEmail(emailField);
+            changeNickName(nickNameField);
             confirmAlert();
         }
     }
@@ -79,5 +76,16 @@ public class ProfileController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("your information changed successfully");
         alert.show();
+    }
+
+    public static String rankCounter() {
+        int rank = 0;
+        for (User user: User.getAllUsers()){
+            //TODO if two won are equal ?
+            if (user != User.getLoggedUser() && user.getNumberOfWins() > User.getLoggedUser().getNumberOfWins()){
+                rank++;
+            }
+        }
+        return String.valueOf(rank);
     }
 }

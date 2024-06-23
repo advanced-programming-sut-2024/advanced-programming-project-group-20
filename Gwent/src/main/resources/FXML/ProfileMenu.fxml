@@ -35,17 +35,18 @@
             </font></Label>
         <VBox layoutX="833.0" layoutY="334.0" prefHeight="98.0" prefWidth="204.0" spacing="3" stylesheets="@Profile.css">
             <children>
-                <Label prefHeight="30.0" prefWidth="208.0" text="top score:" />
-                <Label prefHeight="30.0" prefWidth="203.0" text="rank:" />
-                <Label prefHeight="30.0" prefWidth="204.0" text="number of games:" />
+                <Label fx:id="topScoreLabel" prefHeight="30.0" prefWidth="208.0" text="top score:" />
+                <Label fx:id="rankLabel" prefHeight="30.0" prefWidth="203.0" text="rank:" />
+                <Label fx:id="totalGamesLabel" prefHeight="30.0" prefWidth="204.0" text="number of games:" />
             </children>
         </VBox>
         <VBox layoutX="881.0" layoutY="440.0" prefHeight="66.0" prefWidth="100.0" spacing="3">
             <children>
-                <Label prefHeight="94.0" prefWidth="100.0" text="win" />
-                <Label prefHeight="94.0" prefWidth="100.0" text="equal" />
-                <Label prefHeight="94.0" prefWidth="100.0" text="fail" />
+                <Label fx:id="winLabel" prefHeight="94.0" prefWidth="100.0" text="win:" />
+                <Label fx:id="drawLabel" prefHeight="94.0" prefWidth="100.0" text="draw:" />
+                <Label fx:id="loseLabel" prefHeight="94.0" prefWidth="100.0" text="fail:" />
             </children></VBox>
         <Button layoutX="939.0" layoutY="299.0" mnemonicParsing="false" onMouseClicked="#saveChanges" prefHeight="26.0" prefWidth="131.0" text="save changes" />
+      <Button onMouseClicked="#BackToMainMenu" layoutX="43.0" layoutY="30.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Back" />
     </children>
 </AnchorPane>

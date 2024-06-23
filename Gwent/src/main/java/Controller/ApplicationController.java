@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
@@ -11,7 +12,6 @@ import javafx.stage.Stage;
 
 public class ApplicationController {
     private static Stage stage;
-
     private static Pane root;
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -72,4 +72,14 @@ public class ApplicationController {
         alert.show();
     }
 
+    public static void setEnable(Pane root) {
+        for (Node node: root.getChildren()) {
+            node.setDisable(false);
+        }
+    }
+    public static void setDisable(Pane root) {
+        for (Node node: root.getChildren()) {
+            node.setDisable(true);
+        }
+    }
 }

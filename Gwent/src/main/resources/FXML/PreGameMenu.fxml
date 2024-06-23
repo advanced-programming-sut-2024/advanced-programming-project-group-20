@@ -11,8 +11,8 @@
       <ScrollPane fx:id="deckPane" layoutX="775.0" layoutY="85.0" prefHeight="600.0" prefWidth="435.0">
       </ScrollPane>
       <Button layoutX="514.0" layoutY="119.0" mnemonicParsing="false" onMouseClicked="#chooseFaction" prefHeight="40.0" prefWidth="250.0" text="Choose Faction" />
-      <Label fx:id="username" alignment="CENTER" contentDisplay="CENTER" layoutX="575.0" layoutY="30.0" prefHeight="40.0" prefWidth="129.0" text="Username" textAlignment="CENTER" />
-      <Label fx:id="factionName" alignment="CENTER" contentDisplay="CENTER" layoutX="575.0" layoutY="70.0" prefHeight="40.0" prefWidth="129.0" text="Faction" textAlignment="CENTER" />
+      <Label fx:id="username" alignment="CENTER" contentDisplay="CENTER" layoutX="537.0" layoutY="30.0" prefHeight="40.0" prefWidth="200.0" text="Username" textAlignment="CENTER" />
+      <Label fx:id="factionName" alignment="CENTER" contentDisplay="CENTER" layoutX="537.0" layoutY="70.0" prefHeight="40.0" prefWidth="200.0" text="Faction" textAlignment="CENTER" />
       <ImageView fx:id="userImageView" fitHeight="186.0" fitWidth="130.0" layoutX="581.0" layoutY="180.0" onMouseClicked="#chooseLeaders" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="totalLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="518.0" layoutY="380.0" prefHeight="40.0" prefWidth="249.0" text="Label" />
       <Label fx:id="unitLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="517.0" layoutY="420.0" prefHeight="40.0" prefWidth="250.0" text="Label" />

@@ -48,8 +48,8 @@ public class GameMenu extends Application {
     public void start(Stage stage) throws Exception {
         User player;
         User opponent;
-        User.setLoggedUser(player = new User("ali", "123", "reza", "a.@1"));
-        player.setOpponentUser(opponent = new User("ali", "123", "reza", "a.@1"));
+        User.setLoggedUser(player = new User("ali", "123", "reza", "a.@1", "1" ,"1"));
+        player.setOpponentUser(opponent = new User("ali", "123", "reza", "a.@1", "1", "1"));
         User.setTurnUser(player);
         player.setFaction(new Nilfgaard());
         opponent.setFaction(new Monsters());

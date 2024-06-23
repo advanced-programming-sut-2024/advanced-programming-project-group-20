@@ -4,14 +4,12 @@ import Model.*;
 import Model.Factions.*;
 import View.GameMenu;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
@@ -133,18 +131,12 @@ public class PreGameController {
     public static void saveDeckByAddress() {
     }
 
-    public static void saveDeckByName() {
-    }
 
     public static String loadGameByName() {
         return null;
     }
 
     public static String loadGameByFile() {
-        return null;
-    }
-
-    public static String showLeaders() {
         return null;
     }
 
@@ -155,7 +147,7 @@ public class PreGameController {
         }
         userImageView.setImage(new Image(PreGameController.class.getResource
                 ("/Leaders/" + User.getTurnUser().getLeader().getName() + ".jpg").toExternalForm()));
-        setEnable();
+        ApplicationController.setEnable(root);
     }
 
     public static void addCardToDeck(String cardName, int count) {
@@ -321,21 +313,12 @@ public class PreGameController {
             addLeaderToUserLeader(faction, leader2);
             selectLeaders(all);
         });
-        setDisable();
+        ApplicationController.setDisable(root);
         root.getChildren().add(copper);
         root.getChildren().add(bronze);
     }
 
-    private void setEnable() {
-        for (Node node: root.getChildren()) {
-            node.setDisable(false);
-        }
-    }
-    private void setDisable() {
-        for (Node node: root.getChildren()) {
-            node.setDisable(true);
-        }
-    }
+
 
     private void showLeadersOfFactionsWith5Leaders(Faction faction, String leader1, String leader2, String leader3, String leader4, String leader5) {
         ImageView copper = new ImageView(new Image(String.valueOf(Nilfgaard.class.getResource("/Leaders/" + leader1 + ".jpg"))));
@@ -388,7 +371,7 @@ public class PreGameController {
             addLeaderToUserLeader(faction, leader5);
             selectLeaders(all);
         });
-        setDisable();
+        ApplicationController.setDisable(root);
         root.getChildren().add(copper);
         root.getChildren().add(bronze);
         root.getChildren().add(gold);

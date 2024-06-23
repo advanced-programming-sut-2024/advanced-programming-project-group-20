@@ -7,27 +7,23 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
 
 public class RegisterMenu extends Application {
+    public static Pane root;
     @FXML
     private TextField repeatedPasswordField;
-    @FXML
-    private CheckBox checkLogin;
     @FXML
     private TextField emailField;
     @FXML
     private TextField nickNameField;
-
     @FXML
     private TextField passwordField;
     @FXML
@@ -36,7 +32,6 @@ public class RegisterMenu extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
     }
 
     @Override
@@ -46,10 +41,11 @@ public class RegisterMenu extends Application {
         stage.setWidth(900);
         SetHeightAndWidth(stage);
         URL url = RegisterMenu.class.getResource("/FXML/RegisterMenu.fxml");
-        Pane root = FXMLLoader.load(url);
+        root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
+        stage.centerOnScreen();
         stage.setScene(scene);
-        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg",stage.getHeight(), stage.getWidth())));
+        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }
 
@@ -65,14 +61,18 @@ public class RegisterMenu extends Application {
             throw new RuntimeException(e);
         }
     }
+
     public void register(MouseEvent mouseEvent) {
+        if (root == null){
+            System.out.println("null ast");
+        }
         RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
     }
 
     //TODO delete this later
     public void gotoMainMenu(MouseEvent mouseEvent) {
-        User user = new User("hamid", "1" ,"1" , "1");
-        User user1 = new User("ali", "1" ,"1" , "1");
+        User user = new User("hamid", "1", "1", "1","1","1");
+        User user1 = new User("ali", "1", "1", "1", "1", "1");
         User.setLoggedUser(user);
         try {
             new MainMenu().start(ApplicationController.getStage());
@@ -80,6 +80,9 @@ public class RegisterMenu extends Application {
             throw new RuntimeException(e);
         }
         ApplicationController.getStage().setWidth(900);
-//        ApplicationController.getStage().setHeight();
+    }
+
+    public void makeRandomPassword(MouseEvent mouseEvent) {
+        RegisterController.randomPassword(passwordField, repeatedPasswordField);
     }
 }

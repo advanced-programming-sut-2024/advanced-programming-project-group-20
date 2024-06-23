@@ -1,14 +1,15 @@
 package Model;
 
+import Model.Factions.Nilfgaard;
 import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 public class Leader extends Rectangle {
     private Faction faction;
     private String name;
-
     private boolean isUsed;
-    private Image image;
+//    private Image image;
     public void action() {
 
     }
@@ -17,6 +18,7 @@ public class Leader extends Rectangle {
         this.faction = faction;
         this.name = name;
         this.isUsed = false;
+        this.setFill(new ImagePattern(new Image(String.valueOf(Nilfgaard.class.getResource("/Leaders/" + name + ".jpg")))));
     }
 
     public Faction getFaction() {
