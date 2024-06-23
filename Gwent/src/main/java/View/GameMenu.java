@@ -61,8 +61,8 @@ public class GameMenu extends Application {
         stage.centerOnScreen();
         stage.setHeight(900);
         stage.setWidth(1600);
+        ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
-
 
     }
 
@@ -104,7 +104,7 @@ public class GameMenu extends Application {
     }
 
     public void putCardInDeck() {
-ApplicationController.getRoot().getChildren().remove(turnLabel);
+        ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         for (Card card : User.getTurnUser().getBoard().getHand()) {
             deckHbox.getChildren().add(card);

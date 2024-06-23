@@ -5,6 +5,8 @@ import Model.Card;
 import Model.User;
 import View.RegisterMenu;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -45,8 +47,12 @@ public class GameController {
     }
 
     private static void setLeaderImage(User user, int height) {
-        //  i dont have lider please make it
-        ImageView leader = new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/deck_back_" + user.getFaction().getName() + ".jpg")));
+        ImageView leader = new ImageView();
+        leader.setImage(user.getLeader().getImage());
+        leader.setOnMouseClicked(mouseEvent -> {
+            User.getTurnUser().getLeader().action();
+            User.getTurnUser().getLeader().setUsed(true);
+        });
         ApplicationController.getRoot().getChildren().add(leader);
         leader.setY(height);
         leader.setX(113);
@@ -277,13 +283,16 @@ public class GameController {
         fadeTransition.setToValue(0);
         fadeTransition.setCycleCount(1);
         fadeTransition.play();
-        User.setTurnUser(User.getTurnUser().getOpponentUser());
-        deckHbox.getChildren().clear();
-        swapHboxes(0, 5, hBoxes);
-        swapHboxes(1, 4, hBoxes);
-        swapHboxes(2, 3, hBoxes);
-        GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
-
+        Timeline waitForChange = new Timeline(new KeyFrame(Duration.seconds(1.8),actionEvent -> {
+            User.setTurnUser(User.getTurnUser().getOpponentUser());
+            deckHbox.getChildren().clear();
+            swapHboxes(0, 5, hBoxes);
+            swapHboxes(1, 4, hBoxes);
+            swapHboxes(2, 3, hBoxes);
+            GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
+        }));
+        waitForChange.setCycleCount(1);
+        waitForChange.play();
     }
 
     private static void swapHboxes(int hbox1, int hbox2, ArrayList<HBox> hBoxes) {

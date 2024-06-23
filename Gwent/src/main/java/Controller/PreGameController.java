@@ -182,7 +182,7 @@ public class PreGameController {
         monsters.setFitWidth(256);
         monsters.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Monsters());
-            User.getTurnUser().setLeader(new Leader(new Monsters(), "monsters_eredin_copper"));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt",User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -195,7 +195,7 @@ public class PreGameController {
         nilfgaard.setFitWidth(256);
         nilfgaard.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Nilfgaard());
-            User.getTurnUser().setLeader(new Leader(new Nilfgaard(), "nilfgaard_emhyr_copper"));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard",User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -208,7 +208,7 @@ public class PreGameController {
         northernRealms.setFitWidth(256);
         northernRealms.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new NorthernRealms());
-            User.getTurnUser().setLeader(new Leader(new NorthernRealms(), "realms_foltest_copper"));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth",User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -221,7 +221,7 @@ public class PreGameController {
         skellige.setFitWidth(256);
         skellige.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Skellige());
-            User.getTurnUser().setLeader(new Leader(new Skellige(), "skellige_crach_an_craite"));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite",User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -234,7 +234,7 @@ public class PreGameController {
         scoiaTael.setFitWidth(256);
         scoiaTael.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new ScoiaTael());
-            User.getTurnUser().setLeader(new Leader(new ScoiaTael(), "scoiatael_francesca_gold"));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf",User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -254,17 +254,17 @@ public class PreGameController {
     public void chooseLeaders(MouseEvent mouseEvent) {
         //TODO put names of leaders
         switch (User.getTurnUser().getFaction().getName()) {
-            case "Monsters" -> monsterLeader("monsters_eredin_copper", "monsters_eredin_bronze", "monsters_eredin_gold"
-                    , "monsters_eredin_silver", "monsters_eredin_the_treacherous");
-            case "Skellige" -> skelligeLeader("skellige_crach_an_craite", "skellige_king_bran");
+            case "Monsters" -> monsterLeader("KingOfTheWildHunt", "CommanderOfRedRiders", "DestroyerOfWorlds"
+                    , "BringerOfDeath", "TheTreacherous");
+            case "Skellige" -> skelligeLeader("CrachAnCraite", "KingBran");
             case "Nilfgaard" ->
-                    nilfgaardLeader("nilfgaard_emhyr_bronze", "nilfgaard_emhyr_copper", "nilfgaard_emhyr_gold"
-                            , "nilfgaard_emhyr_invader_of_the_north", "nilfgaard_emhyr_silver");
+                    nilfgaardLeader("EmperorOfNilfgaard", "HisImperialMajesty", "TheRelentless"
+                            , "InvaderOfNorth", "TheWhiteFlame");
             case "ScoiaTael" ->
-                    scoiaTaelLeader("scoiatael_francesca_bronze", "scoiatael_francesca_copper", "scoiatael_francesca_gold"
-                            , "scoiatael_francesca_hope_of_the_aen_seidhe", "scoiatael_francesca_silver");
-            default -> northernRealmsLeader("realms_foltest_copper", "realms_foltest_bronze", "realms_foltest_gold"
-                    , "realms_foltest_silver", "realms_foltest_son_of_medell");
+                    scoiaTaelLeader("PurebloodElf", "DaisyOfTheValley", "TheBeautiful"
+                            , "HopeOfTheAenSeidhe", "QueenOfDolBlathanna");
+            default -> northernRealmsLeader("LordOfCommanderOfTheNorth", "KingOfTemperia", "TheSteal-Forged"
+                    , "TheSiegemaster", "SunOfMedell");
         }
 
 
@@ -380,16 +380,17 @@ public class PreGameController {
 
     private void addLeaderToUserLeader(Faction faction, String leaderName) {
         if (faction instanceof Monsters) {
-            User.getTurnUser().setLeader(new Leader(new Monsters(), leaderName));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters(leaderName,faction));
         } else if (faction instanceof Skellige) {
-            User.getTurnUser().setLeader(new Leader(new Skellige(), leaderName));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige(leaderName,faction));
         } else if (faction instanceof ScoiaTael) {
-            User.getTurnUser().setLeader(new Leader(new ScoiaTael(), leaderName));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael(leaderName,faction));
         } else if (faction instanceof Nilfgaard) {
-            User.getTurnUser().setLeader(new Leader(new Nilfgaard(), leaderName));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard(leaderName,faction));
         } else {
-            User.getTurnUser().setLeader(new Leader(new NorthernRealms(), leaderName));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName,faction));
         }
     }
+
 
 }

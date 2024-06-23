@@ -1,5 +1,6 @@
 package Controller;
 
+import View.GameMenu;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -13,6 +14,9 @@ import javafx.stage.Stage;
 public class ApplicationController {
     private static Stage stage;
     private static Pane root;
+
+    private static GameMenu gameMenu;
+
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     private static MediaPlayer mediaPlayer;
@@ -54,6 +58,13 @@ public class ApplicationController {
         }
     }
 
+    public static GameMenu getGameMenu() {
+        return gameMenu;
+    }
+
+    public static void setGameMenu(GameMenu gameMenu) {
+        ApplicationController.gameMenu = gameMenu;
+    }
 
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
