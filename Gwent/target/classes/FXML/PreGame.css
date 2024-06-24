@@ -1,14 +1,14 @@
 .label {
     -fx-font-size: 16px;
     -fx-font-family: "Bahnschrift";
-    -fx-text-fill: #cb1f1f;
-    -fx-background-color: #71e18a;
+    -fx-text-fill: #cc8d2e;
+    /*-fx-background-color: #71e18a;*/
     -fx-padding: 5px 10px;
-    -fx-border-color: #cccccc;
+    /*-fx-border-color: #cccccc;*/
     -fx-border-width: 2px;
     -fx-border-radius: 5px;
-    -fx-background-color: rgba(255, 255, 255, 0.5);
-    -fx-font-weight: bold
+    /*-fx-background-color: rgb(255, 255, 255);*/
+    -fx-font-weight: bold;
 }
 
 .button {
@@ -20,4 +20,5 @@
     -fx-font-size: 16;
     -fx-padding: 10 20;
     -fx-cursor: hand;
+    -fx-border-radius: 5px;
 }

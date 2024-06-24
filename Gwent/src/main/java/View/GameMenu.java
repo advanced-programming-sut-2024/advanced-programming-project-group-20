@@ -55,7 +55,6 @@ public class GameMenu extends Application {
         User.getTurnUser().setBoard(new Board());
         User.getTurnUser().getOpponentUser().setBoard(new Board());
         ApplicationController.setStage(stage);
-        ApplicationController.setIcon();
         ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
         URL url = PreGameMenu.class.getResource("/FXML/GameMenu.fxml");
         Pane root = FXMLLoader.load(url);
@@ -118,6 +117,7 @@ public class GameMenu extends Application {
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
+
                 if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage,latch)) {
                     putCardInDeck();
                     if (!User.getTurnUser().getOpponentUser().isPassed())

@@ -2,11 +2,15 @@ package Controller;
 
 import Model.User;
 import View.LoginMenu;
+import View.PrivateFieldAdapter;
 import View.RegisterMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -146,43 +150,38 @@ public class RegisterController {
     }
 
     private static void saveTheUserInGson(ArrayList<User> list) {
+
 //        File file = new File("users.json");
-//        try {
-//            if (!file.exists()) {
-//                if (file.createNewFile()) {
-//                    System.out.println("File '" + file.getName() + "' created successfully");
-//                } else {
-//                    System.out.println("Failed to create file '" + file.getName() + "'");
-//                }
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
+////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = new User("f", "f", "f", "f","f", "f");
+////        Gson gson= new Gson();
 //        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(User.class, new UserSerializer())
+//                .registerTypeAdapter(User.class, new PrivateFieldAdapter())
 //                .create();
 //        String json = gson.toJson(list);
-//        try {
-//            if (Files.readString(file.toPath()).equals(json)) return;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 //        try (PrintWriter pw = new PrintWriter(file)) {
 //            pw.write(json);
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        }
-    }
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+        System.out.println(json);
 
+        try (FileWriter writer = new FileWriter("users.json")) {
+            gson.toJson(user, writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
-        System.out.println(secureAnswer.getText());
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-        saveTheUserInGson(User.getAllUsers());
+//        saveTheUserInGson(User.getAllUsers());
+//        user.saveUserToJSon();
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

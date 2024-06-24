@@ -1,10 +1,10 @@
 package Model;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class GameHistory {
-    private User winner;
+    private String winnerName;
+
     private String opponentName;
     private double firstRoundPointMe = -1;
     private double firstRoundPointOpponent = -1;
@@ -30,12 +30,12 @@ public class GameHistory {
         return 0;
     }
 
-    public User getWinner() {
-        return winner;
+    public String getWinner() {
+        return winnerName;
     }
 
-    public void setWinner(User winner) {
-        this.winner = winner;
+    public void setWinner(String winner) {
+        this.winnerName = winner;
     }
 
     public double getFirstRoundPointMe() {
