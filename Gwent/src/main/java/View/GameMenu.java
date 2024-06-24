@@ -81,8 +81,11 @@ public class GameMenu extends Application {
         passedLabel.setId("no");
         turnLabel.setId("no");
         setHboxes();
+        GameController.sethBoxes(hBoxes);
+        GameController.setDeckHbox(deckHbox);
+        GameController.setHighScoreIcon(highScoreImage);
         ApplicationController.setRoot(pane);
-        GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreImage);
+        GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
         putCardInDeck();
@@ -104,12 +107,14 @@ public class GameMenu extends Application {
         ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         deckHbox.getChildren().clear();
+        System.out.println(User.getTurnUser().getUsername() + ".....................");
         for (Card card : hand) {
+            System.out.println(card.getName() );
             deckHbox.getChildren().add(card);
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
-                GameController.putCardInDeck(hBoxes, deckHbox, card, hand);
+                GameController.putCardInDeck(card, hand);
             });
 
         }
@@ -121,17 +126,19 @@ public class GameMenu extends Application {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
-                    if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
+                    System.out.println(1);
+                    if (GameController.placeCard(hBox, highScoreImage, latch)) {
+                        System.out.println(2);
                         putCardInDeck();
                             User.getTurnUser().getBoard().setHasPlayedOne(true);
                         nextTurn.setOnMouseClicked(event2 -> {
                             if (User.getTurnUser().getBoard().isHasPlayedOne()) {
                                 if (!User.getTurnUser().getOpponentUser().isPassed())
-                                    GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+                                    GameController.changeTurn(highScoreImage, turnLabel);
                                 Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
                                 waitForChangeTurn.setCycleCount(1);
                                 waitForChangeTurn.play();
-                                GameController.updateBorder(hBoxes);
+                                GameController.updateBorder();
                                 User.getTurnUser().getBoard().setHasPlayedOne(false);
                             }
                         });
@@ -146,7 +153,7 @@ public class GameMenu extends Application {
         if (!User.getTurnUser().getOpponentUser().isPassed()) {
             putCardInDeck();
             User.getTurnUser().setPassed(true);
-            GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+            GameController.changeTurn(highScoreImage, turnLabel);
             ApplicationController.getRoot().getChildren().add(passedLabel);
             Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
             waitForChangeTurn.setCycleCount(1);
@@ -156,7 +163,7 @@ public class GameMenu extends Application {
             ApplicationController.getRoot().getChildren().remove(passedLabel);
             User.getTurnUser().getOpponentUser().setPassed(false);
             User.getTurnUser().setPassed(false);
-            GameController.nextRound(hBoxes, highScoreImage);
+            GameController.nextRound(highScoreImage);
             putCardInDeck();
         }
     }

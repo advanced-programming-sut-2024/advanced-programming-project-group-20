@@ -1,6 +1,9 @@
 package Model;
 
+import Controller.GameController;
+import javafx.application.Application;
 import javafx.scene.Node;
+import Controller.ApplicationController;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -18,27 +21,29 @@ public class SpecialAction {
     }
 
     public static void decoy(Card decoy) {
-        for (Card card1 : User.getTurnUser().getBoard().getCloseCombat()) {
-            AtomicReference<Card> card = new AtomicReference<>(card1);
-            card.get().setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().getHand().add(card1);
-                card.set(CardBuilder.neutral("decoy"));
+        for (Card card : User.getTurnUser().getBoard().getCloseCombat()) {
+            card.setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card);
+                User.getTurnUser().getBoard().getCloseCombat().remove(card);
+                User.getTurnUser().getBoard().getCloseCombat().add(decoy);
             });
         }
-        for (Card card1 : User.getTurnUser().getBoard().getSiege()) {
-            AtomicReference<Card> card = new AtomicReference<>(card1);
-            card.get().setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().getHand().add(card1);
-                card.set(CardBuilder.neutral("decoy"));
+        for (Card card : User.getTurnUser().getBoard().getSiege()) {
+            card.setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card);
+                User.getTurnUser().getBoard().getSiege().remove(card);
+                User.getTurnUser().getBoard().getSiege().add(decoy);
             });
         }
-        for (Card card1 : User.getTurnUser().getBoard().getRanged()) {
-            AtomicReference<Card> card = new AtomicReference<>(card1);
-            card.get().setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().getHand().add(card1);
-                card.set(CardBuilder.neutral("decoy"));
+        for (Card card : User.getTurnUser().getBoard().getRanged()) {
+            card.setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card);
+                User.getTurnUser().getBoard().getRanged().remove(card);
+                User.getTurnUser().getBoard().getRanged().add(decoy);
             });
         }
+
+
     }
 
 

@@ -52,7 +52,6 @@ public class AbilityActions {
                     hBox.getChildren().add(card);
                 setSizeSmaller(card,2.5);
                 card.setOnMouseClicked(mouseEvent -> {
-                    card.setInDeck(true);
                     card.setSelect(false);
                     root.getChildren().remove(hBox);
                     User.getTurnUser().getBoard().getBurnedCard().remove(card);

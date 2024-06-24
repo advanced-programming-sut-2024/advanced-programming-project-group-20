@@ -21,7 +21,6 @@ public class Card extends Pane {
     transient private Image image;
     transient private Image gameImage;
     private boolean isSelect =false;
-    private boolean isInDeck = true;
 
 
     public Card(String name, String type, String ability, boolean description
@@ -136,14 +135,6 @@ public class Card extends Pane {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public boolean isInDeck() {
-        return isInDeck;
-    }
-
-    public void setInDeck(boolean inDeck) {
-        isInDeck = inDeck;
     }
 
     public boolean hasAbility(Card card){
