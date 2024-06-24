@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.ApplicationController;
+import Controller.GameController;
 import javafx.animation.Timeline;
 import javafx.scene.ImageCursor;
 import javafx.scene.Node;
@@ -78,7 +79,7 @@ public class LeaderBuilder {
                         imageView.setOnMouseClicked(mouseEvent -> {
                             User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().remove(card);
                             User.getTurnUser().getBoard().getHand().add(card);
-                            ApplicationController.getGameMenu().putCardInDeck();
+                            GameController.updateBorder();
                             root.getChildren().remove(hBox);
                             for (Node node : root.getChildren()) {
                                 node.setDisable(false);
@@ -104,7 +105,7 @@ public class LeaderBuilder {
                     Card card = nonHeroCards.get(randomNumber);
                     User.getTurnUser().getBoard().getBurnedCard().remove(card);
                     User.getTurnUser().getBoard().getHand().add(card);
-                    ApplicationController.getGameMenu().putCardInDeck();
+                    GameController.updateBorder();
                     nonHeroCards = new ArrayList<>();
                     for (Card card1 : User.getTurnUser().getBoard().getBurnedCard()){
                         if (card1.getAbility().contains("hero")) {
@@ -213,7 +214,7 @@ public class LeaderBuilder {
                         imageView.setOnMouseClicked(mouseEvent -> {
                             User.getTurnUser().getBoard().getBurnedCard().remove(card);
                             User.getTurnUser().getBoard().getHand().add(card);
-                            ApplicationController.getGameMenu().putCardInDeck();
+                            GameController.updateBorder();
                             root.getChildren().remove(hBox);
                             for (Node node : root.getChildren()) {
                                 node.setDisable(false);
@@ -273,7 +274,7 @@ public class LeaderBuilder {
                     }
                     Random random = new Random();
                     User.getTurnUser().getBoard().getHand().add(nonHero.get(random.nextInt(0, nonHero.size())));
-                    ApplicationController.getGameMenu().putCardInDeck();
+                    GameController.updateBorder();
                 }
             };
             case "TheBeautiful" -> new Leader(faction, "TheBeautiful") {
@@ -337,7 +338,7 @@ public class LeaderBuilder {
                         allNonHeroes.remove(num);
                     }
                     User.getTurnUser().getOpponentUser().getBoard().getHand().addAll(allNonHeroes);
-                    ApplicationController.getGameMenu().putCardInDeck();
+                    GameController.updateBorder();
                 }
             };
             case "KingBran" -> new Leader(faction, "KingBran") {

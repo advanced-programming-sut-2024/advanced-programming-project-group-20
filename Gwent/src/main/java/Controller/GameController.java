@@ -24,9 +24,33 @@ import java.util.concurrent.CountDownLatch;
 
 public class GameController {
 public static ArrayList<Timeline> timelines = new ArrayList<>();
+private static ArrayList<HBox> hBoxes;
+private static ImageView highScoreIcon;
+private static HBox deckHbox;
 
 
-    public static void setImagesOfBoard(User user, ArrayList<HBox> hBoxes, ImageView highScoreIcon) {
+    public static void setHighScoreIcon(ImageView highScoreIcon) {
+        GameController.highScoreIcon = highScoreIcon;
+    }
+
+    public static HBox getDeckHbox() {
+        return deckHbox;
+    }
+
+    public static void setDeckHbox(HBox deckHbox) {
+        GameController.deckHbox = deckHbox;
+    }
+
+    public static ArrayList<HBox> gethBoxes() {
+        return hBoxes;
+    }
+
+    public static void sethBoxes(ArrayList<HBox> hBoxes) {
+        GameController.hBoxes = hBoxes;
+    }
+
+    public static void setImagesOfBoard(User user) {
+        updateBorder();
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
         // image and lable of deck back
         setImageOfDeckBack(user, 686);
@@ -42,12 +66,11 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         setImageCartNumber(user.getOpponentUser(), 358, 590, getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)));
         setProfileImages(user.getOpponentUser(), 200);
         setProfileImages(user, 520);
-        setHighScoreIcon(hBoxes, highScoreIcon);
+        setHighScoreIcon(highScoreIcon);
         deckCardNumber(User.getTurnUser().getOpponentUser(), 295);
         deckCardNumber(User.getTurnUser(), 615);
         setLeaderImage(User.getTurnUser(), 687);
         setLeaderImage(User.getTurnUser().getOpponentUser(), 64);
-        updateBorder(hBoxes);
     }
 
     private static void setLeaderImage(User user, int height) {
@@ -86,7 +109,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         labelStyle(height, labelUsername);
     }
 
-    private static void setHighScoreIcon(ArrayList<HBox> hBoxes, ImageView highScoreIcon) {
+    private static void setHighScoreIcon() {
         if (!ApplicationController.getRoot().getChildren().contains(highScoreIcon))
             ApplicationController.getRoot().getChildren().add(highScoreIcon);
         highScoreIcon.setLayoutX(319);
@@ -98,7 +121,6 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         highScoreIcon.setFitHeight(63);
         if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) == getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3))) {
             ApplicationController.getRoot().getChildren().remove(highScoreIcon);
-
         }
     }
 
@@ -179,8 +201,8 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static void putCardInDeck(ArrayList<HBox> hBoxes, HBox deckHbox, Card card, ArrayList<Card> hand) {
-        if (!card.isSelect() && card.isInDeck()) {
+    public static void putCardInDeck(Card card, ArrayList<Card> hand) {
+        if (!card.isSelect()) {
             boolean isAnySelected = false;
             for (Card card1 : hand) {
                 if (card1.isSelect()) {
@@ -191,21 +213,22 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
             if (!isAnySelected) {
                 if (getHbox(card) >= 10 )
                     hBoxes.get(getHbox(card) / 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                if (getHbox(card) == 9) return;
-                hBoxes.get(getHbox(card) % 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                 card.setPrefWidth(card.getWidth() * 1.5);
                 card.setPrefHeight(card.getHeight() * 1.5);
                 ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * 1.5);
                 ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * 1.5);
                 card.setSelect(true);
-                if (card.getName().equals("decoy")) {
+                if (card.getName().equals("Decoy")) {
                     SpecialAction.decoy(card);
+                    return;
                 }
+                hBoxes.get(getHbox(card) % 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
             }
         } else {
             if (card.isSelect()) {
                 if (getHbox(card) >= 10)
                     hBoxes.get(getHbox(card) / 10).setStyle(null);
+                if (!card.getName().equals("Decoy"))
                 hBoxes.get(getHbox(card) % 10).setStyle(null);
                 setSizeSmaller(card);
             }
@@ -279,7 +302,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static void changeTurn(HBox deckHbox, ArrayList<HBox> hBoxes, ImageView highScoreIcon, Label turnLabel) {
+    public static void changeTurn(ImageView highScoreIcon, Label turnLabel) {
         if (!ApplicationController.getRoot().getChildren().contains(turnLabel))
             ApplicationController.getRoot().getChildren().add(turnLabel);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), turnLabel);
@@ -289,22 +312,12 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         fadeTransition.play();
         Timeline waitForChange = new Timeline(new KeyFrame(Duration.seconds(1.8), actionEvent -> {
             User.setTurnUser(User.getTurnUser().getOpponentUser());
-            swapHboxes(0, 5, hBoxes);
-            swapHboxes(1, 4, hBoxes);
-            swapHboxes(2, 3, hBoxes);
-            GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
+            updateBorder();
+            GameController.setImagesOfBoard(User.getTurnUser());
         }));
         waitForChange.setCycleCount(1);
         waitForChange.play();
         timelines.add(waitForChange);
-    }
-
-    private static void swapHboxes(int hbox1, int hbox2, ArrayList<HBox> hBoxes) {
-        ArrayList<Node> swapArray = new ArrayList<>(hBoxes.get(hbox1).getChildren());
-        hBoxes.get(hbox1).getChildren().removeAll();
-        hBoxes.get(hbox1).getChildren().addAll(hBoxes.get(hbox2).getChildren());
-        hBoxes.get(hbox2).getChildren().removeAll();
-        hBoxes.get(hbox2).getChildren().addAll(swapArray);
     }
 
     public static boolean checkEnding() {
@@ -320,22 +333,25 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static boolean placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon, CountDownLatch latch) {
+    public static boolean placeCard(HBox hBox, ImageView highScoreIcon, CountDownLatch latch) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
             Card card = cardIterator.next();
-            System.out.println(card.getName());
-            System.out.println(card.isSelect());
-            System.out.println(card.isInDeck());
-            System.out.println(!hBox.getStyle().isEmpty());
-            if (card.isSelect() && card.isInDeck() && !hBox.getStyle().isEmpty()) {
-                System.out.println(2.5);
-                deckHbox.getChildren().remove(card);
-                hBox.getChildren().add(card);
+            ArrayList<Card> targetArray = getArrayPlace(hBox);
+            if (card.isSelect() && !hBox.getStyle().isEmpty()) {
+                User.getTurnUser().getBoard().getHand().remove(card);
+                targetArray.add(card);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
-                card.setInDeck(false);
-                cardIterator.remove();
-                setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
+                setImagesOfBoard(User.getTurnUser());
+                for (HBox hBox1 : hBoxes)
+                    hBox1.setStyle(null);
+                AbilityActions.switchAction(card);
+                return true;
+            } else if (card.isSelect() && card.getName().equals("Decoy")) {
+                User.getTurnUser().getBoard().getHand().remove(card);
+                deckHbox.getChildren().remove(card);
+                setSizeSmaller(card);
+                setImagesOfBoard(User.getTurnUser());
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
                 AbilityActions.switchAction(card);
@@ -343,6 +359,23 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
             }
         }
         return false;
+    }
+
+    private static ArrayList<Card> getArrayPlace(HBox hBox) {
+        if (hBoxes.get(0).equals(hBox)) {
+            return User.getTurnUser().getBoard().getSiege();
+        } else if (hBoxes.get(1).equals(hBox)) {
+            return User.getTurnUser().getBoard().getRanged();
+        } else if (hBoxes.get(2).equals(hBox)) {
+            return User.getTurnUser().getBoard().getCloseCombat();
+        } else if (hBoxes.get(5).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getSiege();
+        } else if (hBoxes.get(4).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getRanged();
+        } else if (hBoxes.get(3).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getCloseCombat();
+        }
+        return new ArrayList<>();
     }
 
     private static void setSizeSmaller(Card card) {
@@ -354,7 +387,8 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static void nextRound(ArrayList<HBox> hBoxes, ImageView highScoreImage) {
+    public static void nextRound(ImageView highScoreImage) {
+        updateBorder();
         User.getTurnUser().getBoard().setHasPlayedOne(false);
         User.getTurnUser().getOpponentUser().getBoard().setHasPlayedOne(false);
         System.out.println(User.getTurnUser().getUsername());
@@ -415,29 +449,29 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
 
         putInBurntCards(User.getTurnUser());
         putInBurntCards(User.getTurnUser().getOpponentUser());
-        for (HBox hBox : hBoxes)
-            hBox.getChildren().clear();
+        for (HBox hBox : hBoxes) {
+            ArrayList<Card> target = getArrayPlace(hBox);
+            target.clear();
+        }
         if (monster1 != null) {
             if (monster1.getType().equals("siegeUnit")) {
-                hBoxes.get(2).getChildren().add(monster1);
+                User.getTurnUser().getBoard().getSiege().add(monster1);
             } else if (monster1.getType().equals("rangedUnit")) {
-                hBoxes.get(1).getChildren().add(monster1);
+                User.getTurnUser().getBoard().getRanged().add(monster1);
             } else {
-                hBoxes.get(0).getChildren().add(monster1);
+                User.getTurnUser().getBoard().getCloseCombat().add(monster1);
             }
         }
         if (monster2 != null) {
             if (monster2.getType().equals("siegeUnit")) {
-                hBoxes.get(5).getChildren().add(monster2);
+                User.getTurnUser().getOpponentUser().getBoard().getSiege().add(monster2);
             } else if (monster2.getType().equals("rangedUnit")) {
-                hBoxes.get(4).getChildren().add(monster2);
+                User.getTurnUser().getOpponentUser().getBoard().getRanged().add(monster2);
             } else {
-                hBoxes.get(3).getChildren().add(monster2);
+                User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(monster2);
             }
         }
-        setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreImage);
-
-
+        setImagesOfBoard(User.getTurnUser());
     }
 
 
@@ -520,36 +554,46 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
 
     private static void putInBurntCards(User user) {
         if (user.getBoard().getSiege() != null){
-            System.out.println("no null siege");
             for (Card card : user.getBoard().getSiege())
                 user.getBoard().getBurnedCard().add((Card) card);}
         if (user.getBoard().getRanged() != null) {
-            System.out.println("no null siege");
             for (Card card : user.getBoard().getRanged())
                 user.getBoard().getBurnedCard().add((Card) card);
         }
         if (user.getBoard().getCloseCombat() != null) {
-            System.out.println("no null siege");
             for (Card card : user.getBoard().getCloseCombat())
                 user.getBoard().getBurnedCard().add((Card) card);
         }
     }
 
-    public static void updateBorder(ArrayList<HBox> hBoxes) {
-        for (Node node:hBoxes.get(0).getChildren())
-            User.getTurnUser().getBoard().getSiege().add((Card) node);
-        for (Node node:hBoxes.get(1).getChildren())
-            User.getTurnUser().getBoard().getRanged().add((Card) node);
-        for (Node node:hBoxes.get(2).getChildren())
-            User.getTurnUser().getBoard().getRanged().add((Card) node);
-        for (Node node:hBoxes.get(3).getChildren())
-            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add((Card) node);
-        for (Node node:hBoxes.get(4).getChildren())
-            User.getTurnUser().getOpponentUser().getBoard().getRanged().add((Card) node);
-        for (Node node:hBoxes.get(5).getChildren())
-            User.getTurnUser().getOpponentUser().getBoard().getSiege().add((Card) node);
-
-
-
+    public static void updateBorder() {
+        User user1 = User.getTurnUser();
+        User user2 = User.getTurnUser().getOpponentUser();
+        for (HBox hBox : hBoxes) {
+            hBox.getChildren().clear();
+        }
+        deckHbox.getChildren().clear();
+        for (Card card : user1.getBoard().getSiege()) {
+            hBoxes.get(0).getChildren().add(card);
+        }
+        for (Card card : user1.getBoard().getRanged()) {
+            hBoxes.get(1).getChildren().add(card);
+        }
+        for (Card card : user1.getBoard().getCloseCombat()) {
+            hBoxes.get(2).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getSiege()) {
+            hBoxes.get(5).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getRanged()) {
+            hBoxes.get(4).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getCloseCombat()) {
+            hBoxes.get(3).getChildren().add(card);
+        }
+        for (Card card : user1.getBoard().getHand()) {
+            deckHbox.getChildren().add(card);
+        }
+        setHighScoreIcon();
     }
 }

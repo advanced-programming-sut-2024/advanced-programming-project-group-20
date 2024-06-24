@@ -164,7 +164,7 @@ public class PreGameController {
     }
 
     public void changeTurn() throws Exception {
-        if (unitCard < 22) {
+        if (unitCard < 10) {
             ApplicationController.alert("Low Unit Card","You should choose at least 22 unit card");
             return;
         } else if (specialCard > 10) {
@@ -399,6 +399,5 @@ public class PreGameController {
             User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName,faction));
         }
     }
-
 
 }
