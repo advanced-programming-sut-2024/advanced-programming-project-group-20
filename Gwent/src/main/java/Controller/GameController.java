@@ -3,7 +3,6 @@ package Controller;
 import Model.Board;
 import Model.Card;
 import Model.User;
-import View.RegisterMenu;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,10 +15,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class GameController {
 
@@ -391,19 +387,156 @@ public class GameController {
         System.out.println(User.getTurnUser().getUsername());
         System.out.println(User.getTurnUser().getOpponentUser().getUsername());
         System.out.println(hBoxes.get(0));
-        if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) > getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3))) {
-            if (User.getTurnUser().getOpponentUser().isFullHealth())
+        Card monster1 = null;
+        Card monster2 = null;
+        double totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+        double totalPoints2 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
+        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
+        if (totalPoints1 > totalPoints2) {
+            if (User.getTurnUser().getOpponentUser().isFullHealth()){
                 User.getTurnUser().getOpponentUser().setFullHealth(false);
+                if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
+                    northernRealms(User.getTurnUser());
+                }
+            }
+            else System.exit(0);
+        } else if (totalPoints1 < totalPoints2) {
+            if (User.getTurnUser().isFullHealth()) {
+                if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("NorthernRealms")) {
+                    northernRealms(User.getTurnUser().getOpponentUser());
+                }
+                User.getTurnUser().setFullHealth(false);
+            }
             else System.exit(0);
         } else {
-            if (User.getTurnUser().isFullHealth())
-                User.getTurnUser().setFullHealth(false);
-            else System.exit(0);
+            if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
+                if (!User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
+                    if (User.getTurnUser().getOpponentUser().isFullHealth())
+                        User.getTurnUser().getOpponentUser().setFullHealth(false);
+                    else System.exit(0);
+                }
+            }
+            if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
+                if (!User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
+                    if (User.getTurnUser().getOpponentUser().isFullHealth())
+                        User.getTurnUser().getOpponentUser().setFullHealth(false);
+                    else System.exit(0);
+                }
+            }
         }
+        if (User.getTurnUser().getFaction().getName().equals("Monsters")) {
+            monster1 = monstersAction(hBoxes.subList(0,3));
+        }
+        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")){
+            monster2 = monstersAction(hBoxes.subList(3,6));
+        }
+        if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
+            skelligeAction(User.getTurnUser());
+        }
+        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")){
+            skelligeAction(User.getTurnUser().getOpponentUser());
+        }
+        turnStarter();
         for (HBox hBox : hBoxes)
             hBox.getChildren().clear();
+        if (monster1 != null) {
+            if (monster1.getType().equals("siegeUnit")) {
+                hBoxes.get(2).getChildren().add(monster1);
+            } else if (monster1.getType().equals("rangedUnit")) {
+                hBoxes.get(1).getChildren().add(monster1);
+            } else {
+                hBoxes.get(0).getChildren().add(monster1);
+            }
+        }
+        if (monster2 != null) {
+            if (monster2.getType().equals("siegeUnit")) {
+                hBoxes.get(5).getChildren().add(monster2);
+            } else if (monster2.getType().equals("rangedUnit")) {
+                hBoxes.get(4).getChildren().add(monster2);
+            } else {
+                hBoxes.get(3).getChildren().add(monster2);
+            }
+        }
         setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreImage);
 
 
+    }
+
+    private static void skelligeAction(User user) {
+        if (user.getActiveGame().getSecondRoundPointMe() > -0.9) {
+            for (int i = 0;i < 2; i++) {
+                Random random = new Random();
+                int rand = random.nextInt(0,user.getDeck().size());
+                Card card = user.getDeck().get(rand);
+                user.getDeck().remove(card);
+                user.getBoard().getHand().add(card);
+            }
+        }
+    }
+
+    private static Card monstersAction(List<HBox> hBoxes) {
+        ArrayList<Card> allCards = new ArrayList<>();
+        for (Node node : hBoxes.get(0).getChildren()) {
+            Card card = (Card) node;
+            if (card.getType().equals("special") || card.getType().equals("weather")) {
+                continue;
+            }
+            allCards.add(card);
+        }
+        for (Node node : hBoxes.get(1).getChildren()) {
+            Card card = (Card) node;
+            if (card.getType().equals("special") || card.getType().equals("weather")) {
+                continue;
+            }
+            allCards.add(card);
+        }
+        for (Node node : hBoxes.get(2).getChildren()) {
+            Card card = (Card) node;
+            if (card.getType().equals("spell") || card.getType().equals("weather"))
+                continue;
+            allCards.add(card);
+        }
+        Random random = new Random();
+        return allCards.get(random.nextInt(0, allCards.size()));
+    }
+
+
+    private static void calculatePoints(User user,double userPoints, double opponentPoints) {
+        if (user.getActiveGame().getFirstRoundPointMe() < 0) {
+            user.getActiveGame().setFirstRoundPointMe(userPoints);
+            user.getActiveGame().setFirstRoundPointOpponent(opponentPoints);
+        } else if (user.getActiveGame().getSecondRoundPointMe() < 0) {
+            user.getActiveGame().setSecondRoundPointMe(userPoints);
+            user.getActiveGame().setSecondRoundPointOpponent(opponentPoints);
+        } else {
+            user.getActiveGame().setThirdRoundPointMe(userPoints);
+            user.getActiveGame().setThirdRoundPointOpponent(opponentPoints);
+        }
+    }
+
+    private static void northernRealms(User user) {
+        Random random = new Random();
+        int rand = random.nextInt(0,user.getDeck().size());
+        Card card = user.getDeck().get(rand);
+        user.getDeck().remove(card);
+        user.getBoard().getHand().add(card);
+    }
+    public static void turnStarter() {
+        if (User.getLoggedUser().getFaction().getName().equals("ScoiaTeal") &&
+                !User.getLoggedUser().getOpponentUser().getFaction().getName().equals("ScoiaTeal")) {
+            User.setTurnUser(User.getLoggedUser());
+        } else if (!User.getLoggedUser().getFaction().getName().equals("ScoiaTeal") &&
+                User.getLoggedUser().getOpponentUser().getFaction().getName().equals("ScoiaTeal")) {
+            User.setTurnUser(User.getLoggedUser().getOpponentUser());
+        } else {
+            Random random = new Random();
+            boolean loggedUser = random.nextBoolean();
+            if (loggedUser) {
+                User.setTurnUser(User.getLoggedUser());
+            } else {
+                User.setTurnUser(User.getLoggedUser().getOpponentUser());
+            }
+        }
     }
 }

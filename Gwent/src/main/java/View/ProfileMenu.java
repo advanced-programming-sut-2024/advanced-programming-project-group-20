@@ -96,7 +96,7 @@ public class ProfileMenu extends Application {
         TableColumn<GameHistory, String> winner = new TableColumn<>("Winner");
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
 
-        for (GameHistory gameHistory: GameHistory.getGameHistories()){
+        for (GameHistory gameHistory: User.getLoggedUser().getGameHistories()){
             tableView.setItems(null);
         }
         collectionContent.getChildren().add(tableView);
