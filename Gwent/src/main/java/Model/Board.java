@@ -3,18 +3,21 @@ package Model;
 import javafx.animation.Timeline;
 import javafx.scene.layout.HBox;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
-    private HBox siege =new HBox();
-    private HBox ranged  =new HBox();
-    private HBox closeCombat =new HBox() ;
+public class Board implements Serializable {
+    transient private HBox siege =new HBox();
+    transient private HBox ranged  =new HBox();
+    transient private HBox closeCombat =new HBox() ;
     private ArrayList<Card> burnedCard = new ArrayList<>();
     private ArrayList<Card> hand =new ArrayList<>();
     private Card spell;
     private Leader leader;
     private Card weatherCard;
-
 
     public HBox getSiege() {
         return siege;

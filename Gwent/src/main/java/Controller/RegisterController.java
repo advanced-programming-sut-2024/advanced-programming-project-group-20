@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.Board;
 import Model.User;
 import View.LoginMenu;
 import View.PrivateFieldAdapter;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -149,11 +151,11 @@ public class RegisterController {
         RegisterMenu.root.getChildren().add(button1);
     }
 
-    private static void saveTheUserInGson(ArrayList<User> list) {
+    private static void saveTheUserInGson(User user) {
 
 //        File file = new File("users.json");
 ////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        User user = new User("f", "f", "f", "f","f", "f");
+//        User user = new User("f", "f", "f", "f","f", "f");
 ////        Gson gson= new Gson();
 //        Gson gson = new GsonBuilder()
 //                .registerTypeAdapter(User.class, new PrivateFieldAdapter())
@@ -164,14 +166,41 @@ public class RegisterController {
 //        } catch (FileNotFoundException e) {
 //            e.printStackTrace();
 //        }
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        System.out.println(json);
-
+//        Gson gson = new Gson();
+//        String json = gson.toJson(user);
+//        System.out.println(json);
+//
+//        try (FileWriter writer = new FileWriter("users.json")) {
+//            gson.toJson(user, writer);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        Field[] fields= User.class.getDeclaredFields();
+//for (Field field: fields){
+//    field.setAccessible(true);
+//}
         try (FileWriter writer = new FileWriter("users.json")) {
             gson.toJson(user, writer);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        // Serialization
+        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("user.ser"))) {
+            outputStream.writeObject(user);
+            System.out.println("User object has been saved to user.ser");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Deserialization
+        User restoredUser = null;
+        try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("user.ser"))) {
+            restoredUser = (User) inputStream.readObject();
+            System.out.println("Username: " + restoredUser.getUsername());
+            System.out.println("Password: " + restoredUser.getPassword()); // Password will be null due to transient keyword
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -180,8 +209,9 @@ public class RegisterController {
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-//        saveTheUserInGson(User.getAllUsers());
+        saveTheUserInGson(user);
 //        user.saveUserToJSon();
+//        Board.serializeUser(user, "users.ser");
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

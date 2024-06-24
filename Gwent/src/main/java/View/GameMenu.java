@@ -117,13 +117,6 @@ public class GameMenu extends Application {
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-<<<<<<< HEAD
-                if (!User.getTurnUser().getOpponentUser().isPassed()&& GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
-                    GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
-                    Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2),actionEvent->putCardInDeck()));
-                    waitForChangeTurn.setCycleCount(1);
-                    waitForChangeTurn.play();
-=======
 
                 if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage,latch)) {
                     putCardInDeck();
@@ -134,7 +127,6 @@ public class GameMenu extends Application {
                     waitForChangeTurn.play();
                     GameController.timelines.add(waitForChangeTurn);
                     GameController.updateBorder(hBoxes);
->>>>>>> 6f5d8cc20bb54efbe82ac2ce34f32c51531be283
                 }
             });
         }
