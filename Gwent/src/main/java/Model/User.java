@@ -9,6 +9,7 @@ public class User {
 //    @SerializedName("board")
     public Board board = new Board();
 //    @SerializedName("username")
+    private GameHistory activeGame;
     private String username;
     private String password;
     private String nickName;
@@ -17,7 +18,6 @@ public class User {
     private Faction faction;
     private Leader leader;
     private User opponentUser;
-    private ArrayList<Card> totalCards= new ArrayList<>();
     private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
     private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
     private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
@@ -40,6 +40,7 @@ public class User {
 
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
+        this.activeGame = null;
         this.username = username;
         this.password = password;
         this.nickName = nickName;
@@ -50,6 +51,14 @@ public class User {
         this.secureAnswer = secureAnswer;
         allUsers.add(this);
         numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
+    }
+
+    public GameHistory getActiveGame() {
+        return activeGame;
+    }
+
+    public void setActiveGame(GameHistory activeGame) {
+        this.activeGame = activeGame;
     }
 
     public static User giveUserByUsername(String username) {
@@ -156,14 +165,6 @@ public class User {
 
     public void setOpponentUser(User opponentUser) {
         this.opponentUser = opponentUser;
-    }
-
-    public ArrayList<Card> getTotalCards() {
-        return totalCards;
-    }
-
-    public void setTotalCards(ArrayList<Card> totalCards) {
-        this.totalCards = totalCards;
     }
 
     public ArrayList<ArrayList<Card>> getDecks() {

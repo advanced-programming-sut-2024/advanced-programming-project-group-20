@@ -1,13 +1,14 @@
 package Model;
 
+import javafx.animation.Timeline;
 import javafx.scene.layout.HBox;
 
 import java.util.ArrayList;
 
 public class Board {
-    private HBox siege ;
-    private HBox ranged ;
-    private HBox closeCombat ;
+    private HBox siege =new HBox();
+    private HBox ranged  =new HBox();
+    private HBox closeCombat =new HBox() ;
     private ArrayList<Card> burnedCard = new ArrayList<>();
     private ArrayList<Card> hand =new ArrayList<>();
     private Card spell;

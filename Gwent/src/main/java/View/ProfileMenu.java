@@ -115,9 +115,15 @@ tableView.setPrefWidth(1230);
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         tableView.getColumns().add(winner);
 
+<<<<<<< HEAD
 //        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
 //            tableView.setItems(null);
 //        }
+=======
+        for (GameHistory gameHistory: User.getLoggedUser().getGameHistories()){
+            tableView.setItems(null);
+        }
+>>>>>>> 6f5d8cc20bb54efbe82ac2ce34f32c51531be283
         collectionContent.getChildren().add(tableView);
         scrollOfHistory.setContent(collectionContent);
     }

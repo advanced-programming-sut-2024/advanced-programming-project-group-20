@@ -4,13 +4,14 @@ import java.util.Date;
 
 public class GameHistory {
     private String winnerName;
+
     private String opponentName;
-    private double firstRoundPointMe;
-    private double firstRoundPointOpponent;
-    private double secondRoundPointMe;
-    private double secondRoundPointOpponent;
-    private double thirdRoundPointMe;
-    private double thirdRoundPointOpponent;
+    private double firstRoundPointMe = -1;
+    private double firstRoundPointOpponent = -1;
+    private double secondRoundPointMe = -1;
+    private double secondRoundPointOpponent = -1;
+    private double thirdRoundPointMe = -1;
+    private double thirdRoundPointOpponent = -1;
     private double totalPointsMe;
     private double totalPointsOpponent;
     private Date date;
@@ -24,7 +25,6 @@ public class GameHistory {
         totalPointsMe = firstRoundPointMe + secondRoundPointMe + totalPointsMe;
         totalPointsOpponent = firstRoundPointOpponent + secondRoundPointOpponent + totalPointsOpponent;
     }
-
 
     private double sumOfPoints(User user) {
         return 0;
@@ -60,6 +60,30 @@ public class GameHistory {
 
     public double getThirdRoundPointOpponent() {
         return thirdRoundPointOpponent;
+    }
+
+    public void setThirdRoundPointOpponent(double thirdRoundPointOpponent) {
+        this.thirdRoundPointOpponent = thirdRoundPointOpponent;
+    }
+
+    public void setFirstRoundPointMe(double firstRoundPointMe) {
+        this.firstRoundPointMe = firstRoundPointMe;
+    }
+
+    public void setFirstRoundPointOpponent(double firstRoundPointOpponent) {
+        this.firstRoundPointOpponent = firstRoundPointOpponent;
+    }
+
+    public void setSecondRoundPointMe(double secondRoundPointMe) {
+        this.secondRoundPointMe = secondRoundPointMe;
+    }
+
+    public void setSecondRoundPointOpponent(double secondRoundPointOpponent) {
+        this.secondRoundPointOpponent = secondRoundPointOpponent;
+    }
+
+    public void setThirdRoundPointMe(double thirdRoundPointMe) {
+        this.thirdRoundPointMe = thirdRoundPointMe;
     }
 
     public Date getDate() {

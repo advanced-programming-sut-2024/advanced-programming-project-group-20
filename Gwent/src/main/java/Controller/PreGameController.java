@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class PreGameController {
@@ -87,7 +88,9 @@ public class PreGameController {
 
 
     public void startGame() throws Exception {
-        User.setTurnUser(User.getLoggedUser());
+        GameController.turnStarter();
+        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(),new Date()));
+        User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(),new Date()));
         GameMenu gameMenu = new GameMenu();
         gameMenu.start(ApplicationController.getStage());
     }

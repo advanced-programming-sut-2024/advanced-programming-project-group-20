@@ -19,6 +19,7 @@ public class Card extends Pane {
     private Faction faction;
     private int numberOfCartInGame;
     private Image image;
+    private Image gameImage;
     private boolean isSelect =false;
     private boolean isInDeck = true;
 
@@ -37,7 +38,12 @@ public class Card extends Pane {
         } else {
             this.image = new Image(String.valueOf(Card.class.getResource("/Cards/" + "Neutral" + "/" + name + ".jpg")));
         }
-        Rectangle rectangle = new Rectangle(70,100,new ImagePattern(image));
+        if (faction != null) {
+            this.gameImage = new Image(String.valueOf(Card.class.getResource("/gameCards/" + faction.getName() + "/" + name + ".jpg")));
+        } else {
+            this.gameImage = new Image(String.valueOf(Card.class.getResource("/gameCards/" + "Neutral" + "/" + name + ".jpg")));
+        }
+        Rectangle rectangle = new Rectangle(70,100,new ImagePattern(gameImage));
         this.getChildren().add(rectangle);
         this.getChildren().add(new Label(String.valueOf(this.getPower())));
         ((Label)this.getChildren().get(1)).setFont(new Font("Agency FB Bold",20));
@@ -110,6 +116,14 @@ public class Card extends Pane {
 
     public void setNumberOfCartInGame(int numberOfCartInGame) {
         this.numberOfCartInGame = numberOfCartInGame;
+    }
+
+    public Image getGameImage() {
+        return gameImage;
+    }
+
+    public void setGameImage(Image gameImage) {
+        this.gameImage = gameImage;
     }
 
     public Image getImage() {
