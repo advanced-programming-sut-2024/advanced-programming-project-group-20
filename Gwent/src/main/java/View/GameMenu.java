@@ -120,7 +120,6 @@ public class GameMenu extends Application {
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-
                 System.out.println(0);
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
                     System.out.println(1);

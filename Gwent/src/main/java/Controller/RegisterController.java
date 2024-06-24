@@ -159,6 +159,7 @@ public class RegisterController {
     private static void saveTheUserInGson(User user) {
 
 
+
 //        File file = new File("users.json");
 ////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 //        User user = new User("f", "f", "f", "f","f", "f");
