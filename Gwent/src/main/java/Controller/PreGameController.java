@@ -38,6 +38,11 @@ public class PreGameController {
     public void initialize() {
         updateData();
         setContents();
+        showIcons();
+    }
+
+    private void showIcons() {
+        
     }
 
     private void setContents() {
@@ -93,11 +98,11 @@ public class PreGameController {
         TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(418);
         collectionContent.setMinHeight(600);
-        collectionContent.setStyle("-fx-background-color: #c0f305");
+        collectionContent.setStyle("-fx-background-color: #161716");
         TilePane deckContent = new TilePane(5, 5);
         deckContent.setMinHeight(600);
         deckContent.setPrefWidth(418);
-        deckContent.setStyle("-fx-background-color: #05f3b4");
+        deckContent.setStyle("-fx-background-color: #161716");
         ArrayList<Card> allCards = neutral.getCollection();
         allCards.addAll(faction.getCollection());
         for (Card card : allCards) {

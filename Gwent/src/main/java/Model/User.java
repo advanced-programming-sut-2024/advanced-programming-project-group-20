@@ -5,7 +5,10 @@ import Model.Factions.Nilfgaard;
 import java.util.ArrayList;
 
 public class User {
-    private Board board;
+    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+//    @SerializedName("board")
+    public Board board = new Board();
+//    @SerializedName("username")
     private String username;
     private String password;
     private String nickName;
@@ -19,7 +22,6 @@ public class User {
     private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
     private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
     private ArrayList<Card> deck = new ArrayList<>();
-    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
