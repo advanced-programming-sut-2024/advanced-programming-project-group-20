@@ -23,7 +23,6 @@ import java.util.concurrent.CountDownLatch;
 
 
 public class GameController {
-public static ArrayList<Timeline> timelines = new ArrayList<>();
 
 
     public static void setImagesOfBoard(User user, ArrayList<HBox> hBoxes, ImageView highScoreIcon) {
@@ -296,7 +295,6 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         }));
         waitForChange.setCycleCount(1);
         waitForChange.play();
-        timelines.add(waitForChange);
     }
 
     private static void swapHboxes(int hbox1, int hbox2, ArrayList<HBox> hBoxes) {
@@ -320,7 +318,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static boolean placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon, CountDownLatch latch) {
+    public static boolean placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
             Card card = cardIterator.next();
             System.out.println(card.getName());
@@ -536,6 +534,12 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
     public static void updateBorder(ArrayList<HBox> hBoxes) {
+        User.getTurnUser().getBoard().setSiege(new ArrayList<>());
+        User.getTurnUser().getBoard().setRanged(new ArrayList<>());
+        User.getTurnUser().getBoard().setCloseCombat(new ArrayList<>());
+        User.getTurnUser().getOpponentUser().getBoard().setSiege(new ArrayList<>());
+        User.getTurnUser().getOpponentUser().getBoard().setRanged(new ArrayList<>());
+        User.getTurnUser().getOpponentUser().getBoard().setCloseCombat(new ArrayList<>());
         for (Node node:hBoxes.get(0).getChildren())
             User.getTurnUser().getBoard().getSiege().add((Card) node);
         for (Node node:hBoxes.get(1).getChildren())

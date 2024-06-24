@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
 
@@ -34,8 +35,6 @@ public class AbilityActions {
     }
 
     public static void medic() {
-        for (Timeline timeline : GameController.timelines)
-            timeline.stop();
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
         HBox hBox = new HBox();
@@ -48,22 +47,20 @@ public class AbilityActions {
         root.getChildren().add(hBox);
         for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
             if (card.getAbility() == null || !(card.getAbility().equals("hero") || card.getType().equals("weather") || card.getType().equals("spell"))) {
+                System.out.println(card.getName());
                 if (!hBox.getChildren().contains(card))
                     hBox.getChildren().add(card);
-                System.out.println(card.getName());
-                card.getChildren().get(0).setScaleX(2.5);
-                card.getChildren().get(0).setScaleY(2.5);
+                setSizeSmaller(card,2.5);
                 card.setOnMouseClicked(mouseEvent -> {
-                    for (Timeline timeline : GameController.timelines)
-                        timeline.play();
+                    card.setInDeck(true);
+                    card.setSelect(false);
                     root.getChildren().remove(hBox);
                     User.getTurnUser().getBoard().getBurnedCard().remove(card);
                     User.getTurnUser().getBoard().getHand().add(card);
                     card.setOnMouseClicked(null);
                     for (Node node : hBox.getChildren()) {
-                        if (((Pane) node).getChildren().get(0).getScaleX() > 1) {
-                            node.setScaleX(0.4);
-                            node.setScaleY(0.4);
+                        if (((Pane) node).getHeight()>100) {
+                          setSizeSmaller((Card) node,0.4);
                         }
                     }
                     ApplicationController.setEnable(root);
@@ -72,8 +69,13 @@ public class AbilityActions {
                 });
             }
         }
-
-
+    }
+    private static void setSizeSmaller(Card card , double scale) {
+        card.setPrefWidth(card.getPrefWidth() *scale);
+        card.setPrefHeight(card.getPrefHeight() *scale);
+        ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * scale);
+        ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * scale);
+        card.setSelect(false);
     }
 
     public static void moralBoost() {

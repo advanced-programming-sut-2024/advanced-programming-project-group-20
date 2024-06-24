@@ -120,11 +120,8 @@ public class GameMenu extends Application {
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-                System.out.println(0);
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
-                    System.out.println(1);
-                    if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage, latch)) {
-                        System.out.println(2);
+                    if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
                         putCardInDeck();
                             User.getTurnUser().getBoard().setHasPlayedOne(true);
                         nextTurn.setOnMouseClicked(event2 -> {
@@ -134,7 +131,6 @@ public class GameMenu extends Application {
                                 Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
                                 waitForChangeTurn.setCycleCount(1);
                                 waitForChangeTurn.play();
-                                GameController.timelines.add(waitForChangeTurn);
                                 GameController.updateBorder(hBoxes);
                                 User.getTurnUser().getBoard().setHasPlayedOne(false);
                             }
