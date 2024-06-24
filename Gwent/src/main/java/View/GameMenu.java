@@ -21,6 +21,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     @FXML
@@ -38,6 +39,9 @@ public class GameMenu extends Application {
     public HBox spellHbox;
     public ImageView highScoreImage;
     public Label turnLabel;
+    public ImageView turnBurnt;
+    public ImageView opponentBurnt;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     ArrayList<HBox> hBoxes = new ArrayList<>();
 
@@ -63,17 +67,11 @@ public class GameMenu extends Application {
         stage.setWidth(1600);
         ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
-
+        System.out.println(turnSiege);
     }
 
     @FXML
     public void initialize() {
-        //todo remove
-//        Card card=User.getTurnUser().getDeck().getFirst();
-//        card.setLayoutX(1000);
-//        card.setLayoutY(500);
-//        pane.getChildren().add(card);
-        //todo remove
         pane.getChildren().remove(passedLabel);
         pane.getChildren().remove(turnLabel);
         passedLabel.setId("no");
@@ -95,23 +93,19 @@ public class GameMenu extends Application {
         hBoxes.add(opponentRanged);
         hBoxes.add(opponentSiege);
         hBoxes.add(spellHbox);
-        User.getTurnUser().getBoard().setSiege(turnSiege);
-        User.getTurnUser().getBoard().setRanged(turnRanged);
-        User.getTurnUser().getBoard().setCloseCombat(turnCombat);
-        User.getTurnUser().getOpponentUser().getBoard().setSiege(opponentSiege);
-        User.getTurnUser().getOpponentUser().getBoard().setRanged(opponentRanged);
-        User.getTurnUser().getOpponentUser().getBoard().setCloseCombat(opponentCombat);
+
     }
 
     public void putCardInDeck() {
         ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
+        deckHbox.getChildren().clear();
         for (Card card : User.getTurnUser().getBoard().getHand()) {
             deckHbox.getChildren().add(card);
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
-                GameController.putCardInDeck(hBoxes, deckHbox, card, hand);
+                GameController.putCardInDeck(hBoxes, deckHbox, card, hand, turnBurnt, opponentBurnt);
             });
 
         }
@@ -122,12 +116,15 @@ public class GameMenu extends Application {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
 
-                if (!User.getTurnUser().getOpponentUser().isPassed()&& GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage)) {
-                    GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
-                    Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2),actionEvent->putCardInDeck()));
+                if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage,latch)) {
+                    putCardInDeck();
+                    if (!User.getTurnUser().getOpponentUser().isPassed())
+                        GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+                    Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
                     waitForChangeTurn.setCycleCount(1);
                     waitForChangeTurn.play();
-
+                    GameController.timelines.add(waitForChangeTurn);
+                    GameController.updateBorder(hBoxes);
                 }
             });
         }
@@ -136,15 +133,14 @@ public class GameMenu extends Application {
 
     public void passTurn() {
         if (!User.getTurnUser().getOpponentUser().isPassed()) {
+            putCardInDeck();
             User.getTurnUser().setPassed(true);
             GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
             ApplicationController.getRoot().getChildren().add(passedLabel);
-            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2)));
+            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
             waitForChangeTurn.setCycleCount(1);
             waitForChangeTurn.play();
 
-            if (waitForChangeTurn.getCurrentRate() == 0)
-                putCardInDeck();
         } else {
             ApplicationController.getRoot().getChildren().remove(passedLabel);
             User.getTurnUser().getOpponentUser().setPassed(false);

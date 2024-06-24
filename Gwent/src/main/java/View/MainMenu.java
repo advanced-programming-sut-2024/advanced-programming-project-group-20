@@ -8,6 +8,7 @@ import Model.CardBuilder;
 import Model.Faction;
 import Model.CardBuilder;
 import Model.Factions.Monsters;
+import Model.Factions.ScoiaTael;
 import Model.Factions.Skellige;
 import Model.User;
 import javafx.application.Application;
@@ -19,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import java.util.concurrent.CountDownLatch;
 
 import java.net.URL;
 
@@ -78,21 +80,21 @@ public class MainMenu extends Application {
 
 
     public void directToGameMenu(MouseEvent mouseEvent) {
-        Skellige skellige = new Skellige();
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Svanrige", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("Udalryk", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("DonarAnHindar", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("WarLongship", skellige));
-        User.getLoggedUser().getDeck().add(CardBuilder.skellige("DraigBon-Dhu", skellige));
+        ScoiaTael scoiaTael = new ScoiaTael();
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Ciaranaep", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Eithne", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Seasenthessis", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("DennisCranmer", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Schirru", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarSmuggler", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarSmuggler", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarSmuggler", scoiaTael));
 
         Monsters monsters = new Monsters();
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
