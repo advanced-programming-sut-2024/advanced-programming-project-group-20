@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GameMenu">
-   <ImageView fitHeight="890" fitWidth="1540">
+   <ImageView  fitHeight="890" fitWidth="1540">
       <Image url="@../someImages/board.jpg">
 
       </Image>
@@ -45,6 +45,11 @@
    </Label>
    <ImageView fx:id="turnBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="688.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="opponentBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true" />
+   <Button fx:id="nextTurn" alignment="CENTER" contentDisplay="CENTER" layoutX="241.0" layoutY="82.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="110.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="next player" textAlignment="CENTER" textFill="#d0ef04">
+      <font>
+         <Font name="Agency FB Bold" size="20.0" />
+      </font>
+   </Button>
 
 
 </AnchorPane>

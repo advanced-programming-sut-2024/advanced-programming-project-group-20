@@ -180,7 +180,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     }
 
 
-    public static void putCardInDeck(ArrayList<HBox> hBoxes, HBox deckHbox, Card card, ArrayList<Card> hand, ImageView turnBurnt, ImageView opponentBurnt) {
+    public static void putCardInDeck(ArrayList<HBox> hBoxes, HBox deckHbox, Card card, ArrayList<Card> hand) {
         if (!card.isSelect() && card.isInDeck()) {
             boolean isAnySelected = false;
             for (Card card1 : hand) {
@@ -208,10 +208,10 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
                 setSizeSmaller(card);
             }
         }
-        setBurntCard(turnBurnt, opponentBurnt);
+
     }
 
-    private static void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
+    public static void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
         if (!User.getTurnUser().getBoard().getBurnedCard().isEmpty()) {
             turnBurnt.setImage(User.getTurnUser().getBoard().getBurnedCard().getLast().getGameImage());
             if (!User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().isEmpty()) {
@@ -288,13 +288,11 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
         fadeTransition.play();
         Timeline waitForChange = new Timeline(new KeyFrame(Duration.seconds(1.8), actionEvent -> {
             User.setTurnUser(User.getTurnUser().getOpponentUser());
-//            deckHbox.getChildren().clear();
             swapHboxes(0, 5, hBoxes);
             swapHboxes(1, 4, hBoxes);
             swapHboxes(2, 3, hBoxes);
             GameController.setImagesOfBoard(User.getTurnUser(), hBoxes, highScoreIcon);
         }));
-        //todo chang to 1
         waitForChange.setCycleCount(1);
         waitForChange.play();
         timelines.add(waitForChange);
@@ -324,7 +322,12 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     public static boolean placeCard(ArrayList<HBox> hBoxes, HBox deckHbox, HBox hBox, ImageView highScoreIcon, CountDownLatch latch) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
             Card card = cardIterator.next();
+            System.out.println(card.getName());
+            System.out.println(card.isSelect());
+            System.out.println(card.isInDeck());
+            System.out.println(!hBox.getStyle().isEmpty());
             if (card.isSelect() && card.isInDeck() && !hBox.getStyle().isEmpty()) {
+                System.out.println(2.5);
                 deckHbox.getChildren().remove(card);
                 hBox.getChildren().add(card);
                 hBox.setStyle(null);
@@ -351,18 +354,20 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
 
 
     public static void nextRound(ArrayList<HBox> hBoxes, ImageView highScoreImage) {
+        User.getTurnUser().getBoard().setHasPlayedOne(false);
+        User.getTurnUser().getOpponentUser().getBoard().setHasPlayedOne(false);
         System.out.println(User.getTurnUser().getUsername());
         System.out.println(User.getTurnUser().getOpponentUser().getUsername());
         System.out.println(hBoxes.get(0));
         Card monster1 = null;
         Card monster2 = null;
         double totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
-        double totalPoints2 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
-        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
-        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
+        double totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
+        // todo un commment them
+//        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
+//        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
         if (totalPoints1 > totalPoints2) {
             if (User.getTurnUser().getOpponentUser().isFullHealth()){
-
                 User.getTurnUser().getOpponentUser().setFullHealth(false);
                 if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser());
@@ -406,7 +411,6 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
             skelligeAction(User.getTurnUser().getOpponentUser());
         }
         turnStarter();
-
 
         putInBurntCards(User.getTurnUser());
         putInBurntCards(User.getTurnUser().getOpponentUser());
@@ -516,27 +520,34 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     private static void putInBurntCards(User user) {
         if (user.getBoard().getSiege() != null){
             System.out.println("no null siege");
-            for (Node node : user.getBoard().getSiege().getChildren())
-                user.getBoard().getBurnedCard().add((Card) node);}
+            for (Card card : user.getBoard().getSiege())
+                user.getBoard().getBurnedCard().add((Card) card);}
         if (user.getBoard().getRanged() != null) {
             System.out.println("no null siege");
-            for (Node node : user.getBoard().getRanged().getChildren())
-                user.getBoard().getBurnedCard().add((Card) node);
+            for (Card card : user.getBoard().getRanged())
+                user.getBoard().getBurnedCard().add((Card) card);
         }
         if (user.getBoard().getCloseCombat() != null) {
             System.out.println("no null siege");
-            for (Node node : user.getBoard().getCloseCombat().getChildren())
-                user.getBoard().getBurnedCard().add((Card) node);
+            for (Card card : user.getBoard().getCloseCombat())
+                user.getBoard().getBurnedCard().add((Card) card);
         }
     }
 
     public static void updateBorder(ArrayList<HBox> hBoxes) {
-        User.getTurnUser().getBoard().setSiege(hBoxes.get(0));
-        User.getTurnUser().getBoard().setRanged(hBoxes.get(1));
-        User.getTurnUser().getBoard().setCloseCombat(hBoxes.get(2));
-        User.getTurnUser().getOpponentUser().getBoard().setCloseCombat(hBoxes.get(3));
-        User.getTurnUser().getOpponentUser().getBoard().setRanged(hBoxes.get(4));
-        User.getTurnUser().getOpponentUser().getBoard().setSiege(hBoxes.get(5));
+        for (Node node:hBoxes.get(0).getChildren())
+            User.getTurnUser().getBoard().getSiege().add((Card) node);
+        for (Node node:hBoxes.get(1).getChildren())
+            User.getTurnUser().getBoard().getRanged().add((Card) node);
+        for (Node node:hBoxes.get(2).getChildren())
+            User.getTurnUser().getBoard().getRanged().add((Card) node);
+        for (Node node:hBoxes.get(3).getChildren())
+            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add((Card) node);
+        for (Node node:hBoxes.get(4).getChildren())
+            User.getTurnUser().getOpponentUser().getBoard().getRanged().add((Card) node);
+        for (Node node:hBoxes.get(5).getChildren())
+            User.getTurnUser().getOpponentUser().getBoard().getSiege().add((Card) node);
+
 
     }
 }

@@ -12,6 +12,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
+    public Button nextTurn;
     @FXML
     private ImageView activeLeader;
     public Label passedLabel;
@@ -103,31 +105,42 @@ public class GameMenu extends Application {
         ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         deckHbox.getChildren().clear();
-        for (Card card : User.getTurnUser().getBoard().getHand()) {
+        for (Card card : hand) {
             deckHbox.getChildren().add(card);
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
-                GameController.putCardInDeck(hBoxes, deckHbox, card, hand, turnBurnt, opponentBurnt);
+                GameController.putCardInDeck(hBoxes, deckHbox, card, hand);
             });
 
         }
+            GameController.setBurntCard(turnBurnt, opponentBurnt);
     }
 
 
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-
-                if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage,latch)) {
-                    putCardInDeck();
-                    if (!User.getTurnUser().getOpponentUser().isPassed())
-                        GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
-                    Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
-                    waitForChangeTurn.setCycleCount(1);
-                    waitForChangeTurn.play();
-                    GameController.timelines.add(waitForChangeTurn);
-                    GameController.updateBorder(hBoxes);
+                System.out.println(0);
+                if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
+                    System.out.println(1);
+                    if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage, latch)) {
+                        System.out.println(2);
+                        putCardInDeck();
+                            User.getTurnUser().getBoard().setHasPlayedOne(true);
+                        nextTurn.setOnMouseClicked(event2 -> {
+                            if (User.getTurnUser().getBoard().isHasPlayedOne()) {
+                                if (!User.getTurnUser().getOpponentUser().isPassed())
+                                    GameController.changeTurn(deckHbox, hBoxes, highScoreImage, turnLabel);
+                                Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
+                                waitForChangeTurn.setCycleCount(1);
+                                waitForChangeTurn.play();
+                                GameController.timelines.add(waitForChangeTurn);
+                                GameController.updateBorder(hBoxes);
+                                User.getTurnUser().getBoard().setHasPlayedOne(false);
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -149,6 +162,7 @@ public class GameMenu extends Application {
             User.getTurnUser().getOpponentUser().setPassed(false);
             User.getTurnUser().setPassed(false);
             GameController.nextRound(hBoxes, highScoreImage);
+            putCardInDeck();
         }
     }
 

@@ -3,10 +3,17 @@ package Controller;
 import Model.User;
 import View.LoginMenu;
 import View.RegisterMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -146,33 +153,12 @@ public class RegisterController {
     }
 
     private static void saveTheUserInGson(ArrayList<User> list) {
-//        File file = new File("users.json");
-//        try {
-//            if (!file.exists()) {
-//                if (file.createNewFile()) {
-//                    System.out.println("File '" + file.getName() + "' created successfully");
-//                } else {
-//                    System.out.println("Failed to create file '" + file.getName() + "'");
-//                }
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(User.class, new UserSerializer())
-//                .create();
-//        String json = gson.toJson(list);
-//        try {
-//            if (Files.readString(file.toPath()).equals(json)) return;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        try (PrintWriter pw = new PrintWriter(file)) {
-//            pw.write(json);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
+Gson gson = new Gson();
+String a =gson.toJson(new User("1","1","2","@","1","5"));
+        String json = gson.toJson(list);
+        System.out.println(json);
+
     }
 
 
