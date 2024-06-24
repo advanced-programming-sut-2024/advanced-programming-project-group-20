@@ -21,13 +21,12 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 
-
 public class GameController {
 
-public static ArrayList<Timeline> timelines = new ArrayList<>();
-private static ArrayList<HBox> hBoxes;
-private static ImageView highScoreIcon;
-private static HBox deckHbox;
+    public static ArrayList<Timeline> timelines = new ArrayList<>();
+    private static ArrayList<HBox> hBoxes;
+    private static ImageView highScoreIcon;
+    private static HBox deckHbox;
 
 
     public static void setHighScoreIcon(ImageView highScoreIcon) {
@@ -212,7 +211,7 @@ private static HBox deckHbox;
                 }
             }
             if (!isAnySelected) {
-                if (getHbox(card) >= 10 )
+                if (getHbox(card) >= 10)
                     hBoxes.get(getHbox(card) / 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                 card.setPrefWidth(card.getWidth() * 1.5);
                 card.setPrefHeight(card.getHeight() * 1.5);
@@ -230,7 +229,7 @@ private static HBox deckHbox;
                 if (getHbox(card) >= 10)
                     hBoxes.get(getHbox(card) / 10).setStyle(null);
                 if (!card.getName().equals("Decoy"))
-                hBoxes.get(getHbox(card) % 10).setStyle(null);
+                    hBoxes.get(getHbox(card) % 10).setStyle(null);
                 setSizeSmaller(card);
             }
         }
@@ -238,12 +237,13 @@ private static HBox deckHbox;
     }
 
     public static void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
-        if (!User.getTurnUser().getBoard().getBurnedCard().isEmpty()) {
+        if (!User.getTurnUser().getBoard().getBurnedCard().isEmpty())
             turnBurnt.setImage(User.getTurnUser().getBoard().getBurnedCard().getLast().getGameImage());
-            if (!User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().isEmpty()) {
-                opponentBurnt.setImage(User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().getLast().getGameImage());
-            }
-        }
+        else turnBurnt.setImage(null);
+        if (!User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().isEmpty())
+            opponentBurnt.setImage(User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().getLast().getGameImage());
+        else
+            opponentBurnt.setImage(null);
     }
 
     public static void setRandomHand(User user) {
@@ -340,6 +340,7 @@ private static HBox deckHbox;
             if (card.isSelect() && !hBox.getStyle().isEmpty()) {
                 User.getTurnUser().getBoard().getHand().remove(card);
                 targetArray.add(card);
+                card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
                 setImagesOfBoard(User.getTurnUser());
@@ -347,16 +348,18 @@ private static HBox deckHbox;
                     hBox1.setStyle(null);
                 AbilityActions.switchAction(card);
                 return true;
-            } else if (card.isSelect() && card.getName().equals("Decoy")) {
-                User.getTurnUser().getBoard().getHand().remove(card);
-                deckHbox.getChildren().remove(card);
-                setSizeSmaller(card);
-                setImagesOfBoard(User.getTurnUser());
-                for (HBox hBox1 : hBoxes)
-                    hBox1.setStyle(null);
-                AbilityActions.switchAction(card);
-                return true;
             }
+//            else if (card.isSelect() && card.getName().equals("Decoy")) {
+//                User.getTurnUser().getBoard().getHand().remove(card);
+//                deckHbox.getChildren().remove(card);
+//                setSizeSmaller(card);
+//                setImagesOfBoard(User.getTurnUser());
+//                for (HBox hBox1 : hBoxes)
+//                    hBox1.setStyle(null);
+//                AbilityActions.switchAction(card);
+//                card.setOnMouseClicked(null);
+//                return true;
+//            }
         }
         return false;
     }
@@ -402,21 +405,19 @@ private static HBox deckHbox;
 //        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
 //        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
         if (totalPoints1 > totalPoints2) {
-            if (User.getTurnUser().getOpponentUser().isFullHealth()){
+            if (User.getTurnUser().getOpponentUser().isFullHealth()) {
                 User.getTurnUser().getOpponentUser().setFullHealth(false);
                 if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser());
                 }
-            }
-            else System.exit(0);
+            } else System.exit(0);
         } else if (totalPoints1 < totalPoints2) {
             if (User.getTurnUser().isFullHealth()) {
                 if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser().getOpponentUser());
                 }
                 User.getTurnUser().setFullHealth(false);
-            }
-            else System.exit(0);
+            } else System.exit(0);
         } else {
             if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
@@ -434,15 +435,15 @@ private static HBox deckHbox;
             }
         }
         if (User.getTurnUser().getFaction().getName().equals("Monsters")) {
-            monster1 = monstersAction(hBoxes.subList(0,3));
+            monster1 = monstersAction(hBoxes.subList(0, 3));
         }
-        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")){
-            monster2 = monstersAction(hBoxes.subList(3,6));
+        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")) {
+            monster2 = monstersAction(hBoxes.subList(3, 6));
         }
         if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
             skelligeAction(User.getTurnUser());
         }
-        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")){
+        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")) {
             skelligeAction(User.getTurnUser().getOpponentUser());
         }
         turnStarter();
@@ -477,9 +478,9 @@ private static HBox deckHbox;
 
     private static void skelligeAction(User user) {
         if (user.getActiveGame().getSecondRoundPointMe() > -0.9) {
-            for (int i = 0;i < 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 Random random = new Random();
-                int rand = random.nextInt(0,user.getDeck().size());
+                int rand = random.nextInt(0, user.getDeck().size());
                 Card card = user.getDeck().get(rand);
                 user.getDeck().remove(card);
                 user.getBoard().getHand().add(card);
@@ -514,7 +515,7 @@ private static HBox deckHbox;
     }
 
 
-    private static void calculatePoints(User user,double userPoints, double opponentPoints) {
+    private static void calculatePoints(User user, double userPoints, double opponentPoints) {
         if (user.getActiveGame().getFirstRoundPointMe() < 0) {
             user.getActiveGame().setFirstRoundPointMe(userPoints);
             user.getActiveGame().setFirstRoundPointOpponent(opponentPoints);
@@ -529,11 +530,12 @@ private static HBox deckHbox;
 
     private static void northernRealms(User user) {
         Random random = new Random();
-        int rand = random.nextInt(0,user.getDeck().size());
+        int rand = random.nextInt(0, user.getDeck().size());
         Card card = user.getDeck().get(rand);
         user.getDeck().remove(card);
         user.getBoard().getHand().add(card);
     }
+
     public static void turnStarter() {
         if (User.getLoggedUser().getFaction().getName().equals("ScoiaTeal") &&
                 !User.getLoggedUser().getOpponentUser().getFaction().getName().equals("ScoiaTeal")) {
@@ -553,9 +555,10 @@ private static HBox deckHbox;
     }
 
     private static void putInBurntCards(User user) {
-        if (user.getBoard().getSiege() != null){
+        if (user.getBoard().getSiege() != null) {
             for (Card card : user.getBoard().getSiege())
-                user.getBoard().getBurnedCard().add((Card) card);}
+                user.getBoard().getBurnedCard().add((Card) card);
+        }
         if (user.getBoard().getRanged() != null) {
             for (Card card : user.getBoard().getRanged())
                 user.getBoard().getBurnedCard().add((Card) card);
