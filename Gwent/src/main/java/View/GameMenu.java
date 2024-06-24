@@ -4,6 +4,7 @@ import Controller.ApplicationController;
 import Controller.GameController;
 import Model.Board;
 import Model.Card;
+import Model.GameHistory;
 import Model.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -25,7 +26,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     @FXML
-    public ImageView activeLeader;
+    private ImageView activeLeader;
     public Label passedLabel;
     public AnchorPane pane;
     public HBox deckHbox;
@@ -43,7 +44,9 @@ public class GameMenu extends Application {
     public ImageView opponentBurnt;
     private final CountDownLatch latch = new CountDownLatch(1);
 
-    ArrayList<HBox> hBoxes = new ArrayList<>();
+    public ArrayList<HBox> hBoxes = new ArrayList<>();
+    // I add this GameHistory(Hamid)
+    private GameHistory gameHistory;
 
 
     @Override
@@ -147,5 +150,13 @@ public class GameMenu extends Application {
             User.getTurnUser().setPassed(false);
             GameController.nextRound(hBoxes, highScoreImage);
         }
+    }
+
+    public GameHistory getGameHistory() {
+        return gameHistory;
+    }
+
+    public void setGameHistory(GameHistory gameHistory) {
+        this.gameHistory = gameHistory;
     }
 }

@@ -13,7 +13,8 @@ import java.util.Timer;
 import java.util.concurrent.CountDownLatch;
 
 public class AbilityActions {
-    public static void switchAction(Card card) {
+    public static void
+    switchAction(Card card) {
         if (card.getAbility() != null)
             switch (card.getAbility()) {
                 case "spy":

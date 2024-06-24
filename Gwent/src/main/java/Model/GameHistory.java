@@ -4,12 +4,34 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class GameHistory {
+    private static ArrayList<GameHistory> gameHistories;
     private User winner;
-    private User opponent;
-    private ArrayList<Double> userPoints = new ArrayList<>();
-    private ArrayList<Double> opponentPoints = new ArrayList<>();
+    private String opponentName;
+    private double firstRoundPointMe;
+    private double firstRoundPointOpponent;
+    private double secondRoundPointMe;
+    private double secondRoundPointOpponent;
+    private double thirdRoundPointMe;
+    private double thirdRoundPointOpponent;
+    private double totalPointsMe;
+    private double totalPointsOpponent;
     private Date date;
-    private double sumOfPoints(User user){
+
+    public GameHistory(User opponent, Date date) {
+        this.opponentName = opponent.getUsername();
+        this.date = date;
+    }
+
+    public void countTotalPoints() {
+        totalPointsMe = firstRoundPointMe + secondRoundPointMe + totalPointsMe;
+        totalPointsOpponent = firstRoundPointOpponent + secondRoundPointOpponent + totalPointsOpponent;
+    }
+
+    public static ArrayList<GameHistory> getGameHistories() {
+        return gameHistories;
+    }
+
+    private double sumOfPoints(User user) {
         return 0;
     }
 
@@ -21,28 +43,28 @@ public class GameHistory {
         this.winner = winner;
     }
 
-    public User getOpponent() {
-        return opponent;
+    public double getFirstRoundPointMe() {
+        return firstRoundPointMe;
     }
 
-    public void setOpponent(User opponent) {
-        this.opponent = opponent;
+    public double getFirstRoundPointOpponent() {
+        return firstRoundPointOpponent;
     }
 
-    public ArrayList<Double> getUserPoints() {
-        return userPoints;
+    public double getSecondRoundPointMe() {
+        return secondRoundPointMe;
     }
 
-    public void setUserPoints(ArrayList<Double> userPoints) {
-        this.userPoints = userPoints;
+    public double getSecondRoundPointOpponent() {
+        return secondRoundPointOpponent;
     }
 
-    public ArrayList<Double> getOpponentPoints() {
-        return opponentPoints;
+    public double getThirdRoundPointMe() {
+        return thirdRoundPointMe;
     }
 
-    public void setOpponentPoints(ArrayList<Double> opponentPoints) {
-        this.opponentPoints = opponentPoints;
+    public double getThirdRoundPointOpponent() {
+        return thirdRoundPointOpponent;
     }
 
     public Date getDate() {
@@ -51,5 +73,13 @@ public class GameHistory {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getOpponentName() {
+        return opponentName;
+    }
+
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName;
     }
 }
