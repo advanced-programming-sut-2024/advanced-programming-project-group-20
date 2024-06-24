@@ -9,8 +9,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.concurrent.CountDownLatch;
 
 public class AbilityActions {
     public static void
@@ -25,7 +23,6 @@ public class AbilityActions {
                     break;
                 case "medic":
                     medic();
-
                     break;
             }
 

@@ -118,7 +118,6 @@ public class GameMenu extends Application {
     public void placeCard() {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
-
                 if (GameController.placeCard(hBoxes, deckHbox, hBox, highScoreImage,latch)) {
                     putCardInDeck();
                     if (!User.getTurnUser().getOpponentUser().isPassed())
