@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 import View.LoginMenu;
+import View.PrivateFieldAdapter;
 import View.RegisterMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -154,21 +156,37 @@ public class RegisterController {
 
     private static void saveTheUserInGson(ArrayList<User> list) {
 
-Gson gson = new Gson();
-String a =gson.toJson(new User("1","1","2","@","1","5"));
-        String json = gson.toJson(list);
+
+//        File file = new File("users.json");
+////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        User user = new User("f", "f", "f", "f","f", "f");
+////        Gson gson= new Gson();
+//        Gson gson = new GsonBuilder()
+//                .registerTypeAdapter(User.class, new PrivateFieldAdapter())
+//                .create();
+//        String json = gson.toJson(list);
+//        try (PrintWriter pw = new PrintWriter(file)) {
+//            pw.write(json);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
         System.out.println(json);
-
+        try (FileWriter writer = new FileWriter("users.json")) {
+            gson.toJson(user, writer);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 
 
     public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
-        System.out.println(secureAnswer.getText());
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-        saveTheUserInGson(User.getAllUsers());
+//        saveTheUserInGson(User.getAllUsers());
+//        user.saveUserToJSon();
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

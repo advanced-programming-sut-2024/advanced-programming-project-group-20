@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.AbilityActions;
-import Model.Board;
-import Model.Card;
-import Model.User;
+import Model.*;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -56,10 +53,12 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
     private static void setLeaderImage(User user, int height) {
         ImageView leader = new ImageView();
         leader.setImage(user.getLeader().getImage());
-        leader.setOnMouseClicked(mouseEvent -> {
-            User.getTurnUser().getLeader().action();
-            User.getTurnUser().getLeader().setUsed(true);
-        });
+        if (user.equals(User.getTurnUser())) {
+            leader.setOnMouseClicked(mouseEvent -> {
+                user.getLeader().action();
+                user.getLeader().setUsed(true);
+            });
+        }
         ApplicationController.getRoot().getChildren().add(leader);
         leader.setY(height);
         leader.setX(113);
@@ -190,15 +189,18 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
                 }
             }
             if (!isAnySelected) {
-                if (getHbox(card) >= 10)
+                if (getHbox(card) >= 10 )
                     hBoxes.get(getHbox(card) / 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-
+                if (getHbox(card) == 9) return;
                 hBoxes.get(getHbox(card) % 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                 card.setPrefWidth(card.getWidth() * 1.5);
                 card.setPrefHeight(card.getHeight() * 1.5);
                 ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * 1.5);
                 ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * 1.5);
                 card.setSelect(true);
+                if (card.getName().equals("decoy")) {
+                    SpecialAction.decoy(card);
+                }
             }
         } else {
             if (card.isSelect()) {
@@ -247,8 +249,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
             case "siegeUnit" -> 0;
             case "weather" -> 6;
             case "agileUnit" -> 12;
-            // spell ro chikar konam?
-//            case "spell" -> 6;
+            case "spell" -> 9;
             default -> 4;
         };
 
@@ -547,6 +548,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
             User.getTurnUser().getOpponentUser().getBoard().getRanged().add((Card) node);
         for (Node node:hBoxes.get(5).getChildren())
             User.getTurnUser().getOpponentUser().getBoard().getSiege().add((Card) node);
+
 
 
     }

@@ -36,7 +36,10 @@ public class RegisterMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        //setting title and Icon
         ApplicationController.setStage(stage);
+        stage.setTitle("Gwent");
+        //======================
         stage.setHeight(720);
         stage.setWidth(900);
         SetHeightAndWidth(stage);
@@ -45,6 +48,7 @@ public class RegisterMenu extends Application {
         Scene scene = new Scene(root);
         stage.centerOnScreen();
         stage.setScene(scene);
+        ApplicationController.setIcon();
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }
@@ -63,15 +67,12 @@ public class RegisterMenu extends Application {
     }
 
     public void register(MouseEvent mouseEvent) {
-        if (root == null){
-            System.out.println("null ast");
-        }
         RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
     }
 
     //TODO delete this later
     public void gotoMainMenu(MouseEvent mouseEvent) {
-        User user = new User("hamid", "1", "1", "1","1","1");
+        User user = new User("hamid", "1", "1", "1", "1", "1");
         User user1 = new User("ali", "1", "1", "1", "1", "1");
         User.setLoggedUser(user);
         try {

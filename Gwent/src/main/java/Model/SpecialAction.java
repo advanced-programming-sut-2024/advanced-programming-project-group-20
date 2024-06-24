@@ -1,5 +1,9 @@
 package Model;
 
+import javafx.scene.Node;
+
+import java.util.concurrent.atomic.AtomicReference;
+
 public class SpecialAction {
     public static void bitingFrost(){
 
@@ -13,9 +17,40 @@ public class SpecialAction {
 
     }
 
-    public static void decoy() {
-
+    public static void decoy(Card decoy) {
+        for (Node node : User.getTurnUser().getBoard().getCloseCombat().getChildren()) {
+            AtomicReference<Card> card = new AtomicReference<>((Card) node);
+            Card card1 = (Card) node;
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
+        for (Node node : User.getTurnUser().getBoard().getSiege().getChildren()) {
+            AtomicReference<Card> card = new AtomicReference<>((Card) node);
+            Card card1 = (Card) node;
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
+        for (Node node : User.getTurnUser().getBoard().getRanged().getChildren()) {
+            AtomicReference<Card> card = new AtomicReference<>((Card) node);
+            Card card1 = (Card) node;
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
     }
+
+    private static void decoyAction(Card card , Card decoy) {
+        card = CardBuilder.neutral("decoy");
+        if (card.getFaction().getName().equals("Nilfgaard")) {
+            decoy = CardBuilder.nilfgaard(card.getName(), card.getFaction());
+        }
+    }
+
 
     public static void Villentretenmerth(){
 
