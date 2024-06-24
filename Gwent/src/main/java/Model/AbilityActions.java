@@ -9,8 +9,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.util.Random;
-import java.util.Timer;
-import java.util.concurrent.CountDownLatch;
 
 public class AbilityActions {
     public static void
@@ -25,7 +23,6 @@ public class AbilityActions {
                     break;
                 case "medic":
                     medic();
-
                     break;
             }
 
@@ -50,22 +47,30 @@ public class AbilityActions {
         hBox.setAlignment(Pos.CENTER);
         root.getChildren().add(hBox);
         for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-            if (card.getAbility() == null || !(card.getAbility().equals("hero") || card.getType().equals("weather") || card.getType().equals("spell")))
-                hBox.getChildren().add(card);
-            card.setScaleX(2.5);
-            card.setScaleY(2.5);
-            card.setOnMouseClicked(mouseEvent -> {
-                for (Timeline timeline : GameController.timelines)
-                    timeline.play();
-                root.getChildren().remove(hBox);
-                User.getTurnUser().getBoard().getBurnedCard().remove(card);
-                User.getTurnUser().getBoard().getHand().add(card);
-                for (Node node : hBox.getChildren()) {
-                    node.setScaleX(0.4);
-                    node.setScaleY(0.4);
-                }
-                ApplicationController.setEnable(root);
-            });
+            if (card.getAbility() == null || !(card.getAbility().equals("hero") || card.getType().equals("weather") || card.getType().equals("spell"))) {
+                if (!hBox.getChildren().contains(card))
+                    hBox.getChildren().add(card);
+                System.out.println(card.getName());
+                card.getChildren().get(0).setScaleX(2.5);
+                card.getChildren().get(0).setScaleY(2.5);
+                card.setOnMouseClicked(mouseEvent -> {
+                    for (Timeline timeline : GameController.timelines)
+                        timeline.play();
+                    root.getChildren().remove(hBox);
+                    User.getTurnUser().getBoard().getBurnedCard().remove(card);
+                    User.getTurnUser().getBoard().getHand().add(card);
+                    card.setOnMouseClicked(null);
+                    for (Node node : hBox.getChildren()) {
+                        if (((Pane) node).getChildren().get(0).getScaleX() > 1) {
+                            node.setScaleX(0.4);
+                            node.setScaleY(0.4);
+                        }
+                    }
+                    ApplicationController.setEnable(root);
+                    //todo pak
+                    System.out.println(6);
+                });
+            }
         }
 
 

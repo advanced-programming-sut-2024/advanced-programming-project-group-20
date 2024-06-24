@@ -136,8 +136,7 @@ public class LeaderBuilder {
                 public void action() {
                     Card mostPowerfulCard = null;
                     int n = 0;
-                    for (Node node : User.getTurnUser().getOpponentUser().getBoard().getSiege().getChildren()){
-                        Card card = (Card) node;
+                    for (Card card : User.getTurnUser().getOpponentUser().getBoard().getSiege()){
                         n += card.getPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
@@ -147,7 +146,7 @@ public class LeaderBuilder {
                         }
                     }
                     if (n > 10) {
-                        User.getTurnUser().getOpponentUser().getBoard().getSiege().getChildren().remove(mostPowerfulCard);
+                        User.getTurnUser().getOpponentUser().getBoard().getSiege().remove(mostPowerfulCard);
                     }
                 }
             };
@@ -174,8 +173,7 @@ public class LeaderBuilder {
                 public void action() {
                     Card mostPowerfulCard = null;
                     int n = 0;
-                    for (Node node : User.getTurnUser().getOpponentUser().getBoard().getRanged().getChildren()){
-                        Card card = (Card) node;
+                    for (Card card : User.getTurnUser().getOpponentUser().getBoard().getRanged()){
                         n += card.getPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
@@ -185,7 +183,7 @@ public class LeaderBuilder {
                         }
                     }
                     if (n > 10) {
-                        User.getTurnUser().getOpponentUser().getBoard().getRanged().getChildren().remove(mostPowerfulCard);
+                        User.getTurnUser().getOpponentUser().getBoard().getRanged().remove(mostPowerfulCard);
                     }
                 }
             };
@@ -295,8 +293,7 @@ public class LeaderBuilder {
                 public void action() {
                     Card mostPowerfulCard = null;
                     int n = 0;
-                    for (Node node : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().getChildren()){
-                        Card card = (Card) node;
+                    for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()){
                         n += card.getPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
@@ -306,7 +303,7 @@ public class LeaderBuilder {
                         }
                     }
                     if (n > 10) {
-                        User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().getChildren().remove(mostPowerfulCard);
+                        User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().remove(mostPowerfulCard);
                     }
                 }
             };

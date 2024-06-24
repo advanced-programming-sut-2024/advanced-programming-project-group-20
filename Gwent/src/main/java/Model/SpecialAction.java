@@ -1,5 +1,9 @@
 package Model;
 
+import javafx.scene.Node;
+
+import java.util.concurrent.atomic.AtomicReference;
+
 public class SpecialAction {
     public static void bitingFrost(){
 
@@ -13,9 +17,31 @@ public class SpecialAction {
 
     }
 
-    public static void decoy() {
-
+    public static void decoy(Card decoy) {
+        for (Card card1 : User.getTurnUser().getBoard().getCloseCombat()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
+        for (Card card1 : User.getTurnUser().getBoard().getSiege()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
+        for (Card card1 : User.getTurnUser().getBoard().getRanged()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
+            card.get().setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getBoard().getHand().add(card1);
+                card.set(CardBuilder.neutral("decoy"));
+            });
+        }
     }
+
+
 
     public static void Villentretenmerth(){
 

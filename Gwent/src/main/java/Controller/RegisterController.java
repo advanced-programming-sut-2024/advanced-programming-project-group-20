@@ -11,6 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -152,6 +157,7 @@ public class RegisterController {
     }
 
     private static void saveTheUserInGson(User user) {
+
 
 //        File file = new File("users.json");
 ////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
