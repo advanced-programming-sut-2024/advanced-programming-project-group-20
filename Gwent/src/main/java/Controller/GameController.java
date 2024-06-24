@@ -52,7 +52,7 @@ public static ArrayList<Timeline> timelines = new ArrayList<>();
 
     private static void setLeaderImage(User user, int height) {
         ImageView leader = new ImageView();
-        leader.setImage(user.getLeader().getImage());
+        leader.setImage(new Image(String.valueOf(GameController.class.getResource("/Leaders/" + user.getLeader().getName() + ".jpg"))));
         if (user.equals(User.getTurnUser())) {
             leader.setOnMouseClicked(mouseEvent -> {
                 user.getLeader().action();

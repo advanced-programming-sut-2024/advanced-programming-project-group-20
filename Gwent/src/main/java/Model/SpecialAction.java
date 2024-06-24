@@ -18,25 +18,22 @@ public class SpecialAction {
     }
 
     public static void decoy(Card decoy) {
-        for (Node node : User.getTurnUser().getBoard().getCloseCombat().getChildren()) {
-            AtomicReference<Card> card = new AtomicReference<>((Card) node);
-            Card card1 = (Card) node;
+        for (Card card1 : User.getTurnUser().getBoard().getCloseCombat()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
             card.get().setOnMouseClicked(mouseEvent -> {
                 User.getTurnUser().getBoard().getHand().add(card1);
                 card.set(CardBuilder.neutral("decoy"));
             });
         }
-        for (Node node : User.getTurnUser().getBoard().getSiege().getChildren()) {
-            AtomicReference<Card> card = new AtomicReference<>((Card) node);
-            Card card1 = (Card) node;
+        for (Card card1 : User.getTurnUser().getBoard().getSiege()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
             card.get().setOnMouseClicked(mouseEvent -> {
                 User.getTurnUser().getBoard().getHand().add(card1);
                 card.set(CardBuilder.neutral("decoy"));
             });
         }
-        for (Node node : User.getTurnUser().getBoard().getRanged().getChildren()) {
-            AtomicReference<Card> card = new AtomicReference<>((Card) node);
-            Card card1 = (Card) node;
+        for (Card card1 : User.getTurnUser().getBoard().getRanged()) {
+            AtomicReference<Card> card = new AtomicReference<>(card1);
             card.get().setOnMouseClicked(mouseEvent -> {
                 User.getTurnUser().getBoard().getHand().add(card1);
                 card.set(CardBuilder.neutral("decoy"));
@@ -44,12 +41,6 @@ public class SpecialAction {
         }
     }
 
-    private static void decoyAction(Card card , Card decoy) {
-        card = CardBuilder.neutral("decoy");
-        if (card.getFaction().getName().equals("Nilfgaard")) {
-            decoy = CardBuilder.nilfgaard(card.getName(), card.getFaction());
-        }
-    }
 
 
     public static void Villentretenmerth(){

@@ -18,8 +18,8 @@ public class Card extends Pane {
     private int power;
     private Faction faction;
     private int numberOfCartInGame;
-    private Image image;
-    private Image gameImage;
+    transient private Image image;
+    transient private Image gameImage;
     private boolean isSelect =false;
     private boolean isInDeck = true;
 

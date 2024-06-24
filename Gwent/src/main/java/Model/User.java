@@ -2,26 +2,25 @@ package Model;
 
 import Model.Factions.Nilfgaard;
 
+import java.io.*;
 import java.util.ArrayList;
 
-public class User {
-    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
-//    @SerializedName("board")
-    public Board board = new Board();
-//    @SerializedName("username")
-    private GameHistory activeGame;
+public class User implements Serializable {
+    transient private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+    transient public Board board = new Board();
+    transient private GameHistory activeGame;
     private String username;
     private String password;
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-    private Faction faction;
-    private Leader leader;
-    private User opponentUser;
-    private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
-    private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
-    private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
-    private ArrayList<Card> deck = new ArrayList<>();
+    transient private Faction faction;
+    transient private Leader leader;
+    transient private User opponentUser;
+    transient private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
+    transient private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
+    transient private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
+    transient private ArrayList<Card> deck = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
@@ -36,8 +35,6 @@ public class User {
 
     private boolean isPassed =false;
     private boolean isFullHealth = true;
-
-
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
