@@ -21,32 +21,12 @@ public class AbilityActions {
                 scorch();
             if (card.getAbility().contains("medic"))
                 medic();
-            if (card.getAbility().contains("moralBoost"))
-                moralBoost(arrayListPlace, card);
             if (card.getAbility().contains("muster"))
                 muster(arrayListPlace, card);
-            if (card.getAbility().contains("commander'sHorn"))
-                commanderHorn(card);
             if (card.getAbility().contains("mardoeme"))
                 mardroeme(arrayListPlace);
-
         }
 
-    }
-
-    public static void commanderHorn(Card card) {
-        if (card.getType().equals("closeCombatUnit")) {
-            for (Card card1 : User.getTurnUser().getBoard().getCloseCombat()) {
-                Label label = (Label)card1.getChildren().getFirst();
-                label.setText(String.valueOf(card1.getPower() * 2));
-            }
-        }
-        if (card.getType().equals("siegeUnit")) {
-            for (Card card1 : User.getTurnUser().getBoard().getSiege()) {
-                Label label = (Label)card1.getChildren().getFirst();
-                label.setText(String.valueOf(card1.getPower() * 2));
-            }
-        }
     }
 
     public static void medic() {
@@ -94,18 +74,7 @@ public class AbilityActions {
         card.setSelect(false);
     }
 
-    public static void moralBoost(ArrayList<Card> arrayListPlace, Card card) {
-        int power = card.getPower();
-        System.out.println(power);
-        for (Card card1 : arrayListPlace) {
-            if ((card1.getAbility() == null || !card1.getAbility().contains("hero")) && !card.equals(card1)) {
-                card1.setPower(card1.getPower() + 1);
-                ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
-            }
-        }
-//        card.setPower(power);
-//        ((Label) card.getChildren().get(1)).setText(String.valueOf(power));
-    }
+
 
     public static void muster(ArrayList<Card> arrayListPlace, Card card) {
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();

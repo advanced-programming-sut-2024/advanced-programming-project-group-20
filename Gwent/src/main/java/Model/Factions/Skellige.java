@@ -37,9 +37,6 @@ public class Skellige extends Faction {
         Collection.add(CardBuilder.skellige("YoungBerserker", this));
         Collection.add(CardBuilder.skellige("YoungBerserker", this));
         Collection.add(CardBuilder.skellige("YoungBerserker", this));
-        Collection.add(CardBuilder.skellige("YoungVidkaarl", this));
-        Collection.add(CardBuilder.skellige("YoungVidkaarl", this));
-        Collection.add(CardBuilder.skellige("YoungVidkaarl", this));
         Collection.add(CardBuilder.skellige("LightLongship", this));
         Collection.add(CardBuilder.skellige("LightLongship", this));
         Collection.add(CardBuilder.skellige("LightLongship", this));

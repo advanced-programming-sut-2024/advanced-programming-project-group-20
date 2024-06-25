@@ -4,11 +4,14 @@ import Controller.ApplicationController;
 import Controller.GameController;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
+import java.util.Formattable;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -46,8 +49,6 @@ public class LeaderBuilder {
                         randImages.add(imageView);
                         root.getChildren().add(imageView);
                     }
-                    Button button = new Button("OK");
-                    root.getChildren().add(button);
                     root.setOnMouseClicked(mouseEvent -> {
                         for (Node node : root.getChildren()) {
                             node.setDisable(false);
@@ -66,8 +67,8 @@ public class LeaderBuilder {
                         node.setDisable(true);
                     }
                     HBox hBox = new HBox(5);
-                    hBox.maxWidth(root.getWidth());
-                    hBox.prefHeight(root.getHeight());
+                    hBox.setMaxWidth(root.getWidth());
+                    hBox.setPrefHeight(root.getHeight());
                     for (Card card : User.getTurnUser().getOpponentUser().getBoard().getBurnedCard()) {
                         if (card.getAbility() != null){
                             if (card.getAbility().contains("hero")) {
@@ -126,7 +127,13 @@ public class LeaderBuilder {
             case "TheWhiteFlame" -> new Leader(faction, "TheWhiteFlame") {
                 @Override
                 public void action() {
-
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("TorrentialRain")) {
+                            User.getTurnUser().getDeck().remove(card);
+                            User.getTurnUser().getBoard().getWeather().add(card);
+                            GameController.updateBorder();
+                        }
+                    }
                 }
             };
 
@@ -158,19 +165,33 @@ public class LeaderBuilder {
             case "KingOfTemperia" -> new Leader(faction, "KingOfTemperia") {
                 @Override
                 public void action() {
-
+                    User.getTurnUser().getBoard().leaderBoost[0] = true;
                 }
             };
             case "TheSteal-Forged" -> new Leader(faction, "TheSteal-Forged") {
                 @Override
                 public void action() {
-
+                    for (Card card : User.getTurnUser().getBoard().getWeather()) {
+                        User.getTurnUser().getBoard().getWeather().remove(card);
+                        User.getTurnUser().getBoard().getBurnedCard().add(card);
+                    }
+                    for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+                        User.getTurnUser().getOpponentUser().getBoard().getWeather().remove(card);
+                        User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                    }
                 }
             };
             case "TheSiegemaster" -> new Leader(faction, "TheSiegemaster") {
                 @Override
                 public void action() {
-
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("ImpenetrableFog")) {
+                            User.getTurnUser().getDeck().remove(card);
+                            User.getTurnUser().getBoard().getWeather().add(card);
+                            GameController.updateBorder();
+                            return;
+                        }
+                    }
                 }
             };
             case "SunOfMedell" -> new Leader(faction, "SunOfMedell") {
@@ -207,8 +228,8 @@ public class LeaderBuilder {
                         node.setDisable(true);
                     }
                     HBox hBox = new HBox(5);
-                    hBox.maxWidth(root.getWidth());
-                    hBox.prefHeight(root.getHeight());
+                    hBox.setMaxWidth(root.getWidth());
+                    hBox.setPrefHeight(root.getHeight());
                     for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
                         if (card.getAbility() != null){
                             if (card.getAbility().contains("hero")) {
@@ -234,7 +255,52 @@ public class LeaderBuilder {
             case "CommanderOfRedRiders" -> new Leader(faction, "CommanderOfRedRiders") {
                 @Override
                 public void action() {
-
+                    ArrayList<Card> allWeatherCards = new ArrayList<>();
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("ImpenetrableFog")) {
+                            allWeatherCards.add(card);
+                            break;
+                        }
+                    }
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("BitingFrost")) {
+                            allWeatherCards.add(card);
+                            break;
+                        }
+                    }
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("TorrentialRain")) {
+                            allWeatherCards.add(card);
+                            break;
+                        }
+                    }
+                    if (allWeatherCards.isEmpty()) return;
+                    Pane root = ApplicationController.getRoot();
+                    for (Node node : root.getChildren()) {
+                        node.setDisable(true);
+                    }
+                    ArrayList<ImageView> imageViews = new ArrayList<>();
+                    for (int i = 0; i < allWeatherCards.size(); i++) {
+                        ImageView imageView = new ImageView();
+                        imageView.setImage(allWeatherCards.get(i).getImage());
+                        imageView.setFitHeight(root.getHeight() / 2);
+                        imageView.setFitWidth(0.53 * imageView.getFitHeight());
+                        imageView.setY(root.getHeight() / 5);
+                        imageView.setX((root.getWidth() / (allWeatherCards.size() + 2)) * (i + 1));
+                        imageViews.add(imageView);
+                        root.getChildren().add(imageView);
+                    }
+                    for (int i = 0; i < allWeatherCards.size(); i++) {
+                        int finalI = i;
+                        imageViews.get(i).setOnMouseClicked(mouseEvent -> {
+                            root.getChildren().removeAll(imageViews);
+                            User.getTurnUser().getDeck().remove(allWeatherCards.get(finalI));
+                            User.getTurnUser().getBoard().addWeather(allWeatherCards.get(finalI));
+                            for (Node node : root.getChildren()) {
+                                node.setDisable(false);
+                            }
+                        });
+                    }
                 }
             };
             case "DestroyerOfWorlds" -> new Leader(faction, "DestroyerOfWorlds") {
@@ -266,13 +332,13 @@ public class LeaderBuilder {
             case "BringerOfDeath" -> new Leader(faction, "BringerOfDeath") {
                 @Override
                 public void action() {
-
+                    User.getTurnUser().getBoard().leaderBoost[2] = true;
                 }
             };
             case "TheTreacherous" -> new Leader(faction, "TheTreacherous") {
                 @Override
                 public void action() {
-
+                    User.getTurnUser().getBoard().leaderBoost[3] = true;
                 }
             };
 
@@ -285,7 +351,14 @@ public class LeaderBuilder {
             case "PurebloodElf" -> new Leader(faction, "PurebloodElf") {
                 @Override
                 public void action() {
-
+                    for (Card card : User.getTurnUser().getDeck()) {
+                        if (card.getName().equals("BitingFrost")) {
+                            User.getTurnUser().getDeck().remove(card);
+                            User.getTurnUser().getBoard().getWeather().add(card);
+                            GameController.updateBorder();
+                            return;
+                        }
+                    }
                 }
             };
             case "DaisyOfTheValley" -> new Leader(faction, "DaisyOfTheValley") {
@@ -308,14 +381,57 @@ public class LeaderBuilder {
             case "TheBeautiful" -> new Leader(faction, "TheBeautiful") {
                 @Override
                 public void action() {
-
+                    User.getTurnUser().getBoard().leaderBoost[1] = true;
                 }
             };
             case "HopeOfTheAenSeidhe" -> new Leader(faction, "HopeOfTheAenSeidhe") {
                 @Override
                 public void action() {
-
-                }
+                    for (Card card : User.getTurnUser().getBoard().getCloseCombat()) {
+                        if (!card.getType().equals("agileUnit") || card.getAbility().contains("hero")) continue;
+                        int currentPower = card.getPower(), secondPower = card.getPower();
+                        currentPower = SpecialAction.bitingFrost(currentPower);
+                        secondPower = SpecialAction.impenetrableFog(secondPower);
+                        if (User.getTurnUser().getBoard().leaderBoost[2]){
+                            currentPower *=2;
+                        } else {
+                            currentPower = SpecialAction.commanderHorn(User.getTurnUser().getBoard().getCloseCombat(),card,currentPower);
+                        }
+                        if (User.getTurnUser().getBoard().leaderBoost[1]){
+                            secondPower *=2;
+                        } else {
+                            secondPower = SpecialAction.commanderHorn(User.getTurnUser().getBoard().getRanged(),card,secondPower);
+                        }
+                        currentPower = SpecialAction.moralBoost(User.getTurnUser().getBoard().getCloseCombat(),card,currentPower);
+                        secondPower = SpecialAction.moralBoost(User.getTurnUser().getBoard().getRanged(),card,secondPower);
+                        if (secondPower > currentPower) {
+                            User.getTurnUser().getBoard().getCloseCombat().remove(card);
+                            User.getTurnUser().getBoard().getRanged().add(card);
+                        }
+                    }
+                    for (Card card : User.getTurnUser().getBoard().getRanged()) {
+                        if (!card.getType().equals("agileUnit") || card.getAbility().contains("hero")) continue;
+                        int currentPower = card.getPower(), secondPower = card.getPower();
+                        currentPower = SpecialAction.impenetrableFog(currentPower);
+                        secondPower = SpecialAction.bitingFrost(secondPower);
+                        if (User.getTurnUser().getBoard().leaderBoost[1]){
+                            currentPower *=2;
+                        } else {
+                            currentPower = SpecialAction.commanderHorn(User.getTurnUser().getBoard().getRanged(),card,currentPower);
+                        }
+                        if (User.getTurnUser().getBoard().leaderBoost[2]){
+                            secondPower *=2;
+                        } else {
+                            secondPower = SpecialAction.commanderHorn(User.getTurnUser().getBoard().getCloseCombat(),card,secondPower);
+                        }
+                        currentPower = SpecialAction.moralBoost(User.getTurnUser().getBoard().getRanged(),card,currentPower);
+                        secondPower = SpecialAction.moralBoost(User.getTurnUser().getBoard().getCloseCombat(),card,secondPower);
+                        if (secondPower > currentPower) {
+                            User.getTurnUser().getBoard().getRanged().remove(card);
+                            User.getTurnUser().getBoard().getCloseCombat().add(card);
+                        }
+                    }
+                 }
             };
             case "QueenOfDolBlathanna" -> new Leader(faction, "QueenOfDolBlathanna") {
                 @Override
@@ -376,7 +492,7 @@ public class LeaderBuilder {
             case "KingBran" -> new Leader(faction, "KingBran") {
                 @Override
                 public void action() {
-
+                    User.getTurnUser().getBoard().leaderBoost[4] = true;
                 }
             };
 
@@ -390,8 +506,7 @@ public class LeaderBuilder {
         }
         HBox hBox = new HBox(5);
         hBox.setMaxWidth(root.getWidth());
-        System.out.println(hBox.getMaxWidth());
-        System.out.println(hBox.getMaxWidth() / (User.getTurnUser().getDeck().size() + 2));
+        hBox.setPrefHeight(root.getHeight());
         for (Card card : User.getTurnUser().getDeck()) {
             if (card.getAbility() != null){
                 if (card.getAbility().contains("hero")) {
@@ -402,8 +517,6 @@ public class LeaderBuilder {
             imageView.setImage(card.getImage());
             imageView.setFitWidth(hBox.getMaxWidth() / (User.getTurnUser().getDeck().size() + 2));
             imageView.setPreserveRatio(true);
-            System.out.println(imageView.getFitWidth());
-
             imageView.setOnMouseClicked(mouseEvent -> {
                 User.getTurnUser().getDeck().remove(card);
                 User.getTurnUser().getBoard().getHand().add(card);

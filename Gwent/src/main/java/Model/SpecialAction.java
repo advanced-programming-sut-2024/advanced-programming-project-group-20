@@ -5,22 +5,52 @@ import View.GameMenu;
 import javafx.application.Application;
 import javafx.scene.Node;
 import Controller.ApplicationController;
+import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SpecialAction {
-    public static void bitingFrost(){
-        for (Card card : User.getTurnUser().getBoard().getCloseCombat()){
+    public static int bitingFrost(int number){
+        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+            if (card.getName().equals("BitingFrost"))
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
         }
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+            if (card.getName().equals("BitingFrost"))
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
+        }
+        return number;
     }
 
-    public static void impenetrableFog(){
-
+    public static int impenetrableFog(int number){
+        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+            if (card.getName().equals("ImpenetrableFog")) return 1;
+        }
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+            if (card.getName().equals("ImpenetrableFog")) return 1;
+        }
+        return number;
     }
 
-    public static void torrentialRain(){
-
+    public static int torrentialRain(int number){
+        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+            if (card.getName().equals("TorrentialRain")) return 1;
+        }
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+            if (card.getName().equals("TorrentialRain")) return 1;
+        }
+        return number;
     }
 
     public static void decoy(Card decoy) {
@@ -80,66 +110,22 @@ public class SpecialAction {
         }
     }
 
-    public static void Villentretenmerth(){
-
-    }
-
-    public static void toad(){
-
-    }
-
-    public static void schirru(){
-
-    }
-
-    public static void mardroeme() {
-
-    }
-
-    public static void berserker() {
-
-    }
-
-
-    public static void cerys(){
-
-    }
-
-    public static void kombi(){
-
-    }
-
-    public static void shieldmaide(){
-
-    }
-
-    public static void clanDimunPirate(){
-
-    }
-    public static void youngBerserker() {
-
-    }
-
-    public static void weather() {
-        if (!User.getTurnUser().getBoard().getWeather().isEmpty()){
-            for (Card card : User.getTurnUser().getBoard().getWeather()) {
-                if (card.getName().equals("TorrentialRain"))
-                    torrentialRain();
-                if (card.getName().equals("ImpenetrableFog"))
-                    torrentialRain();
-                if (card.getName().equals("BitingFrost"))
-                    torrentialRain();
+    public static int moralBoost(ArrayList<Card> arrayListPlace, Card card,int power) {
+        for (Card card1 : arrayListPlace) {
+            if (card1.equals(card)) continue;
+            if (card1.getAbility() != null && card1.getAbility().contains("moralBoost")){
+                power += 1;
             }
         }
-        if (!User.getTurnUser().getOpponentUser().getBoard().getWeather().isEmpty()){
-            for (Card card : User.getTurnUser().getBoard().getWeather()) {
-                if (card.getName().equals("TorrentialRain"))
-                    torrentialRain();
-                if (card.getName().equals("ImpenetrableFog"))
-                    torrentialRain();
-                if (card.getName().equals("BitingFrost"))
-                    torrentialRain();
+        return power;
+    }
+    public static int commanderHorn(ArrayList <Card> cards,Card target,int number) {
+        for (Card card : cards) {
+            if (card.getAbility().equals("commander'sHorn") && !card.equals(target)) {
+                return 2 * number;
             }
         }
+        return number;
     }
+
 }
