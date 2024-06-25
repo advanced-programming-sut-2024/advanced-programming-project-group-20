@@ -27,6 +27,12 @@ import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     public Button nextTurn;
+    public HBox turnSiegeNext;
+    public HBox turnRangedNext;
+    public HBox turnCloseNext;
+    public HBox opponentCloseNext;
+    public HBox opponentRangedNext;
+    public HBox opponentSiegeNext;
     @FXML
     private ImageView activeLeader;
     public Label passedLabel;
@@ -108,6 +114,12 @@ public class GameMenu extends Application {
         hBoxes.add(opponentRanged);
         hBoxes.add(opponentSiege);
         hBoxes.add(spellHbox);
+        hBoxes.add(turnSiegeNext);
+        hBoxes.add(turnRangedNext);
+        hBoxes.add(turnCloseNext);
+        hBoxes.add(opponentCloseNext);
+        hBoxes.add(opponentRangedNext);
+        hBoxes.add(opponentSiegeNext);
     }
 
 

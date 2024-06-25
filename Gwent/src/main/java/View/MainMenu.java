@@ -93,23 +93,23 @@ public class MainMenu extends Application {
         User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
 
 
-        Monsters monsters = new Monsters();
+        Skellige skellige =new Skellige();
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Draug", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Leshen", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Kayran", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Toad", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("ArachasBehemoth", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("CroneWeavess", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("CroneWhispess", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("EarthElemental", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Fiend", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("FireElemental", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Wyvern", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Svanrige", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Udalryk", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Cerys", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));

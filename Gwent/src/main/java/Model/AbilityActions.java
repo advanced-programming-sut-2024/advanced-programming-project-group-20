@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.ApplicationController;
+import Model.Factions.Skellige;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -26,6 +27,9 @@ public class AbilityActions {
                 muster(arrayListPlace, card);
             if (card.getAbility().contains("commander'sHorn"))
                 commanderHorn(card);
+            if (card.getAbility().contains("mardoeme"))
+                mardroeme(arrayListPlace);
+
         }
 
     }
@@ -160,7 +164,12 @@ public class AbilityActions {
 
     }
 
-    public static void mardroeme() {
+    public static void mardroeme(ArrayList<Card> arrayListPlace) {
+        Skellige skellige = new Skellige();
+        for (int i = arrayListPlace.size()-1; i >=0 ; i--) {
+            if (arrayListPlace.get(i).getType().contains("berserker"))
+                arrayListPlace.set(i,CardBuilder.skellige("Berserker",skellige));
+        }
 
     }
 

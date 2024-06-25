@@ -1,12 +1,5 @@
 package Model;
 
-import javafx.animation.Timeline;
-import javafx.scene.layout.HBox;
-
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Board {
@@ -15,6 +8,9 @@ public class Board {
     private ArrayList<Card> closeCombat =new ArrayList<>() ;
     private ArrayList<Card> burnedCard = new ArrayList<>();
     private ArrayList<Card> hand =new ArrayList<>();
+    private ArrayList<Card> siegeNext = new ArrayList<>();
+    private ArrayList<Card> rangedNext = new ArrayList<>();
+    private ArrayList<Card> closeNext = new ArrayList<>();
     private Card spell;
     private Leader leader;
     private boolean hasPlayedOne =false;
@@ -91,5 +87,29 @@ public class Board {
 
     public void setHasPlayedOne(boolean hasPlayedOne) {
         this.hasPlayedOne = hasPlayedOne;
+    }
+
+    public ArrayList<Card> getSiegeNext() {
+        return siegeNext;
+    }
+
+    public void setSiegeNext(ArrayList<Card> siegeNext) {
+        this.siegeNext = siegeNext;
+    }
+
+    public ArrayList<Card> getRangedNext() {
+        return rangedNext;
+    }
+
+    public void setRangedNext(ArrayList<Card> rangedNext) {
+        this.rangedNext = rangedNext;
+    }
+
+    public ArrayList<Card> getCloseNext() {
+        return closeNext;
+    }
+
+    public void setCloseNext(ArrayList<Card> closeNext) {
+        this.closeNext = closeNext;
     }
 }

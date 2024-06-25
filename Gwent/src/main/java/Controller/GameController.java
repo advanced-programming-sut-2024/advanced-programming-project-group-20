@@ -231,32 +231,40 @@ public class GameController {
                 }
             }
             if (!isAnySelected) {
-                if (getHbox(card) >= 10)
-                    hBoxes.get(getHbox(card) / 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                card.setPrefWidth(card.getWidth() * 1.5);
-                card.setPrefHeight(card.getHeight() * 1.5);
-                ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * 1.5);
-                ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * 1.5);
-                card.setSelect(true);
+                if(card.getName().equals("Mardroeme")){
+                    hBoxes.get(7).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    hBoxes.get(8).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    hBoxes.get(9).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    setSizeBigger(card);
+                }
+                if (getHbox(card) >= 100)
+                    hBoxes.get(getHbox(card) / 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                setSizeBigger(card);
                 if (card.getName().equals("Decoy")) {
                     SpecialAction.decoy(card);
                     return;
                 }
-                hBoxes.get(getHbox(card) % 10).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                hBoxes.get(getHbox(card) % 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
             }
         } else {
             if (card.isSelect()) {
-                if (getHbox(card) >= 10)
-                    hBoxes.get(getHbox(card) / 10).setStyle(null);
-                if (!card.getName().equals("Decoy"))
-                    hBoxes.get(getHbox(card) % 10).setStyle(null);
-                else {
+                for(HBox hBox:hBoxes)
+                    hBox.setStyle(null);
+                if (card.getName().equals("Decoy")) {
                     SpecialAction.decoyAction(card);
                 }
                 setSizeSmaller(card);
             }
         }
 
+    }
+
+    private static void setSizeBigger(Card card) {
+        card.setPrefWidth(card.getWidth() * 1.5);
+        card.setPrefHeight(card.getHeight() * 1.5);
+        ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * 1.5);
+        ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * 1.5);
+        card.setSelect(true);
     }
 
     public static void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
@@ -281,12 +289,14 @@ public class GameController {
     }
 
     private static int getHbox(Card card) {
+        if (card.getName().equals("mardoeme"))
+            return 987;
         if (card.getAbility() != null && card.getAbility().contains("spy")) {
             return switch (card.getType()) {
                 case "closeCombatUnit" -> 3;
                 case "rangedUnit" -> 4;
                 case "siegeUnit" -> 5;
-                case "agileUnit" -> 34;
+                case "agileUnit" -> 304;
                 default -> 6;
             };
         }
@@ -295,7 +305,7 @@ public class GameController {
             case "rangedUnit" -> 1;
             case "siegeUnit" -> 0;
             case "weather" -> 6;
-            case "agileUnit" -> 12;
+            case "agileUnit" -> 102;
             case "spell" -> 9;
             default -> 4;
         };
@@ -384,22 +394,15 @@ public class GameController {
                 card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
-                setImagesOfBoard(User.getTurnUser());
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
                 AbilityActions.switchAction(card, targetArray);
+                updateCardEvent();
                 updateBorder();
+                setImagesOfBoard(User.getTurnUser());
                 return true;
             }
-//            else if (card.isSelect() && card.getName().equals("Decoy")) {
-//                User.getTurnUser().getBoard().getHand().remove(card);
-//                targetArray.add(card);
-//                setSizeSmaller(card);
-//                setImagesOfBoard(User.getTurnUser());
-//                for (HBox hBox1 : hBoxes)
-//                    hBox1.setStyle(null);
-//                return true;
-//            }
+
         }
         return false;
     }
@@ -417,6 +420,12 @@ public class GameController {
             return User.getTurnUser().getOpponentUser().getBoard().getRanged();
         } else if (hBoxes.get(3).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getCloseCombat();
+        }else if (hBoxes.get(7).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getCloseNext();
+        }else if (hBoxes.get(8).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getRangedNext();
+        }else if (hBoxes.get(9).equals(hBox)) {
+            return User.getTurnUser().getOpponentUser().getBoard().getSiegeNext();
         }
         return new ArrayList<>();
     }
@@ -613,6 +622,7 @@ public class GameController {
 
 
     public static void updateBorder() {
+        // todo for mardoem
         User user1 = User.getTurnUser();
         User user2 = User.getTurnUser().getOpponentUser();
         for (HBox hBox : hBoxes) {
