@@ -7,6 +7,8 @@ import View.PrivateFieldAdapter;
 import View.RegisterMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonReader;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 //import com.google.gson.Gson;
@@ -156,69 +159,35 @@ public class RegisterController {
         RegisterMenu.root.getChildren().add(button1);
     }
 
-    private static void saveTheUserInGson(User user) {
-
-
-
-//        File file = new File("users.json");
-////        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        User user = new User("f", "f", "f", "f","f", "f");
-////        Gson gson= new Gson();
-//        Gson gson = new GsonBuilder()
-//                .registerTypeAdapter(User.class, new PrivateFieldAdapter())
-//                .create();
-//        String json = gson.toJson(list);
-//        try (PrintWriter pw = new PrintWriter(file)) {
-//            pw.write(json);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        Gson gson = new Gson();
-//        String json = gson.toJson(user);
-//        System.out.println(json);
-//
+    private static void saveTheUserInGson(ArrayList<User> users) {
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
 //        try (FileWriter writer = new FileWriter("users.json")) {
 //            gson.toJson(user, writer);
 //        } catch (IOException e) {
-//            throw new RuntimeException(e);
+//            e.printStackTrace();
 //        }
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        Field[] fields= User.class.getDeclaredFields();
-//for (Field field: fields){
-//    field.setAccessible(true);
-//}
-        try (FileWriter writer = new FileWriter("users.json")) {
-            gson.toJson(user, writer);
-        } catch (IOException e) {
+        String json = gson.toJson(users);
+        try (PrintWriter pw = new PrintWriter("users.json")) {
+            pw.write(json);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        // Serialization
-        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("user.ser"))) {
-            outputStream.writeObject(user);
-            System.out.println("User object has been saved to user.ser");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // Deserialization
-        User restoredUser = null;
-        try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("user.ser"))) {
-            restoredUser = (User) inputStream.readObject();
-            System.out.println("Username: " + restoredUser.getUsername());
-            System.out.println("Password: " + restoredUser.getPassword()); // Password will be null due to transient keyword
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+
     }
+
 
 
     public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-        saveTheUserInGson(user);
+//User.getAllUsers().addAll(users);
+        saveTheUserInGson(User.getAllUsers());
 //        user.saveUserToJSon();
 //        Board.serializeUser(user, "users.ser");
+//        ArrayList<User> users = parseFile(new File("users.json"), User.class);
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {
