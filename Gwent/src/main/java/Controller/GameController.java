@@ -258,7 +258,7 @@ public class GameController {
     }
 
     private static int getHbox(Card card) {
-        if (card.getAbility() != null && card.getAbility().equals("spy")) {
+        if (card.getAbility() != null && card.getAbility().contains("spy")) {
             return switch (card.getType()) {
                 case "closeCombatUnit" -> 3;
                 case "rangedUnit" -> 4;
@@ -340,13 +340,31 @@ public class GameController {
             if (card.isSelect() && !hBox.getStyle().isEmpty()) {
                 User.getTurnUser().getBoard().getHand().remove(card);
                 targetArray.add(card);
+                int power = card.getPower();
+                for (Card card1 : targetArray) {
+                    if (card1.getAbility() != null) {
+                        if (card1.getAbility().contains("moralBoost") && card.getAbility()!=null&&!card.getAbility().contains("hero")&&!card1.equals(card)) {
+                            card.setPower(card.getPower() + 1);
+                            ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
+                        }
+                        //tightBond
+                        if (card1.getName().equals(card.getName()) && card1.getAbility().contains("tightBond")) {
+                            card.setPower(card.getPower() + power);
+                            ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
+                            card1.setPower(card1.getPower() + power);
+                            ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
+                        }
+                    }
+                }
+
                 card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
                 setImagesOfBoard(User.getTurnUser());
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
-                AbilityActions.switchAction(card);
+                AbilityActions.switchAction(card, targetArray);
+                updateBorder();
                 return true;
             }
 //            else if (card.isSelect() && card.getName().equals("Decoy")) {
