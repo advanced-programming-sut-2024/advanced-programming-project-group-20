@@ -5,8 +5,9 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 
 public abstract class Faction {
+
     protected String name;
-    protected ArrayList<Card> Collection = new ArrayList<>();
+    transient protected ArrayList<Card> Collection = new ArrayList<>();
 
     public void ability(){}
 

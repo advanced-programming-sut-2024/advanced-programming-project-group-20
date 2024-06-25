@@ -93,8 +93,8 @@ public class AbilityActions {
     public static void moralBoost(ArrayList<Card> arrayListPlace, Card card) {
         int power = card.getPower();
         System.out.println(power);
-        for (Card card1:arrayListPlace){
-            if ((card1.getAbility()==null||!card1.getAbility().contains("hero"))&&!card.equals(card1)) {
+        for (Card card1 : arrayListPlace) {
+            if ((card1.getAbility() == null || !card1.getAbility().contains("hero")) && !card.equals(card1)) {
                 card1.setPower(card1.getPower() + 1);
                 ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
             }
@@ -136,21 +136,15 @@ public class AbilityActions {
 
     public static void scorch() {
         ArrayList<Card> shouldBurn = new ArrayList<>();
-        ArrayList<Card> allCardsOnBoard = new ArrayList<>();
         //have all cards in one arraylist
-        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getRanged());
-        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getSiege());
-        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getCloseCombat());
-        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
-        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getSiege());
-        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+
         int maxPointOfCards = 0;
-        for (Card card : allCardsOnBoard) {
-            if (card.getPower() > maxPointOfCards && !card.getAbility().equals("hero")) {
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
+            if (card.getPower() > maxPointOfCards && !card.getAbility().contains("hero")) {
                 maxPointOfCards = card.getPower();
             }
         }
-        for (Card card : allCardsOnBoard) {
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
             //TODO check this part
             if (card.getAbility() == null) continue;
             if (!card.getAbility().equals("hero") && card.getPower() == maxPointOfCards) {
@@ -158,8 +152,10 @@ public class AbilityActions {
             }
         }
 
-    }
+          User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+                User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
 
+        }
     public static void berserker() {
 
     }

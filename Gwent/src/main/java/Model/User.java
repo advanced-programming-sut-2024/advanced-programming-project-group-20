@@ -5,8 +5,8 @@ import Model.Factions.Nilfgaard;
 import java.io.*;
 import java.util.ArrayList;
 
-public class User implements Serializable {
-    transient private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+public class User {
+    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
@@ -33,7 +33,7 @@ public class User implements Serializable {
 
     private int maxPoint;
 
-    private boolean isPassed =false;
+    private boolean isPassed = false;
     private boolean isFullHealth = true;
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {

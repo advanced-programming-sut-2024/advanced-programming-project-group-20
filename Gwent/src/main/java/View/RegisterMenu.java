@@ -2,7 +2,11 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.RegisterController;
+import Model.GameHistory;
 import Model.User;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +18,11 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterMenu extends Application {
     public static Pane root;
@@ -49,9 +57,34 @@ public class RegisterMenu extends Application {
         stage.centerOnScreen();
         stage.setScene(scene);
         ApplicationController.setIcon();
+        User.setAllUsers(parseFile(new File("users.json"), User.class));
+
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }
+
+    public static ArrayList<User> parseFile(File file, Class<User> eClass)
+    {
+        ArrayList<User> arr = new ArrayList<>();
+        Gson gson = new Gson();
+        try {
+            JsonArray a = gson.fromJson(new FileReader(file), JsonArray.class);
+            a.forEach(e -> {
+                try {
+                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
+                    reader.setLenient(true);
+                    User obj = gson.fromJson(reader, eClass);
+                    arr.add(obj);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (FileNotFoundException e) {
+//            saveToFile(arr, file); //if file is not present, make it for first time
+        }
+        return arr;
+    }
+
 
     private void SetHeightAndWidth(Stage stage) {
         stage.setX((Screen.getPrimary().getVisualBounds().getWidth() - stage.getWidth() - 400) / 2);
