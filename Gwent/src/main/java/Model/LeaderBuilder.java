@@ -2,8 +2,6 @@ package Model;
 
 import Controller.ApplicationController;
 import Controller.GameController;
-import javafx.animation.Timeline;
-import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -11,8 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LeaderBuilder {
     public static Leader nilfgaard(String cardName, Faction faction) {
@@ -68,11 +66,13 @@ public class LeaderBuilder {
                         node.setDisable(true);
                     }
                     HBox hBox = new HBox(5);
-                    hBox.maxHeight(root.getHeight());
-                    hBox.prefWidth(root.getWidth());
+                    hBox.maxWidth(root.getWidth());
+                    hBox.prefHeight(root.getHeight());
                     for (Card card : User.getTurnUser().getOpponentUser().getBoard().getBurnedCard()) {
-                        if (card.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         ImageView imageView = new ImageView();
                         imageView.setImage(card.getImage());
@@ -96,8 +96,10 @@ public class LeaderBuilder {
                     Random random = new Random();
                     ArrayList<Card> nonHeroCards = new ArrayList<>();
                     for (Card card1 : User.getTurnUser().getBoard().getBurnedCard()){
-                        if (card1.getAbility().contains("hero")) {
-                            continue;
+                        if (card1.getAbility() != null){
+                            if (card1.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         nonHeroCards.add(card1);
                     }
@@ -108,8 +110,10 @@ public class LeaderBuilder {
                     GameController.updateBorder();
                     nonHeroCards = new ArrayList<>();
                     for (Card card1 : User.getTurnUser().getBoard().getBurnedCard()){
-                        if (card1.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         nonHeroCards.add(card1);
                     }
@@ -203,11 +207,13 @@ public class LeaderBuilder {
                         node.setDisable(true);
                     }
                     HBox hBox = new HBox(5);
-                    hBox.maxHeight(root.getHeight());
-                    hBox.prefWidth(root.getWidth());
+                    hBox.maxWidth(root.getWidth());
+                    hBox.prefHeight(root.getHeight());
                     for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-                        if (card.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         ImageView imageView = new ImageView();
                         imageView.setImage(card.getImage());
@@ -234,7 +240,27 @@ public class LeaderBuilder {
             case "DestroyerOfWorlds" -> new Leader(faction, "DestroyerOfWorlds") {
                 @Override
                 public void action() {
+                    ApplicationController.alert("Burn", "Choose 2 Card from your hand for burn");
+                    AtomicInteger choose = new AtomicInteger(0);
+                    for (Card card : User.getTurnUser().getBoard().getHand()) {
+                        card.setOnMouseClicked(mouseEvent -> {
+                            User.getTurnUser().getBoard().getHand().remove(card);
+                            User.getTurnUser().getBoard().getBurnedCard().add(card);
+                            GameController.updateBorder();
+                            DestroyerOfWorlds2();
+                        });
+                    }
+                }
 
+                private void DestroyerOfWorlds2() {
+                    for (Card card : User.getTurnUser().getBoard().getHand()) {
+                        card.setOnMouseClicked(mouseEvent -> {
+                            User.getTurnUser().getBoard().getHand().remove(card);
+                            User.getTurnUser().getBoard().getBurnedCard().add(card);
+                            GameController.updateBorder();
+                            showDeckForChoose();
+                        });
+                    }
                 }
             };
             case "BringerOfDeath" -> new Leader(faction, "BringerOfDeath") {
@@ -267,8 +293,10 @@ public class LeaderBuilder {
                 public void action() {
                     ArrayList<Card> nonHero = new ArrayList<>();
                     for (Card card : User.getTurnUser().getDeck()) {
-                        if (card.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         nonHero.add(card);
                     }
@@ -320,14 +348,18 @@ public class LeaderBuilder {
                 public void action() {
                     ArrayList<Card> allNonHeroes = new ArrayList<>();
                     for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-                        if (card.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         allNonHeroes.add(card);
                     }
                     for (Card card : User.getTurnUser().getOpponentUser().getBoard().getBurnedCard()) {
-                        if (card.getAbility().contains("hero")) {
-                            continue;
+                        if (card.getAbility() != null){
+                            if (card.getAbility().contains("hero")) {
+                                continue;
+                            }
                         }
                         allNonHeroes.add(card);
                     }
@@ -350,5 +382,40 @@ public class LeaderBuilder {
 
             default -> null;
         };
+    }
+    public static void showDeckForChoose() {
+        Pane root = ApplicationController.getRoot();
+        for (Node node : root.getChildren()) {
+            node.setDisable(true);
+        }
+        HBox hBox = new HBox(5);
+        hBox.setMaxWidth(root.getWidth());
+        System.out.println(hBox.getMaxWidth());
+        System.out.println(hBox.getMaxWidth() / (User.getTurnUser().getDeck().size() + 2));
+        for (Card card : User.getTurnUser().getDeck()) {
+            if (card.getAbility() != null){
+                if (card.getAbility().contains("hero")) {
+                    continue;
+                }
+            }
+            ImageView imageView = new ImageView();
+            imageView.setImage(card.getImage());
+            imageView.setFitWidth(hBox.getMaxWidth() / (User.getTurnUser().getDeck().size() + 2));
+            imageView.setPreserveRatio(true);
+            System.out.println(imageView.getFitWidth());
+
+            imageView.setOnMouseClicked(mouseEvent -> {
+                User.getTurnUser().getDeck().remove(card);
+                User.getTurnUser().getBoard().getHand().add(card);
+                GameController.updateBorder();
+                root.getChildren().remove(hBox);
+                for (Node node : root.getChildren()) {
+                    node.setDisable(false);
+                }
+                GameController.updateCardEvent();
+            });
+            hBox.getChildren().add(imageView);
+        }
+        root.getChildren().add(hBox);
     }
 }

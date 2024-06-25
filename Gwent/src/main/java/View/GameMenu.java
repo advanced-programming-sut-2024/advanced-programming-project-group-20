@@ -89,14 +89,15 @@ public class GameMenu extends Application {
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
         }
+        GameController.setBiggerCardImage(biggerCardImage);
+        GameController.setTurnLabel(turnLabel);
+        GameController.setTurnBurnt(turnBurnt);
+        GameController.setOpponentBurnt(opponentBurnt);
         GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
-        putCardInDeck();
-        //ee
+        GameController.updateCardEvent();
         placeCard();
-
-
     }
 
     private void setHboxes() {
@@ -107,26 +108,9 @@ public class GameMenu extends Application {
         hBoxes.add(opponentRanged);
         hBoxes.add(opponentSiege);
         hBoxes.add(spellHbox);
-
     }
 
-    public void putCardInDeck() {
-        ApplicationController.getRoot().getChildren().remove(turnLabel);
-        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
-        deckHbox.getChildren().clear();
-        for (Card card : hand) {
-            deckHbox.getChildren().add(card);
-            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
-            card.setOnMouseClicked(event -> {
-//                eee
-                GameController.putCardInDeck(card, hand);
-            });
 
-        }
-        //ee
-            GameController.setBurntCard(turnBurnt, opponentBurnt);
-    }
 
 
     public void placeCard() {
@@ -134,7 +118,7 @@ public class GameMenu extends Application {
             hBox.setOnMouseClicked(event -> {
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
                     if (GameController.placeCard(hBox, highScoreImage, latch)) {
-                        putCardInDeck();
+                        GameController.updateCardEvent();
                         User.getTurnUser().getBoard().setHasPlayedOne(true);
                         for (Card card : User.getTurnUser().getBoard().getHand()) {
                             card.setOnMouseClicked(null);
@@ -143,7 +127,7 @@ public class GameMenu extends Application {
                             if (User.getTurnUser().getBoard().isHasPlayedOne()) {
                                 if (!User.getTurnUser().getOpponentUser().isPassed())
                                     GameController.changeTurn(highScoreImage, turnLabel);
-                                Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
+                                Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> GameController.updateCardEvent()));
                                 waitForChangeTurn.setCycleCount(1);
                                 waitForChangeTurn.play();
                                 GameController.updateBorder();
@@ -161,11 +145,11 @@ public class GameMenu extends Application {
         if (User.getTurnUser().getBoard().isHasPlayedOne())
             return;
         if (!User.getTurnUser().getOpponentUser().isPassed()) {
-            putCardInDeck();
+            GameController.updateCardEvent();
             User.getTurnUser().setPassed(true);
             GameController.changeTurn(highScoreImage, turnLabel);
             ApplicationController.getRoot().getChildren().add(passedLabel);
-            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> putCardInDeck()));
+            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> GameController.updateCardEvent()));
             waitForChangeTurn.setCycleCount(1);
             waitForChangeTurn.play();
 
@@ -174,7 +158,7 @@ public class GameMenu extends Application {
             User.getTurnUser().getOpponentUser().setPassed(false);
             User.getTurnUser().setPassed(false);
             GameController.nextRound(highScoreImage);
-            putCardInDeck();
+            GameController.updateCardEvent();
         }
     }
 

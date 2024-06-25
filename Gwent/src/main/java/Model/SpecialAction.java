@@ -11,7 +11,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class SpecialAction {
     public static void bitingFrost(){
-
+        for (Card card : User.getTurnUser().getBoard().getCloseCombat()){
+        }
     }
 
     public static void impenetrableFog(){
@@ -71,8 +72,11 @@ public class SpecialAction {
         allcards.addAll(User.getTurnUser().getBoard().getRanged());
         allcards.addAll(User.getTurnUser().getBoard().getSiege());
         allcards.addAll(User.getTurnUser().getBoard().getCloseCombat());
-        for (Card card1 : allcards) {
-            card1.setOnMouseClicked(null);
+        for (Card card : allcards) {
+            card.setOnMouseClicked(null);
+        }
+        for (Card card : User.getTurnUser().getBoard().getHand()) {
+            card.setOnMouseClicked(null);
         }
     }
 
@@ -114,5 +118,28 @@ public class SpecialAction {
     }
     public static void youngBerserker() {
 
+    }
+
+    public static void weather() {
+        if (!User.getTurnUser().getBoard().getWeather().isEmpty()){
+            for (Card card : User.getTurnUser().getBoard().getWeather()) {
+                if (card.getName().equals("TorrentialRain"))
+                    torrentialRain();
+                if (card.getName().equals("ImpenetrableFog"))
+                    torrentialRain();
+                if (card.getName().equals("BitingFrost"))
+                    torrentialRain();
+            }
+        }
+        if (!User.getTurnUser().getOpponentUser().getBoard().getWeather().isEmpty()){
+            for (Card card : User.getTurnUser().getBoard().getWeather()) {
+                if (card.getName().equals("TorrentialRain"))
+                    torrentialRain();
+                if (card.getName().equals("ImpenetrableFog"))
+                    torrentialRain();
+                if (card.getName().equals("BitingFrost"))
+                    torrentialRain();
+            }
+        }
     }
 }

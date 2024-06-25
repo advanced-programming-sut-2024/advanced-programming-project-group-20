@@ -238,7 +238,7 @@ public class CardBuilder {
                     true, 0, null, 3);
             case "Decoy" -> new Card(cardName, "spell", null,
                     true, 0, null, 3);
-            case "Dandelion" -> new Card(cardName, "closeCombatUnit", "Commander’sHorn",
+            case "Dandelion" -> new Card(cardName, "closeCombatUnit", "commander'sHorn",
                     true, 2, null, 1);
             case "EmielRegis", "ZoltanChivay" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, null, 1);
@@ -246,7 +246,7 @@ public class CardBuilder {
                     false, 2, null, 1);
             case "GaunterO’DimmDarkness" -> new Card(cardName, "rangedUnit", "muster",
                     false, 4, null, 3);
-            case "MysteriousElf" -> new Card(cardName, "closeCombat", "spy&Hero",
+            case "MysteriousElf" -> new Card(cardName, "closeCombatUnit", "spy&Hero",
                     false, 0, null, 1);
             case "OlgierdVonEverc" -> new Card(cardName, "agileUnit", "moralBoost",
                     false, 6, null, 1);

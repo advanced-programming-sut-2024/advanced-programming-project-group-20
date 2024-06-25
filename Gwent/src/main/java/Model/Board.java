@@ -18,8 +18,16 @@ public class Board {
     private Card spell;
     private Leader leader;
     private boolean hasPlayedOne =false;
-    private Card weatherCard;
+    private ArrayList<Card> weather = new ArrayList<>();
 
+
+    public void addWeather(Card card) {
+        weather.add(card);
+    }
+
+    public ArrayList<Card> getWeather() {
+        return weather;
+    }
 
     public ArrayList<Card> getSiege() {
         return siege;
