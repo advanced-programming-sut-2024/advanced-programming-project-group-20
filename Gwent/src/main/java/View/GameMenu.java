@@ -85,10 +85,12 @@ public class GameMenu extends Application {
         GameController.setDeckHbox(deckHbox);
         GameController.setHighScoreIcon(highScoreImage);
         ApplicationController.setRoot(pane);
+        //ee
         GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
         putCardInDeck();
+        //ee
         placeCard();
     }
 
@@ -107,17 +109,17 @@ public class GameMenu extends Application {
         ApplicationController.getRoot().getChildren().remove(turnLabel);
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         deckHbox.getChildren().clear();
-        System.out.println(User.getTurnUser().getUsername() + ".....................");
         for (Card card : hand) {
-            System.out.println(card.getName() );
             deckHbox.getChildren().add(card);
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
+//                eee
                 GameController.putCardInDeck(card, hand);
             });
 
         }
+        //ee
             GameController.setBurntCard(turnBurnt, opponentBurnt);
     }
 
@@ -126,11 +128,12 @@ public class GameMenu extends Application {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
-                    System.out.println(1);
                     if (GameController.placeCard(hBox, highScoreImage, latch)) {
-                        System.out.println(2);
                         putCardInDeck();
-                            User.getTurnUser().getBoard().setHasPlayedOne(true);
+                        User.getTurnUser().getBoard().setHasPlayedOne(true);
+                        for (Card card : User.getTurnUser().getBoard().getHand()) {
+                            card.setOnMouseClicked(null);
+                        }
                         nextTurn.setOnMouseClicked(event2 -> {
                             if (User.getTurnUser().getBoard().isHasPlayedOne()) {
                                 if (!User.getTurnUser().getOpponentUser().isPassed())

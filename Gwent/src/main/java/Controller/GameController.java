@@ -5,6 +5,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,7 +28,6 @@ public class GameController {
     private static ArrayList<HBox> hBoxes;
     private static ImageView highScoreIcon;
     private static HBox deckHbox;
-
 
     public static void setHighScoreIcon(ImageView highScoreIcon) {
         GameController.highScoreIcon = highScoreIcon;
@@ -230,6 +230,9 @@ public class GameController {
                     hBoxes.get(getHbox(card) / 10).setStyle(null);
                 if (!card.getName().equals("Decoy"))
                     hBoxes.get(getHbox(card) % 10).setStyle(null);
+                else {
+                    SpecialAction.decoyAction(card);
+                }
                 setSizeSmaller(card);
             }
         }
@@ -278,6 +281,7 @@ public class GameController {
         };
 
     }
+
 
     private static int getTotalHboxPower(HBox hBox) {
         int total = 0;
@@ -351,13 +355,11 @@ public class GameController {
             }
 //            else if (card.isSelect() && card.getName().equals("Decoy")) {
 //                User.getTurnUser().getBoard().getHand().remove(card);
-//                deckHbox.getChildren().remove(card);
+//                targetArray.add(card);
 //                setSizeSmaller(card);
 //                setImagesOfBoard(User.getTurnUser());
 //                for (HBox hBox1 : hBoxes)
 //                    hBox1.setStyle(null);
-//                AbilityActions.switchAction(card);
-//                card.setOnMouseClicked(null);
 //                return true;
 //            }
         }
@@ -381,7 +383,7 @@ public class GameController {
         return new ArrayList<>();
     }
 
-    private static void setSizeSmaller(Card card) {
+    public static void setSizeSmaller(Card card) {
         card.setPrefWidth(card.getWidth() / 1.5);
         card.setPrefHeight(card.getHeight() / 1.5);
         ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() / 1.5);

@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AbilityActions {
@@ -25,6 +26,7 @@ public class AbilityActions {
                 case "medic":
                     medic();
                     break;
+
             }
 
 
@@ -50,7 +52,7 @@ public class AbilityActions {
                 System.out.println(card.getName());
                 if (!hBox.getChildren().contains(card))
                     hBox.getChildren().add(card);
-                setSizeSmaller(card,2.5);
+                setSizeSmaller(card, 2.5);
                 card.setOnMouseClicked(mouseEvent -> {
                     card.setSelect(false);
                     root.getChildren().remove(hBox);
@@ -58,8 +60,8 @@ public class AbilityActions {
                     User.getTurnUser().getBoard().getHand().add(card);
                     card.setOnMouseClicked(null);
                     for (Node node : hBox.getChildren()) {
-                        if (((Pane) node).getHeight()>100) {
-                          setSizeSmaller((Card) node,0.4);
+                        if (((Pane) node).getHeight() > 100) {
+                            setSizeSmaller((Card) node, 0.4);
                         }
                     }
                     ApplicationController.setEnable(root);
@@ -69,9 +71,10 @@ public class AbilityActions {
             }
         }
     }
-    private static void setSizeSmaller(Card card , double scale) {
-        card.setPrefWidth(card.getPrefWidth() *scale);
-        card.setPrefHeight(card.getPrefHeight() *scale);
+
+    private static void setSizeSmaller(Card card, double scale) {
+        card.setPrefWidth(card.getPrefWidth() * scale);
+        card.setPrefHeight(card.getPrefHeight() * scale);
         ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * scale);
         ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * scale);
         card.setSelect(false);
@@ -100,7 +103,27 @@ public class AbilityActions {
     }
 
     public static void scorch() {
-
+        ArrayList<Card> shouldBurn = new ArrayList<>();
+        ArrayList<Card> allCardsOnBoard = new ArrayList<>();
+        //have all cards in one arraylist
+        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getRanged());
+        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getSiege());
+        allCardsOnBoard.addAll(User.getTurnUser().getBoard().getCloseCombat());
+        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
+        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getSiege());
+        allCardsOnBoard.addAll(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+        int maxPointOfCards = 0;
+        for (Card card : allCardsOnBoard) {
+            if (card.getPower() > maxPointOfCards && !card.getAbility().equals("hero")) {
+                maxPointOfCards = card.getPower();
+            }
+        }
+        for (Card card : allCardsOnBoard) {
+            //TODO check this part
+            if (!card.getAbility().equals("hero") && card.getPower() == maxPointOfCards) {
+                shouldBurn.add(card);
+            }
+        }
 
     }
 
