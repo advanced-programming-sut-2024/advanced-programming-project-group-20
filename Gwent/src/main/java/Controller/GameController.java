@@ -305,9 +305,11 @@ public class GameController {
 
     private static int getTotalHboxPower(HBox hBox) {
         int total = 0;
-
-        for (int i = 0; i < hBox.getChildren().size(); i++)
-            total += ((Card) hBox.getChildren().get(i)).getPower();
+        for (int i = 0; i < hBox.getChildren().size(); i++) {
+            Card card = (Card) hBox.getChildren().get(i);
+            Label label = (Label) card.getChildren().get(1);
+            total += Integer.parseInt(label.getText());
+        }
         return total;
     }
 
@@ -384,11 +386,11 @@ public class GameController {
                 card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
-                setImagesOfBoard(User.getTurnUser());
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
                 AbilityActions.switchAction(card, targetArray);
                 updateBorder();
+                setImagesOfBoard(User.getTurnUser());
                 return true;
             }
 //            else if (card.isSelect() && card.getName().equals("Decoy")) {
@@ -418,7 +420,7 @@ public class GameController {
         } else if (hBoxes.get(3).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getCloseCombat();
         }
-        return new ArrayList<>();
+        return User.getTurnUser().getBoard().getWeather();
     }
 
     public static void setSizeSmaller(Card card) {
@@ -519,6 +521,8 @@ public class GameController {
         if (transform1 != null) {
             User.getTurnUser().getBoard().getCloseCombat().add(transform1);
         }
+        User.getTurnUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
+        User.getTurnUser().getOpponentUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
         updateBorder();
         setImagesOfBoard(User.getTurnUser());
     }
@@ -646,7 +650,8 @@ public class GameController {
         for (Card card : user2.getBoard().getWeather()) {
             hBoxes.get(6).getChildren().add(card);
         }
-        SpecialAction.weather();
+        setLabels(User.getTurnUser());
+        setLabels(User.getTurnUser().getOpponentUser());
         setHighScoreIcon();
         GameController.setBurntCard(turnBurnt, opponentBurnt);
     }
@@ -670,6 +675,60 @@ public class GameController {
                 GameController.putCardInDeck(card, hand);
             });
 
+        }
+    }
+    public static void setLabels(User user) {
+        for (Card card : user.getBoard().getHand()) {
+            Label label = (Label)card.getChildren().get(1);
+            label.setText(String.valueOf(card.getPower()));
+        }
+        for (Card card : user.getBoard().getSiege()) {
+            Label label = (Label)card.getChildren().get(1);
+            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+                label.setText(String.valueOf(card.getPower()));
+            } else {
+                int number = card.getPower();
+                number = SpecialAction.torrentialRain(number);
+                if (user.getBoard().leaderBoost[0]) {
+                    number *= 2;
+                } else {
+                    number = SpecialAction.commanderHorn(user.getBoard().getSiege(), card, number);
+                }
+                number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
+                label.setText(String.valueOf(number));
+            }
+        }
+        for (Card card : user.getBoard().getRanged()) {
+            Label label = (Label)card.getChildren().get(1);
+            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+                label.setText(String.valueOf(card.getPower()));
+            } else {
+                int number = card.getPower();
+                number = SpecialAction.impenetrableFog(number);
+                if (user.getBoard().leaderBoost[1]) {
+                    number *= 2;
+                } else {
+                    number = SpecialAction.commanderHorn(user.getBoard().getRanged(), card, number);
+                }
+                number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
+                label.setText(String.valueOf(number));
+            }
+        }
+        for (Card card : user.getBoard().getCloseCombat()) {
+            Label label = (Label)card.getChildren().get(1);
+            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+                label.setText(String.valueOf(card.getPower()));
+            } else {
+                int number = card.getPower();
+                number = SpecialAction.bitingFrost(number);
+                if (user.getBoard().leaderBoost[2]) {
+                    number *= 2;
+                } else {
+                    number = SpecialAction.commanderHorn(user.getBoard().getSiege(),card, number);
+                }
+                number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
+                label.setText(String.valueOf(number));
+            }
         }
     }
 }

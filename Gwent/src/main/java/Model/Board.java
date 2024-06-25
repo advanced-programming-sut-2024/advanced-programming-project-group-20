@@ -1,6 +1,7 @@
 package Model;
 
 import javafx.animation.Timeline;
+import javafx.css.FontFace;
 import javafx.scene.layout.HBox;
 
 import java.io.FileOutputStream;
@@ -19,6 +20,7 @@ public class Board {
     private Leader leader;
     private boolean hasPlayedOne =false;
     private ArrayList<Card> weather = new ArrayList<>();
+    public boolean[] leaderBoost = {false,false,false,false,false};
 
 
     public void addWeather(Card card) {
