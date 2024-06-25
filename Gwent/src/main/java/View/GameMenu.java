@@ -85,13 +85,18 @@ public class GameMenu extends Application {
         GameController.setDeckHbox(deckHbox);
         GameController.setHighScoreIcon(highScoreImage);
         ApplicationController.setRoot(pane);
-        //ee
+        for (Card card: User.getLoggedUser().getDeck()){
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+        }
         GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
         putCardInDeck();
         //ee
         placeCard();
+
+
     }
 
     private void setHboxes() {
@@ -153,6 +158,8 @@ public class GameMenu extends Application {
 
 
     public void passTurn() {
+        if (User.getTurnUser().getBoard().isHasPlayedOne())
+            return;
         if (!User.getTurnUser().getOpponentUser().isPassed()) {
             putCardInDeck();
             User.getTurnUser().setPassed(true);

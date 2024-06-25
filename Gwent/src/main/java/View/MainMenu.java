@@ -88,14 +88,10 @@ public class MainMenu extends Application {
         User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Seasenthessis", scoiaTael));
         User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("DennisCranmer", scoiaTael));
         User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Schirru", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("ElvenSkirmisher", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarSmuggler", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarSmuggler", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("IsengrimFaoiltiarna", scoiaTael));
+        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Milva", scoiaTael));
         User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
+
 
         Monsters monsters = new Monsters();
         User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
@@ -114,9 +110,9 @@ public class MainMenu extends Application {
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.monsters("Ghoul", monsters));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
+        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
         User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
         User.setTurnUser(User.getLoggedUser());
         try {

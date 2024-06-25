@@ -1,10 +1,9 @@
 package Model;
 
 import Controller.ApplicationController;
-import Controller.GameController;
-import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -13,22 +12,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AbilityActions {
-    public static void
-    switchAction(Card card) {
-        if (card.getAbility() != null)
-            switch (card.getAbility()) {
-                case "spy":
-                    spy();
-                    break;
-                case "scorch":
-                    scorch();
-                    break;
-                case "medic":
-                    medic();
-                    break;
-
-            }
-
+    public static void switchAction(Card card, ArrayList<Card> arrayListPlace) {
+        if (card.getAbility() != null) {
+            if (card.getAbility().contains("spy"))
+                spy();
+            if (card.getAbility().contains("scorch"))
+                scorch();
+            if (card.getAbility().contains("medic"))
+                medic();
+            if (card.getAbility().contains("moralBoost"))
+                moralBoost(arrayListPlace, card);
+            if (card.getAbility().contains("muster"))
+                muster(arrayListPlace, card);
+        }
 
     }
 
@@ -37,6 +33,8 @@ public class AbilityActions {
     }
 
     public static void medic() {
+        if (User.getTurnUser().getBoard().getBurnedCard().isEmpty())
+            return;
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
         HBox hBox = new HBox();
@@ -65,8 +63,7 @@ public class AbilityActions {
                         }
                     }
                     ApplicationController.setEnable(root);
-                    //todo pak
-                    System.out.println(6);
+
                 });
             }
         }
@@ -80,12 +77,34 @@ public class AbilityActions {
         card.setSelect(false);
     }
 
-    public static void moralBoost() {
-
+    public static void moralBoost(ArrayList<Card> arrayListPlace, Card card) {
+        int power = card.getPower();
+        System.out.println(power);
+        for (Card card1:arrayListPlace){
+            if ((card1.getAbility()==null||!card1.getAbility().contains("hero"))&&!card.equals(card1)) {
+                card1.setPower(card1.getPower() + 1);
+                ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
+            }
+        }
+//        card.setPower(power);
+//        ((Label) card.getChildren().get(1)).setText(String.valueOf(power));
     }
 
-    public static void muster() {
+    public static void muster(ArrayList<Card> arrayListPlace, Card card) {
+        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
+        ArrayList<Card> deck = User.getTurnUser().getDeck();
+        findMusters(arrayListPlace, card, hand);
+        findMusters(arrayListPlace, card, deck);
+    }
 
+    private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deck) {
+        for (int i = deck.size()-1; i >= 0; i--) {
+            if (deck.get(i).getName().equals(card.getName())) {
+                User.getTurnUser().getBoard().getHand().remove(deck.get(i));
+                arrayListPlace.add(deck.get(i));
+                deck.get(i).setOnMouseClicked(null);
+            }
+        }
     }
 
     public static void spy() {
