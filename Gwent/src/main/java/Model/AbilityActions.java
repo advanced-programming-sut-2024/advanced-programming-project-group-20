@@ -24,12 +24,25 @@ public class AbilityActions {
                 moralBoost(arrayListPlace, card);
             if (card.getAbility().contains("muster"))
                 muster(arrayListPlace, card);
+            if (card.getAbility().contains("commander'sHorn"))
+                commanderHorn(card);
         }
 
     }
 
-    public static void commanderHorn() {
-
+    public static void commanderHorn(Card card) {
+        if (card.getType().equals("closeCombatUnit")) {
+            for (Card card1 : User.getTurnUser().getBoard().getCloseCombat()) {
+                Label label = (Label)card1.getChildren().getFirst();
+                label.setText(String.valueOf(card1.getPower() * 2));
+            }
+        }
+        if (card.getType().equals("siegeUnit")) {
+            for (Card card1 : User.getTurnUser().getBoard().getSiege()) {
+                Label label = (Label)card1.getChildren().getFirst();
+                label.setText(String.valueOf(card1.getPower() * 2));
+            }
+        }
     }
 
     public static void medic() {
@@ -97,12 +110,12 @@ public class AbilityActions {
         findMusters(arrayListPlace, card, deck);
     }
 
-    private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deck) {
-        for (int i = deck.size() - 1; i >= 0; i--) {
-            if (deck.get(i).getName().equals(card.getName())) {
-                User.getTurnUser().getBoard().getHand().remove(deck.get(i));
-                arrayListPlace.add(deck.get(i));
-                deck.get(i).setOnMouseClicked(null);
+    private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deckOrHand) {
+        for (int i = deckOrHand.size()-1; i >= 0; i--) {
+            if (deckOrHand.get(i).getName().equals(card.getName())&&!deckOrHand.get(i).equals(card)) {
+                arrayListPlace.add(deckOrHand.get(i));
+                deckOrHand.get(i).setOnMouseClicked(null);
+                User.getTurnUser().getBoard().getHand().remove(deckOrHand.get(i));
             }
         }
     }
@@ -133,7 +146,8 @@ public class AbilityActions {
         }
         for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
             //TODO check this part
-            if (!card.getAbility().contains("hero") && card.getPower() == maxPointOfCards) {
+            if (card.getAbility() == null) continue;
+            if (!card.getAbility().equals("hero") && card.getPower() == maxPointOfCards) {
                 shouldBurn.add(card);
             }
         }
@@ -150,7 +164,18 @@ public class AbilityActions {
 
     }
 
-    public static void transformers() {
-
+    public static Card transformers(User user) {
+        for (Card card : user.getBoard().getCloseCombat()) {
+            if (card.getAbility() == null) continue;
+            if (card.getAbility().contains("transformers")) {
+                user.getBoard().getBurnedCard().remove(card);
+                card.setPower(8);
+                card.setAbility(null);
+                Label label = (Label)card.getChildren().get(1);
+                label.setText("8");
+                return card;
+            }
+        }
+        return null;
     }
 }

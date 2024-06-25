@@ -28,6 +28,26 @@ public class GameController {
     private static ArrayList<HBox> hBoxes;
     private static ImageView highScoreIcon;
     private static HBox deckHbox;
+    private static ImageView turnBurnt;
+    private static ImageView opponentBurnt;
+    private static Label turnLabel;
+    private static ImageView biggerCardImage;
+
+    public static void setBiggerCardImage(ImageView biggerCardImage) {
+        GameController.biggerCardImage = biggerCardImage;
+    }
+
+    public static void setTurnLabel(Label turnLabel) {
+        GameController.turnLabel = turnLabel;
+    }
+
+    public static void setTurnBurnt(ImageView turnBurnt) {
+        GameController.turnBurnt = turnBurnt;
+    }
+
+    public static void setOpponentBurnt(ImageView opponentBurnt) {
+        GameController.opponentBurnt = opponentBurnt;
+    }
 
     public static void setHighScoreIcon(ImageView highScoreIcon) {
         GameController.highScoreIcon = highScoreIcon;
@@ -352,7 +372,7 @@ public class GameController {
                             ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
                         }
                         //tightBond
-                        if (card1.getName().equals(card.getName()) && card1.getAbility().contains("tightBond")) {
+                        if (!card.equals(card1)&&card1.getName().equals(card.getName()) && card1.getAbility().contains("tightBond")) {
                             card.setPower(card.getPower() + power);
                             ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
                             card1.setPower(card1.getPower() + power);
@@ -467,9 +487,10 @@ public class GameController {
             skelligeAction(User.getTurnUser().getOpponentUser());
         }
         turnStarter();
-
         putInBurntCards(User.getTurnUser());
         putInBurntCards(User.getTurnUser().getOpponentUser());
+        Card transform1 = AbilityActions.transformers(User.getTurnUser());
+        Card transform2 = AbilityActions.transformers(User.getTurnUser().getOpponentUser());
         for (HBox hBox : hBoxes) {
             ArrayList<Card> target = getArrayPlace(hBox);
             target.clear();
@@ -492,6 +513,13 @@ public class GameController {
                 User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(monster2);
             }
         }
+        if (transform2 != null) {
+            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(transform2);
+        }
+        if (transform1 != null) {
+            User.getTurnUser().getBoard().getCloseCombat().add(transform1);
+        }
+        updateBorder();
         setImagesOfBoard(User.getTurnUser());
     }
 
@@ -575,18 +603,12 @@ public class GameController {
     }
 
     private static void putInBurntCards(User user) {
-        if (user.getBoard().getSiege() != null) {
-            for (Card card : user.getBoard().getSiege())
-                user.getBoard().getBurnedCard().add((Card) card);
-        }
-        if (user.getBoard().getRanged() != null) {
-            for (Card card : user.getBoard().getRanged())
-                user.getBoard().getBurnedCard().add((Card) card);
-        }
-        if (user.getBoard().getCloseCombat() != null) {
-            for (Card card : user.getBoard().getCloseCombat())
-                user.getBoard().getBurnedCard().add((Card) card);
-        }
+        if (user.getBoard().getSiege() != null)
+                user.getBoard().getBurnedCard().addAll(user.getBoard().getSiege());
+        if (user.getBoard().getRanged() != null)
+                user.getBoard().getBurnedCard().addAll(user.getBoard().getRanged());
+        if (user.getBoard().getCloseCombat() != null)
+                user.getBoard().getBurnedCard().addAll(user.getBoard().getCloseCombat());
     }
 
 
@@ -618,7 +640,37 @@ public class GameController {
         for (Card card : user1.getBoard().getHand()) {
             deckHbox.getChildren().add(card);
         }
+        for (Card card : user1.getBoard().getWeather()) {
+            hBoxes.get(6).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getWeather()) {
+            hBoxes.get(6).getChildren().add(card);
+        }
+        SpecialAction.weather();
         setHighScoreIcon();
+        GameController.setBurntCard(turnBurnt, opponentBurnt);
+    }
+
+    public static void updateCardEvent() {
+        ApplicationController.getRoot().getChildren().remove(turnLabel);
+        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
+        deckHbox.getChildren().clear();
+        for (Card card : hand) {
+            deckHbox.getChildren().add(card);
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+            card.setOnMouseClicked(event -> {
+                GameController.putCardInDeck(card, hand);
+            });
+        }
+        for (Card card:User.getTurnUser().getDeck()){
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+            card.setOnMouseClicked(event -> {
+                GameController.putCardInDeck(card, hand);
+            });
+
+        }
     }
 }
 
