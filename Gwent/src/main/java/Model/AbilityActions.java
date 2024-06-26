@@ -149,8 +149,6 @@ public class AbilityActions {
                 user.getBoard().getBurnedCard().remove(card);
                 card.setPower(8);
                 card.setAbility(null);
-                Label label = (Label)card.getChildren().get(1);
-                label.setText("8");
                 return card;
             }
         }

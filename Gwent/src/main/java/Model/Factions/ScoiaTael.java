@@ -43,6 +43,14 @@ public class ScoiaTael extends Faction {
         Collection.add(CardBuilder.scoiaTael("Seasenthessis", this));
         Collection.add(CardBuilder.scoiaTael("Schirru", this));
         Collection.add(CardBuilder.scoiaTael("IsengrimFaoiltiarna", this));
+        Collection.add(CardBuilder.scoiaTael("Iorveth", this));
+        Collection.add(CardBuilder.scoiaTael("Filavandrel", this));
+        Collection.add(CardBuilder.scoiaTael("MahakamanDefender", this));
+        Collection.add(CardBuilder.scoiaTael("MahakamanDefender", this));
+        Collection.add(CardBuilder.scoiaTael("MahakamanDefender", this));
+        Collection.add(CardBuilder.scoiaTael("MahakamanDefender", this));
+        Collection.add(CardBuilder.scoiaTael("MahakamanDefender", this));
+        Collection.add(CardBuilder.scoiaTael("BarclayEls", this));
 
     }
 }

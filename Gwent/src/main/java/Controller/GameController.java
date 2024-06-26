@@ -251,7 +251,7 @@ public class GameController {
                 for(HBox hBox:hBoxes)
                     hBox.setStyle(null);
                 if (card.getName().equals("Decoy")) {
-                    SpecialAction.decoyAction(card);
+                    updateCardEvent();
                 }
                 setSizeSmaller(card);
             }
@@ -374,19 +374,6 @@ public class GameController {
             if (card.isSelect() && !hBox.getStyle().isEmpty()) {
                 User.getTurnUser().getBoard().getHand().remove(card);
                 targetArray.add(card);
-                int power = card.getPower();
-                for (Card card1 : targetArray) {
-                    if (card1.getAbility() != null) {
-                        //tightBond
-                        if (!card.equals(card1)&&card1.getName().equals(card.getName()) && card1.getAbility().contains("tightBond")) {
-                            card.setPower(card.getPower() + power);
-                            ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
-                            card1.setPower(card1.getPower() + power);
-                            ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
-                        }
-                    }
-                }
-
                 card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
@@ -434,7 +421,13 @@ else return null;
         }else if (hBoxes.get(7).equals(hBox)) {
             return User.getTurnUser().getBoard().getSiegeNext();
         }
-        return User.getTurnUser().getBoard().getWeather();
+        else if (hBoxes.get(6).equals(hBox)) {
+            ArrayList<Card> weathers = new ArrayList<>();
+            weathers.addAll(User.getTurnUser().getBoard().getWeather());
+            weathers.addAll(User.getTurnUser().getOpponentUser().getBoard().getWeather());
+            return weathers;
+        }
+        return null;
     }
 
     public static void setSizeSmaller(Card card) {
