@@ -45,6 +45,12 @@ public class Nilfgaard extends Faction {
         Collection.add(CardBuilder.nilfgaard("SiegeTechnician", this));
         Collection.add(CardBuilder.nilfgaard("Sweers", this));
         Collection.add(CardBuilder.nilfgaard("Vanhemar", this));
+        Collection.add(CardBuilder.nilfgaard("ShilardFitz-Oesterlen", this));
+        Collection.add(CardBuilder.nilfgaard("AssirevarAnahid", this));
+        Collection.add(CardBuilder.nilfgaard("HeavyZerrikanianFireScorpion", this));
+        Collection.add(CardBuilder.nilfgaard("Albrich", this));
+        Collection.add(CardBuilder.nilfgaard("LethoofGulet", this));
+        Collection.add(CardBuilder.nilfgaard("Rainfarn", this));
 
     }
 }

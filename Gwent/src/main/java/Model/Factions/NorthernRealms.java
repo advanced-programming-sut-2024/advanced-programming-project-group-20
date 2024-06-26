@@ -44,5 +44,14 @@ public class NorthernRealms extends Faction {
         Collection.add(CardBuilder.northernRealms("SíledeTansarville", this));
         Collection.add(CardBuilder.northernRealms("Thaler", this));
         Collection.add(CardBuilder.northernRealms("YarpenZirgrin", this));
+        Collection.add(CardBuilder.northernRealms("BlueStripesCommando", this));
+        Collection.add(CardBuilder.northernRealms("BlueStripesCommando", this));
+        Collection.add(CardBuilder.northernRealms("BlueStripesCommando", this));
+        Collection.add(CardBuilder.northernRealms("Dethmold", this));
+        Collection.add(CardBuilder.northernRealms("KeiraMetz", this));
+        Collection.add(CardBuilder.northernRealms("SheldonSkaggs", this));
+        Collection.add(CardBuilder.northernRealms("Trebuchet", this));
+        Collection.add(CardBuilder.northernRealms("Trebuchet", this));
+
     }
 }

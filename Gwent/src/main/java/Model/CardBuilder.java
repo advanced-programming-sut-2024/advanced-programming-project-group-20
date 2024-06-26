@@ -12,11 +12,11 @@ public class CardBuilder {
                     true, 4, faction, 1);
             case "Vidkaarl" -> new Card(cardName, "closeCombatUnit", "moralBoost",
                     true, 14, faction, 1111);  //there is no number for this card in dock;
-            case "Svanrige", "Udalryk", "DonarAnHindar" -> new Card(cardName, "closeCombatUnit", null,
+            case "Svanrige", "Udalryk", "DonarAnHindar", "ClanTordarrochArmorsmith" -> new Card(cardName, "closeCombatUnit", null,
                     false, 4, faction, 1);
             case "ClanAnCraite" -> new Card(cardName, "closeCombatUnit", "tightBond",
                     false, 6, faction, 3);
-            case "MadmanLugos" -> new Card(cardName, "closeCombatUnit", null,
+            case "MadmanLugos", "BlueboyLugos" -> new Card(cardName, "closeCombatUnit", null,
                     false, 6, faction, 1);
             case "Cerys" -> new Card(cardName, "closeCombatUnit", "hero&muster",
                     true, 10, faction, 1);
@@ -46,6 +46,8 @@ public class CardBuilder {
                     false, 2, faction, 1);
             case "Olaf" -> new Card(cardName, "agileUnit", "moralBoost",
                     false, 12, faction, 1);
+            case "HolgerBlackhand" -> new Card(cardName, "siegeUnit", null,
+                    false, 12, faction, 1);
             default -> null;
         };
     }
@@ -54,7 +56,9 @@ public class CardBuilder {
         return switch (cardName) {
             case "ElvenSkirmisher" -> new Card(cardName, "rangedUnit", "muster",
                     false, 2, faction, 3);
-            case "Yaevinn" -> new Card(cardName, "agileUnit", null,
+            case "Iorveth", "Seasenthessis", "Eithne" -> new Card(cardName, "rangedUnit", "hero",
+                    false, 10, faction, 1);
+            case "Yaevinn", "Filavandrel", "BarclayEls" -> new Card(cardName, "agileUnit", null,
                     false, 6, faction, 1);
             case "Ciaranaep" -> new Card(cardName, "agileUnit", null,
                     false, 3, faction, 1);
@@ -82,13 +86,12 @@ public class CardBuilder {
                     false, 5, faction, 2);
             case "Milva" -> new Card(cardName, "rangedUnit", "moralBoost",
                     false, 10, faction, 1);
-            case "Seasenthessis", "Eithne" -> new Card(cardName, "rangedUnit", "hero"
-                    , false, 10, faction, 1);
             case "Schirru" -> new Card(cardName, "siegeUnit", "scorch",
                     true, 8, faction, 1);
-            case "IsengrimFaoiltiarna" ->
-                    new Card(cardName, "closeCombatUnit", "hero&moralBoost",
+            case "IsengrimFaoiltiarna" -> new Card(cardName, "closeCombatUnit", "hero&moralBoost",
                             false, 10, faction, 1);
+            case "MahakamanDefender" -> new Card(cardName, "closeCombatUnit", "hero&moralBoost",
+                    false, 5, faction, 5);
 
 
             default -> null;
@@ -99,6 +102,8 @@ public class CardBuilder {
         return switch (cardName) {
             case "Ballista" -> new Card(cardName, "siegeUnit", null,
                     false, 6, faction, 2);
+            case "BlueStripesCommando" -> new Card(cardName, "closeCombatUnit", "tightBond",
+                    false, 4, faction, 3);
             case "Catapult" -> new Card(cardName, "siegeUnit", "tightBond",
                     false, 8, faction, 2);
             case "DragonHunter" -> new Card(cardName, "rangedUnit", "tightBond",
@@ -119,7 +124,7 @@ public class CardBuilder {
                     false, 5, faction, 1);
             case "RedanianFootSoldier" -> new Card(cardName, "closeCombatUnit", null,
                     false, 1, faction, 2);
-            case "SabrinaGlevissing" -> new Card(cardName, "rangedUnit", null,
+            case "SabrinaGlevissing" , "SheldonSkaggs" -> new Card(cardName, "rangedUnit", null,
                     false, 4, faction, 1);
             case "SiegeTower" -> new Card(cardName, "siegeUnit", null,
                     false, 6, faction, 1);
@@ -128,12 +133,16 @@ public class CardBuilder {
                             false, 5, faction, 1);
             case "SigismundDijkstra" -> new Card(cardName, "closeCombatUnit", "spy",
                     false, 4, faction, 1);
-            case "SíledeTansarville" -> new Card(cardName, "rangedUnit", null,
+            case "SíledeTansarville", "KeiraMetz" -> new Card(cardName, "rangedUnit", null,
                     false, 5, faction, 1);
             case "Thaler" -> new Card(cardName, "siegeUnit", "spy",
                     false, 1, faction, 1);
             case "YarpenZirgrin" -> new Card(cardName, "closeCombatUnit", null,
                     false, 2, faction, 1);
+            case "Dethmold" -> new Card(cardName, "rangedUnit", null,
+                    false, 6, faction, 1);
+            case "Trebuchet" -> new Card(cardName, "siegeUnit", null,
+                    false, 6, faction, 2);
             default -> null;
         };
     }
@@ -144,6 +153,8 @@ public class CardBuilder {
                     false, 3, faction, 4);
             case "StefanSkellen" -> new Card(cardName, "closeCombatUnit", "spy",
                     false, 9, faction, 1);
+            case "ShilardFitz-Oesterlen" -> new Card(cardName, "closeCombatUnit", "spy",
+                    false, 7, faction, 1);
             case "YoungEmissary" -> new Card(cardName, "closeCombatUnit", "tightBond",
                     false, 5, faction, 2);
             case "CahirMawrDyffrynAepCeallach" -> new Card(cardName, "closeCombatUnit", null,
@@ -152,6 +163,8 @@ public class CardBuilder {
                     false, 4, faction, 1);
             case "Puttkammer" -> new Card(cardName, "rangedUnit", null,
                     false, 3, faction, 1);
+            case "AssirevarAnahid" -> new Card(cardName, "rangedUnit", null,
+                    false, 6, faction, 1);
             case "BlackInfantryArcher" -> new Card(cardName, "rangedUnit", null,
                     false, 10, faction, 2);
             case "TiborEggebracht" -> new Card(cardName, "rangedUnit", "hero",
@@ -162,6 +175,8 @@ public class CardBuilder {
                     false, 6, faction, 1);
             case "RottenMangonel" -> new Card(cardName, "siegeUnit", null,
                     false, 3, faction, 1);
+            case "HeavyZerrikanianFireScorpion" -> new Card(cardName, "siegeUnit", null,
+                    false, 10, faction, 1);
             case "ZerrikanianFireScorpion" -> new Card(cardName, "siegeUnit", null,
                     false, 5, faction, 1);
             case "SiegeEngineer" -> new Card(cardName, "siegeUnit", null,
@@ -170,12 +185,18 @@ public class CardBuilder {
                     false, 10, faction, 1);
             case "Cynthia" -> new Card(cardName, "rangedUnit", null,
                     false, 4, faction, 1);
+            case "Albrich" -> new Card(cardName, "rangedUnit", null,
+                    false, 2, faction, 1);
             case "EtolianAuxiliaryArchers" -> new Card(cardName, "rangedUnit", "medic",
                     false, 1, faction, 2);
             case "MennoCoehoorn" -> new Card(cardName, "closeCombatUnit", "hero&medic",
                     false, 10, faction, 1);
+            case "LethoofGulet" -> new Card(cardName, "closeCombatUnit", "hero",
+                    false, 10, faction, 1);
             case "Morteisen" -> new Card(cardName, "closeCombatUnit", null,
                     false, 3, faction, 1);
+            case "Rainfarn" -> new Card(cardName, "closeCombatUnit", null,
+                    false, 4, faction, 1);
             case "NausicaaCavalryRider" -> new Card(cardName, "closeCombatUnit", "tightBond",
                     false, 2, faction, 3);
             case "SiegeTechnician" -> new Card(cardName, "siegeUnit", "medic",
@@ -192,7 +213,7 @@ public class CardBuilder {
 
     public static Card monsters(String cardName, Faction faction) {
         return switch (cardName) {
-            case "Draug", "Leshen" -> new Card(cardName, "closeCombatUnit", "hero",
+            case "Draug", "Leshen", "Imlerith" -> new Card(cardName, "closeCombatUnit", "hero",
                     false, 10, faction, 1);
             case "Kayran" -> new Card(cardName, "agileUnit", "MoraleBoostAndHero",
                     false, 8, faction, 1);
@@ -200,14 +221,16 @@ public class CardBuilder {
                     true, 7, faction, 1);
             case "ArachasBehemoth" -> new Card(cardName, "siegeUnit", "muster",
                     false, 6, faction, 1);
-            case "CroneWeavess", "CroneWhispess" -> new Card(cardName, "closeCombatUnit", "muster",
+            case "CroneWeavess", "CroneWhispess", "CroneBrewess" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 6, faction, 1);
             case "EarthElemental", "FireElemental" -> new Card(cardName, "siegeUnit", null,
                     false, 6, faction, 1);
             case "Fiend" -> new Card(cardName, "closeCombatUnit", null,
                     false, 6, faction, 1);
-            case "Forktail", "Werewolf", "PlagueMaiden", "Griffin" -> new Card(cardName, "closeCombatUnit", null,
+            case "Forktail", "Werewolf", "PlagueMaiden", "Griffin", "Frightener" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, faction, 1);
+            case "Botchling" -> new Card(cardName, "closeCombatUnit", null,
+                    false, 4, faction, 1);
             case "GraveHag" -> new Card(cardName, "rangedUnit", null,
                     false, 5, faction, 1);
             case "IceGiant" -> new Card(cardName, "siegeUnit", null,
@@ -218,11 +241,11 @@ public class CardBuilder {
                     false, 4, faction, 3);
             case "VampireBruxa", "VampireEkimmara", "VampireFleder", "VampireGarkain" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 4, faction, 1);
-            case "Cockatrice", "Endrega", "Wyvern" -> new Card(cardName, "rangedUnit", null,
+            case "Cockatrice", "Endrega", "Wyvern", "Gargoyle" -> new Card(cardName, "rangedUnit", null,
                     false, 2, faction, 1);
             case "Foglet" -> new Card(cardName, "closeCombatUnit", null,
                     false, 2, faction, 1);
-            case "Harpy" -> new Card(cardName, "agileUnit", null,
+            case "Harpy", "CelaenoHarpy" -> new Card(cardName, "agileUnit", null,
                     false, 2, faction, 1);
             case "Nekker" -> new Card(cardName, "closeCombatUnit", "muster",
                     false, 2, faction, 3);
@@ -234,9 +257,11 @@ public class CardBuilder {
 
     public static Card neutral(String cardName) {
         return switch (cardName) {
-            case "BitingFrost", "ImpenetrableFog", "TorrentialRain" -> new Card(cardName, "weather", null,
+            case "BitingFrost", "ImpenetrableFog", "TorrentialRain", "SkelligeStorm" -> new Card(cardName, "weather", null,
                     true, 0, null, 3);
-            case "Decoy" -> new Card(cardName, "spell", null,
+            case "ClearWeather" -> new Card(cardName, "weather", "weather",
+                    true, 0, null, 3);
+            case "Decoy", "Commander’shorn", "Scorch" -> new Card(cardName, "spell", null,
                     true, 0, null, 3);
             case "Dandelion" -> new Card(cardName, "closeCombatUnit", "commander'sHorn",
                     true, 2, null, 1);
@@ -252,10 +277,16 @@ public class CardBuilder {
                     false, 6, null, 1);
             case "TrissMerigold" -> new Card(cardName, "closeCombatUnit", "hero",
                     false, 7, null, 1);
+            case "GeraltofRivia" -> new Card(cardName, "closeCombatUnit", "hero",
+                    false, 15, null, 1);
+            case "Vesemir" -> new Card(cardName, "closeCombatUnit", null,
+                    false, 6, null, 1);
             case "Villentretenmerth" -> new Card(cardName, "closeCombatUnit", "scorch",
                     true, 7, null, 1);
             case "YenneferofVengerberg" -> new Card(cardName, "rangedUnit", "hero&medic",
                     false, 7, null, 1);
+            case "Cow" -> new Card(cardName, "rangedUnit", "transformer",
+                    false, 0, null, 1);
             default -> null;
         };
     }

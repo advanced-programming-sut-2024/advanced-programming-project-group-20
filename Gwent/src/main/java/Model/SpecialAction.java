@@ -121,6 +121,7 @@ public class SpecialAction {
     }
     public static int commanderHorn(ArrayList <Card> cards,Card target,int number) {
         for (Card card : cards) {
+            if (card.getAbility() == null) continue;
             if (card.getAbility().equals("commander'sHorn") && !card.equals(target)) {
                 return 2 * number;
             }

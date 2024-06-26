@@ -54,7 +54,6 @@ public class LeaderBuilder {
                             node.setDisable(false);
                         }
                         root.getChildren().removeAll(randImages);
-                        root.getChildren().remove(button);
                         root.setOnMouseClicked(null);
                     });
                 }
