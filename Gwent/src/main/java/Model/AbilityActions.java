@@ -136,8 +136,8 @@ public class AbilityActions {
     public static void mardroeme(ArrayList<Card> arrayListPlace) {
         Skellige skellige = new Skellige();
         for (int i = arrayListPlace.size()-1; i >=0 ; i--) {
-            if (arrayListPlace.get(i).getType().contains("berserker"))
-                arrayListPlace.set(i,CardBuilder.skellige("Berserker",skellige));
+            if (arrayListPlace.get(i).getAbility().contains("berserker"))
+                arrayListPlace.set(i,CardBuilder.skellige("YoungVidkaarl",skellige));
         }
 
     }
