@@ -4,7 +4,6 @@ import Controller.ApplicationController;
 import Model.Factions.Skellige;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -18,7 +17,7 @@ public class AbilityActions {
             if (card.getAbility().contains("spy"))
                 spy();
             if (card.getAbility().contains("scorch"))
-                scorch();
+                scorch(card);
             if (card.getAbility().contains("medic"))
                 medic();
             if (card.getAbility().contains("muster"))
@@ -43,7 +42,7 @@ public class AbilityActions {
         hBox.setAlignment(Pos.CENTER);
         root.getChildren().add(hBox);
         for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-            if (card.getAbility() == null || !(card.getAbility().equals("hero") || card.getType().equals("weather") || card.getType().equals("spell"))) {
+            if (card.getAbility() == null || !(card.getAbility().contains("hero") || card.getType().equals("weather") || card.getType().equals("spell"))) {
                 System.out.println(card.getName());
                 if (!hBox.getChildren().contains(card))
                     hBox.getChildren().add(card);
@@ -75,7 +74,6 @@ public class AbilityActions {
     }
 
 
-
     public static void muster(ArrayList<Card> arrayListPlace, Card card) {
         ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
         ArrayList<Card> deck = User.getTurnUser().getDeck();
@@ -84,8 +82,8 @@ public class AbilityActions {
     }
 
     private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deckOrHand) {
-        for (int i = deckOrHand.size()-1; i >= 0; i--) {
-            if (deckOrHand.get(i).getName().equals(card.getName())&&!deckOrHand.get(i).equals(card)) {
+        for (int i = deckOrHand.size() - 1; i >= 0; i--) {
+            if (deckOrHand.get(i).getName().equals(card.getName()) && !deckOrHand.get(i).equals(card)) {
                 arrayListPlace.add(deckOrHand.get(i));
                 deckOrHand.get(i).setOnMouseClicked(null);
                 User.getTurnUser().getBoard().getHand().remove(deckOrHand.get(i));
@@ -103,55 +101,116 @@ public class AbilityActions {
         User.getTurnUser().getDeck().remove(num);
     }
 
-    public static void tightBond() {
-
+    public static int tightBond(Card card, ArrayList<Card> unit, int number) {
+        if (card.getAbility() == null || !card.getAbility().contains("tightBond")) return number;
+        int multi = 0;
+        for (Card card1 : unit) {
+            if (card1.getName().equals(card.getName())) multi++;
+        }
+        return multi * number;
     }
 
-    public static void scorch() {
-        ArrayList<Card> shouldBurn = new ArrayList<>();
-        //have all cards in one arraylist
-
-        int maxPointOfCards = 0;
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
-            if (card.getPower() > maxPointOfCards && !card.getAbility().contains("hero")) {
-                maxPointOfCards = card.getPower();
+    public static void scorch(Card scorch) {
+        if (!scorch.getType().equals("spell")) {
+            ArrayList<Card> shouldBurn = new ArrayList<>();
+            int maxPointOfCards = 0;
+            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() > maxPointOfCards) {
+                    maxPointOfCards = card.getRealPower();
+                }
+            }
+            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() == maxPointOfCards) {
+                    shouldBurn.add(card);
+                }
+            }
+            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+            User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
+        } else {
+            int maxPower = Card.maxPowerFinder();
+            ArrayList<Card> iterator = new ArrayList<>(User.getTurnUser().getBoard().getCloseCombat());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getBoard().getCloseCombat().remove(card);
+                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                }
+            }
+            iterator = new ArrayList<>(User.getTurnUser().getBoard().getRanged());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getBoard().getRanged().remove(card);
+                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                }
+            }
+            iterator = new ArrayList<>(User.getTurnUser().getBoard().getSiege());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getBoard().getSiege().remove(card);
+                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                }
+            }
+            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().remove(card);
+                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                }
+            }
+            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getOpponentUser().getBoard().getRanged().remove(card);
+                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                }
+            }
+            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getSiege());
+            for (Card card : iterator) {
+                if (card.getRealPower() == maxPower) {
+                    if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                    User.getTurnUser().getOpponentUser().getBoard().getSiege().remove(card);
+                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                }
             }
         }
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
-            //TODO check this part
-            if (card.getAbility() == null) continue;
-            if (!card.getAbility().equals("hero") && card.getPower() == maxPointOfCards) {
-                shouldBurn.add(card);
-            }
-        }
-
-          User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
-                User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
-
-        }
-    public static void berserker() {
 
     }
 
     public static void mardroeme(ArrayList<Card> arrayListPlace) {
         Skellige skellige = new Skellige();
-        for (int i = arrayListPlace.size()-1; i >=0 ; i--) {
+        for (int i = arrayListPlace.size() - 1; i >= 0; i--) {
             if (arrayListPlace.get(i).getAbility().contains("berserker"))
-                arrayListPlace.set(i,CardBuilder.skellige("YoungVidkaarl",skellige));
+                arrayListPlace.set(i, CardBuilder.skellige("YoungVidkaarl", skellige));
         }
 
     }
 
-    public static Card transformers(User user) {
+    public static ArrayList<Card> transformers(User user) {
+        ArrayList<Card> transformers = new ArrayList<>();
         for (Card card : user.getBoard().getCloseCombat()) {
             if (card.getAbility() == null) continue;
             if (card.getAbility().contains("transformers")) {
                 user.getBoard().getBurnedCard().remove(card);
                 card.setPower(8);
                 card.setAbility(null);
-                return card;
+                transformers.add(card);
             }
         }
-        return null;
+        for (Card card : user.getBoard().getRanged()) {
+            if (card.getAbility() == null) continue;
+            if (card.getAbility().contains("transformers")) {
+                user.getBoard().getBurnedCard().remove(card);
+                card.setPower(8);
+                card.setAbility(null);
+                transformers.add(card);
+            }
+        }
+        return transformers;
     }
 }

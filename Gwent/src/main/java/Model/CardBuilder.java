@@ -257,11 +257,13 @@ public class CardBuilder {
 
     public static Card neutral(String cardName) {
         return switch (cardName) {
-            case "BitingFrost", "ImpenetrableFog", "TorrentialRain", "SkelligeStorm" -> new Card(cardName, "weather", null,
+            case "BitingFrost", "ImpenetrableFog", "TorrentialRain", "SkelligeStorm", "ClearWeather" ->
+                    new Card(cardName, "weather", null, true, 0, null, 3);
+            case "Decoy" -> new Card(cardName, "spell", null,
                     true, 0, null, 3);
-            case "ClearWeather" -> new Card(cardName, "weather", "weather",
+            case "Commander’shorn" -> new Card(cardName, "spell", "commander'sHorn",
                     true, 0, null, 3);
-            case "Decoy", "Commander’shorn", "Scorch" -> new Card(cardName, "spell", null,
+            case "Scorch" -> new Card(cardName, "spell", "scorch",
                     true, 0, null, 3);
             case "Dandelion" -> new Card(cardName, "closeCombatUnit", "commander'sHorn",
                     true, 2, null, 1);
@@ -285,7 +287,7 @@ public class CardBuilder {
                     true, 7, null, 1);
             case "YenneferofVengerberg" -> new Card(cardName, "rangedUnit", "hero&medic",
                     false, 7, null, 1);
-            case "Cow" -> new Card(cardName, "rangedUnit", "transformer",
+            case "Cow" -> new Card(cardName, "rangedUnit", "transformers",
                     false, 0, null, 1);
             default -> null;
         };
