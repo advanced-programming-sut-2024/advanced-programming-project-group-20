@@ -232,11 +232,13 @@ public class LeaderBuilder {
                             }
                         }
                         ImageView imageView = new ImageView();
+                        imageView.setFitWidth(hBox.getMaxWidth() / User.getTurnUser().getBoard().getBurnedCard().size() - 20);
+                        imageView.setPreserveRatio(true);
                         imageView.setImage(card.getImage());
                         imageView.setOnMouseClicked(mouseEvent -> {
                             User.getTurnUser().getBoard().getBurnedCard().remove(card);
                             User.getTurnUser().getBoard().getHand().add(card);
-                            GameController.updateBorder();
+                            GameController.updateCardEvent();
                             root.getChildren().remove(hBox);
                             for (Node node : root.getChildren()) {
                                 node.setDisable(false);

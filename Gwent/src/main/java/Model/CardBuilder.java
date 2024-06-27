@@ -215,7 +215,7 @@ public class CardBuilder {
         return switch (cardName) {
             case "Draug", "Leshen", "Imlerith" -> new Card(cardName, "closeCombatUnit", "hero",
                     false, 10, faction, 1);
-            case "Kayran" -> new Card(cardName, "agileUnit", "MoraleBoostAndHero",
+            case "Kayran" -> new Card(cardName, "agileUnit", "moralBoost&hero",
                     false, 8, faction, 1);
             case "Toad" -> new Card(cardName, "rangedUnit", "Scorch",
                     true, 7, faction, 1);
