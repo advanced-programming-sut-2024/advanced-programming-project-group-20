@@ -113,9 +113,9 @@ public class GameMenu extends Application {
         GameController.setTurnLabel(turnLabel);
         GameController.setTurnBurnt(turnBurnt);
         GameController.setOpponentBurnt(opponentBurnt);
-        GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
+        GameController.setImagesOfBoard(User.getTurnUser());
         GameController.updateCardEvent();
         placeCard();
         startCheatMenu();

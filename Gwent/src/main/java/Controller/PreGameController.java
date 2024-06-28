@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Random;
 
@@ -34,6 +35,7 @@ public class PreGameController {
     private int specialCard = 0;
     private int heroCard = 0;
     private int strength = 0;
+    private ArrayList<Card> collection = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -43,7 +45,7 @@ public class PreGameController {
     }
 
     private void showIcons() {
-        
+
     }
 
     private void setContents() {
@@ -86,11 +88,16 @@ public class PreGameController {
     }
 
 
-
     public void startGame() throws Exception {
         GameController.turnStarter();
-        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(),new Date()));
-        User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(),new Date()));
+        User.getTurnUser().setFirstTurn(true);
+        User.getTurnUser().getOpponentUser().setFirstTurn(true);
+        User.getTurnUser().setFullHealth(true);
+        User.getTurnUser().getOpponentUser().setFullHealth(true);
+        User.getTurnUser().setPassed(false);
+        User.getTurnUser().getOpponentUser().setPassed(false);
+        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
+        User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(), new Date()));
         GameMenu gameMenu = new GameMenu();
         gameMenu.start(ApplicationController.getStage());
     }
@@ -108,29 +115,69 @@ public class PreGameController {
         deckContent.setStyle("-fx-background-color: #161716");
         ArrayList<Card> allCards = neutral.getCollection();
         allCards.addAll(faction.getCollection());
-        for (Card card : allCards) {
-            ImageView imageView = new ImageView(card.getImage());
-            imageView.setFitHeight(300);
-            imageView.setFitWidth(135);
-            imageView.setOnMouseClicked(mouseEvent -> {
-                if (collectionContent.getChildren().contains(imageView)) {
-                    collectionContent.getChildren().remove(imageView);
-                    deckContent.getChildren().add(imageView);
-                    User.getTurnUser().getDeck().add(card);
-                    updateData();
-                } else if (deckContent.getChildren().contains(imageView)) {
-                    collectionContent.getChildren().add(imageView);
-                    deckContent.getChildren().remove(imageView);
-                    User.getTurnUser().getDeck().remove(card);
-                    updateData();
-                }
-            });
-            collectionContent.getChildren().add(imageView);
-        }
+        collection = allCards;
+        showDeck(deckContent, collectionContent);
+        showCollection(collectionContent, deckContent);
         collectionPane.setContent(collectionContent);
         deckPane.setContent(deckContent);
     }
 
+    private ArrayList<Card> sortCards(ArrayList<Card> allCards) {
+        ArrayList<Card> full = new ArrayList<>();
+        ArrayList<Card> spell = new ArrayList<>();
+        ArrayList<Card> units = new ArrayList<>(allCards);
+        for (Card card : allCards) {
+            if (card.getType().equals("weather")) {
+                full.add(card);
+                units.remove(card);
+            } else if (card.getType().equals("spell")) {
+                spell.add(card);
+                units.remove(card);
+            }
+        }
+        full.sort(Comparator.comparing(Card::getName));
+        spell.sort(Comparator.comparing(Card::getName));
+        units.sort(Comparator.comparingInt(Card::getPower).reversed().thenComparing(Card::getName));
+        full.addAll(spell);
+        full.addAll(units);
+        return full;
+    }
+
+    private void showCollection(TilePane collectionContent, TilePane deckContent) {
+        collectionContent.getChildren().clear();
+        collection = sortCards(collection);
+        for (Card card : collection) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitHeight(300);
+            imageView.setFitWidth(135);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                collection.remove(card);
+                User.getTurnUser().getDeck().add(card);
+                showCollection(collectionContent,deckContent);
+                showDeck(deckContent,collectionContent);
+                updateData();
+            });
+            collectionContent.getChildren().add(imageView);
+        }
+    }
+
+    private void showDeck(TilePane deckContent, TilePane collectionContent) {
+        deckContent.getChildren().clear();
+        User.getTurnUser().setDeck(sortCards(User.getTurnUser().getDeck()));
+        for (Card card : User.getTurnUser().getDeck()) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitHeight(300);
+            imageView.setFitWidth(135);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                collection.add(card);
+                User.getTurnUser().getDeck().remove(card);
+                showCollection(collectionContent,deckContent);
+                showDeck(deckContent,collectionContent);
+                updateData();
+            });
+            deckContent.getChildren().add(imageView);
+        }
+    }
 
     public static void showInformation() {
     }
@@ -157,15 +204,10 @@ public class PreGameController {
         ApplicationController.setEnable(root);
     }
 
-    public static void addCardToDeck(String cardName, int count) {
-    }
-
-    public static void delete(String cardName, int count) {
-    }
 
     public void changeTurn() throws Exception {
         if (unitCard < 10) {
-            ApplicationController.alert("Low Unit Card","You should choose at least 22 unit card");
+            ApplicationController.alert("Low Unit Card", "You should choose at least 22 unit card");
             return;
         } else if (specialCard > 10) {
             ApplicationController.alert("Extra Special Card", "You can't have more than 10 special card");
@@ -190,7 +232,7 @@ public class PreGameController {
         monsters.setFitWidth(256);
         monsters.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Monsters());
-            User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -203,7 +245,7 @@ public class PreGameController {
         nilfgaard.setFitWidth(256);
         nilfgaard.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Nilfgaard());
-            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -216,7 +258,7 @@ public class PreGameController {
         northernRealms.setFitWidth(256);
         northernRealms.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new NorthernRealms());
-            User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -229,7 +271,7 @@ public class PreGameController {
         skellige.setFitWidth(256);
         skellige.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Skellige());
-            User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -242,7 +284,7 @@ public class PreGameController {
         scoiaTael.setFitWidth(256);
         scoiaTael.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new ScoiaTael());
-            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -265,12 +307,10 @@ public class PreGameController {
             case "Monsters" -> monsterLeader("KingOfTheWildHunt", "CommanderOfRedRiders", "DestroyerOfWorlds"
                     , "BringerOfDeath", "TheTreacherous");
             case "Skellige" -> skelligeLeader("CrachAnCraite", "KingBran");
-            case "Nilfgaard" ->
-                    nilfgaardLeader("EmperorOfNilfgaard", "HisImperialMajesty", "TheRelentless"
-                            , "InvaderOfNorth", "TheWhiteFlame");
-            case "ScoiaTael" ->
-                    scoiaTaelLeader("PurebloodElf", "DaisyOfTheValley", "TheBeautiful"
-                            , "HopeOfTheAenSeidhe", "QueenOfDolBlathanna");
+            case "Nilfgaard" -> nilfgaardLeader("EmperorOfNilfgaard", "HisImperialMajesty", "TheRelentless"
+                    , "InvaderOfNorth", "TheWhiteFlame");
+            case "ScoiaTael" -> scoiaTaelLeader("PurebloodElf", "DaisyOfTheValley", "TheBeautiful"
+                    , "HopeOfTheAenSeidhe", "QueenOfDolBlathanna");
             default -> northernRealmsLeader("LordOfCommanderOfTheNorth", "KingOfTemperia", "TheSteal-Forged"
                     , "TheSiegemaster", "SunOfMedell");
         }
@@ -324,7 +364,6 @@ public class PreGameController {
         root.getChildren().add(copper);
         root.getChildren().add(bronze);
     }
-
 
 
     private void showLeadersOfFactionsWith5Leaders(Faction faction, String leader1, String leader2, String leader3, String leader4, String leader5) {
@@ -388,15 +427,15 @@ public class PreGameController {
 
     private void addLeaderToUserLeader(Faction faction, String leaderName) {
         if (faction instanceof Monsters) {
-            User.getTurnUser().setLeader(LeaderBuilder.monsters(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters(leaderName, faction));
         } else if (faction instanceof Skellige) {
-            User.getTurnUser().setLeader(LeaderBuilder.skellige(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige(leaderName, faction));
         } else if (faction instanceof ScoiaTael) {
-            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael(leaderName, faction));
         } else if (faction instanceof Nilfgaard) {
-            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard(leaderName, faction));
         } else {
-            User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName, faction));
         }
     }
 

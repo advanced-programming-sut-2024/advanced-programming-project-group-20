@@ -70,6 +70,10 @@ public class GameController {
     }
 
     public static void setImagesOfBoard(User user) {
+        if (user.isFirstTurn()) {
+            vetoCard(user);
+            return;
+        }
         updateBorder();
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
         setImageOfDeckBack(user, 686);
@@ -89,6 +93,75 @@ public class GameController {
         deckCardNumber(User.getTurnUser(), 615);
         setLeaderImage(User.getTurnUser(), 687);
         setLeaderImage(User.getTurnUser().getOpponentUser(), 64);
+    }
+
+    private static void vetoCard(User user) {
+        Pane root = ApplicationController.getRoot();
+        for (Node node : root.getChildren()) {
+            node.setDisable(true);
+        }
+        Button button = new Button("SKIP");
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 36px;");
+        button.setAlignment(Pos.CENTER);
+        button.setLayoutY(600);
+        button.setLayoutX((1520 - button.getWidth()) / 2);
+        root.getChildren().add(button);
+        HBox hbox = new HBox(10);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setMaxWidth(1540);
+        hbox.setLayoutY(300);
+        hbox.setLayoutX(20);
+        for (Card card : user.getBoard().getHand()) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitWidth(140);
+            imageView.setPreserveRatio(true);
+            hbox.getChildren().add(imageView);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                Random random = new Random();
+                Card newCard = user.getDeck().get(random.nextInt(0, user.getDeck().size()));
+                user.getDeck().remove(newCard);
+                user.getBoard().getHand().add(newCard);
+                user.getBoard().getHand().remove(card);
+                user.getDeck().add(card);
+                hbox.getChildren().add(newCard);
+                hbox.getChildren().clear();
+                secondVeto(hbox, user, button);
+            });
+        }
+        button.setOnMouseClicked(mouseEvent -> {
+            root.getChildren().remove(hbox);
+            for (Node node1 : ApplicationController.getRoot().getChildren()) {
+                node1.setDisable(false);
+            }
+            user.setFirstTurn(false);
+            setImagesOfBoard(user);
+            root.getChildren().remove(button);
+        });
+        root.getChildren().add(hbox);
+    }
+
+    private static void secondVeto(HBox hbox, User user, Button button) {
+        for (Card card : user.getBoard().getHand()) {
+            ImageView imageView = new ImageView(card.getImage());
+            hbox.getChildren().add(imageView);
+            imageView.setFitWidth(140);
+            imageView.setPreserveRatio(true);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                Random random = new Random();
+                Card newCard = user.getDeck().get(random.nextInt(0, user.getDeck().size()));
+                user.getDeck().remove(newCard);
+                user.getBoard().getHand().add(newCard);
+                user.getBoard().getHand().remove(card);
+                user.getDeck().add(card);
+                ApplicationController.getRoot().getChildren().removeAll(hbox, button);
+                for (Node node1 : ApplicationController.getRoot().getChildren()) {
+                    node1.setDisable(false);
+                }
+                user.setFirstTurn(false);
+                setImagesOfBoard(user);
+                updateCardEvent();
+            });
+        }
     }
 
     private static void setLeaderImage(User user, int height) {
@@ -420,7 +493,7 @@ public class GameController {
                 setSizeSmaller(card);
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
-                if (card.getAbility() != null)
+                if (card.getAbility() != null && card.getAbility().equals("mardoeme"))
                     targetArray = getArrayMardoem(hBox);
                 AbilityActions.switchAction(card, targetArray);
                 updateCardEvent();

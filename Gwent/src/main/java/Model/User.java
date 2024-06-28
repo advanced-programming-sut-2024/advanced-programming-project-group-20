@@ -30,11 +30,11 @@ public class User {
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
     private static User turnUser;
-
     private int maxPoint;
 
     private boolean isPassed = false;
     private boolean isFullHealth = true;
+    private boolean firstTurn = true;
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
@@ -300,4 +300,11 @@ public class User {
         isFullHealth = fullHealth;
     }
 
+    public boolean isFirstTurn() {
+        return firstTurn;
+    }
+
+    public void setFirstTurn(boolean firstTurn) {
+        this.firstTurn = firstTurn;
+    }
 }
