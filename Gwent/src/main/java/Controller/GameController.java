@@ -428,8 +428,8 @@ public class GameController {
         Pane root = ApplicationController.getRoot();
         root.getChildren().clear();
         ImageView imageView = new ImageView(new Image(String.valueOf(GameController.class.getResource("/backgrounds/Gwent_1.jpg"))));
-        imageView.setFitWidth(root.getWidth());
-        imageView.setFitHeight(root.getHeight());
+        imageView.setFitWidth(1540);
+        imageView.setFitHeight(890);
         root.getChildren().add(imageView);
         VBox vBox = new VBox(20);
         vBox.setPrefSize(800, 800);
@@ -437,16 +437,16 @@ public class GameController {
         vBox.setLayoutY(50);
         vBox.setAlignment(Pos.TOP_CENTER);
         Label winnerLabel = new Label("Winner " + winner.getUsername());
-        winnerLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
+        winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
         vBox.getChildren().add(winnerLabel);
         Label firstRound = new Label("First Round:");
-        firstRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fb03f9;");
+        firstRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fb03f9;");
         Label secondRound = new Label("Second Round:");
-        secondRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #09daf1;");
+        secondRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #09daf1;");
         Label thirdRound = new Label("Third Round:");
-        thirdRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ff001e");
+        thirdRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ff001e");
         Label total = new Label("Total Points:");
-        total.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: rgb(0,0,0)");
+        total.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgb(0,0,0)");
         Label firstResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getFirstRoundPointMe());
         Label secondResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getSecondRoundPointMe());
         Label thirdResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getThirdRoundPointMe());
@@ -457,12 +457,12 @@ public class GameController {
         Label totalPoint2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getTotalPointsOpponent());
         Label[] labels = {firstResult, secondResult, thirdResult, totalPoint, firstResult2, secondResult2, thirdResult2, totalPoint2};
         for (Label label : labels) {
-            label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white");
+            label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white");
         }
         Button button = new Button("Back to Main Menu");
-        button.setStyle("-fx-background-color: #f6a107");
-        button.setPrefWidth(150);
-        button.setPrefHeight(50);
+        button.setStyle("-fx-background-color: #f6a107; -fx-font-size: 20px; -fx-font-weight: bold;");
+        button.setPrefWidth(250);
+        button.setPrefHeight(70);
         button.setOnMouseClicked(mouseEvent -> {
             MainMenu mainMenu = new MainMenu();
             try {
