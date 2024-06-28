@@ -98,7 +98,7 @@ public class GameController {
             leader.setOnMouseClicked(mouseEvent -> {
                 user.getLeader().action();
                 user.getLeader().setUsed(true);
-                GameController.updateBorder();
+                updateBorder();
             });
         }
         ApplicationController.getRoot().getChildren().add(leader);

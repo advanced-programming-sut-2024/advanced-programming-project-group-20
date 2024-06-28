@@ -9,6 +9,7 @@ import Model.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -70,13 +72,22 @@ public class GameMenu extends Application {
         Pane root = FXMLLoader.load(url);
         ApplicationController.setRoot(root);
         ApplicationController.setRootSize(root);
+        Scale scale = new Scale();
+        scale.xProperty().bind(Bindings.divide(root.widthProperty(), 1540));
+        scale.yProperty().bind(Bindings.divide(root.heightProperty(), 890));
+        root.getTransforms().add(scale);
         Scene scene = new Scene(root);
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.F11) {
+                stage.setFullScreen(!stage.isFullScreen());
+            }
+        });
         stage.setScene(scene);
         ApplicationController.setStage(stage);
         stage.show();
+        stage.setHeight(740);
+        stage.setWidth(1280);
         stage.centerOnScreen();
-        stage.setHeight(900);
-        stage.setWidth(1600);
         ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
     }

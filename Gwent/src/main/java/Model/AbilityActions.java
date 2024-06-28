@@ -1,6 +1,7 @@
 package Model;
 
 import Controller.ApplicationController;
+import Controller.GameController;
 import Model.Factions.Skellige;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,7 +32,7 @@ public class AbilityActions {
     public static void medic() {
         ArrayList<Card> normalCards = new ArrayList<>();
         for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-            if(card.getAbility() == null && !(card.getAbility().contains("hero") ||
+            if(card.getAbility() == null || !(card.getAbility().contains("hero") ||
                     card.getType().equals("weather") || card.getType().equals("spell")))
                 normalCards.add(card);
         }
@@ -63,6 +64,7 @@ public class AbilityActions {
                     }
                 }
                 ApplicationController.setEnable(root);
+                GameController.updateBorder();
             });
         }
     }
