@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -78,7 +79,6 @@ public class GameMenu extends Application {
         stage.setWidth(1600);
         ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
-        System.out.println(turnSiege);
     }
 
     @FXML
@@ -174,7 +174,7 @@ public class GameMenu extends Application {
     }
 
 
-    public void passTurn() {
+    public void passTurn() throws IOException {
         if (User.getTurnUser().getBoard().isHasPlayedOne())
             return;
         if (!User.getTurnUser().getOpponentUser().isPassed()) {

@@ -1,20 +1,28 @@
 package Controller;
 
 import Model.*;
+import View.MainMenu;
+import View.PreGameMenu;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,16 +61,8 @@ public class GameController {
         GameController.highScoreIcon = highScoreIcon;
     }
 
-    public static HBox getDeckHbox() {
-        return deckHbox;
-    }
-
     public static void setDeckHbox(HBox deckHbox) {
         GameController.deckHbox = deckHbox;
-    }
-
-    public static ArrayList<HBox> gethBoxes() {
-        return hBoxes;
     }
 
     public static void sethBoxes(ArrayList<HBox> hBoxes) {
@@ -72,10 +72,8 @@ public class GameController {
     public static void setImagesOfBoard(User user) {
         updateBorder();
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
-        // image and lable of deck back
         setImageOfDeckBack(user, 686);
         setImageOfDeckBack(user.getOpponentUser(), 60);
-        // set number of card in each row
         setImageCartNumber(user, 420, 50, getTotalHboxPower(hBoxes.get(5)));
         setImageCartNumber(user, 420, 157, getTotalHboxPower(hBoxes.get(4)));
         setImageCartNumber(user, 420, 272, getTotalHboxPower(hBoxes.get(3)));
@@ -196,7 +194,6 @@ public class GameController {
         label.setTextAlignment(TextAlignment.CENTER);
     }
 
-
     private static void setImageCartNumber(User user, int width, int height, int number) {
         Label label = new Label(String.valueOf(number));
         label.setId("labelNumber");
@@ -224,7 +221,6 @@ public class GameController {
         label.setMinWidth(20);
     }
 
-
     public static void putCardInDeck(Card card, ArrayList<Card> hand) {
         if (!card.isSelect()) {
             boolean isAnySelected = false;
@@ -235,10 +231,13 @@ public class GameController {
                 }
             }
             if (!isAnySelected) {
-                if (card.getName().equals("Mardroeme")) {
-                    hBoxes.get(7).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                    hBoxes.get(8).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                    hBoxes.get(9).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                if (card.getType().equals("spell") && !card.getName().equals("Decoy")) {
+                    if (hBoxes.get(7).getChildren().isEmpty())
+                        hBoxes.get(7).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    if (hBoxes.get(8).getChildren().isEmpty())
+                        hBoxes.get(8).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    if (hBoxes.get(9).getChildren().isEmpty())
+                        hBoxes.get(9).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                     setSizeBigger(card);
                 } else {
                     if (getHbox(card) >= 100)
@@ -315,7 +314,6 @@ public class GameController {
 
     }
 
-
     private static int getTotalHboxPower(HBox hBox) {
         int total = 0;
         for (int i = 0; i < hBox.getChildren().size(); i++) {
@@ -325,22 +323,6 @@ public class GameController {
         }
         return total;
     }
-
-    public static String vetoCard(Card card) {
-
-        return null;
-    }
-
-    public static void showCardInfo(Card card, ImageView biggerCardImage) {
-        card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-        card.setOnMouseExited(event -> biggerCardImage.setImage(null));
-    }
-
-
-    public static void leaderAction() {
-
-    }
-
 
     public static void changeTurn(ImageView highScoreIcon, Label turnLabel) {
         if (!ApplicationController.getRoot().getChildren().contains(turnLabel))
@@ -359,18 +341,72 @@ public class GameController {
         waitForChange.play();
     }
 
-    public static boolean checkEnding() {
-        return true;
+    private static void endGame(User winner) throws IOException {
+        if (winner.getActiveGame().getThirdRoundPointMe() < 0) {
+            winner.getActiveGame().setThirdRoundPointMe(0);
+            winner.getActiveGame().setThirdRoundPointOpponent(0);
+            winner.getOpponentUser().getActiveGame().setThirdRoundPointMe(0);
+            winner.getOpponentUser().getActiveGame().setThirdRoundPointOpponent(0);
+        }
+        winner.getActiveGame().countTotalPoints();
+        winner.getOpponentUser().getActiveGame().countTotalPoints();
+        winner.getActiveGame().setWinner(winner.getUsername());
+        winner.getOpponentUser().getActiveGame().setWinner(winner.getUsername());
+        Pane root = ApplicationController.getRoot();
+        root.getChildren().clear();
+        ImageView imageView = new ImageView(new Image(String.valueOf(GameController.class.getResource("/backgrounds/Gwent_1.jpg"))));
+        imageView.setFitWidth(root.getWidth());
+        imageView.setFitHeight(root.getHeight());
+        root.getChildren().add(imageView);
+        VBox vBox = new VBox(20);
+        vBox.setPrefSize(800, 800);
+        vBox.setLayoutX(400);
+        vBox.setLayoutY(50);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        Label winnerLabel = new Label("Winner " + winner.getUsername());
+        winnerLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
+        vBox.getChildren().add(winnerLabel);
+        Label firstRound = new Label("First Round:");
+        firstRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #fb03f9;");
+        Label secondRound = new Label("Second Round:");
+        secondRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #09daf1;");
+        Label thirdRound = new Label("Third Round:");
+        thirdRound.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ff001e");
+        Label total = new Label("Total Points:");
+        total.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: rgb(0,0,0)");
+        Label firstResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getFirstRoundPointMe());
+        Label secondResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getSecondRoundPointMe());
+        Label thirdResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getThirdRoundPointMe());
+        Label totalPoint = new Label(winner.getUsername() + "  " + winner.getActiveGame().getTotalPointsMe());
+        Label firstResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getFirstRoundPointOpponent());
+        Label secondResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getSecondRoundPointOpponent());
+        Label thirdResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getThirdRoundPointOpponent());
+        Label totalPoint2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getTotalPointsOpponent());
+        Label[] labels = {firstResult, secondResult, thirdResult, totalPoint, firstResult2, secondResult2, thirdResult2, totalPoint2};
+        for (Label label : labels) {
+            label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white");
+        }
+        Button button = new Button("Back to Main Menu");
+        button.setStyle("-fx-background-color: #f6a107");
+        button.setPrefWidth(150);
+        button.setPrefHeight(50);
+        button.setOnMouseClicked(mouseEvent -> {
+            MainMenu mainMenu = new MainMenu();
+            try {
+                mainMenu.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        winner.getGameHistories().add(winner.getActiveGame());
+        winner.getOpponentUser().getGameHistories().add(winner.getOpponentUser().getActiveGame());
+        vBox.getChildren().addAll(firstRound, firstResult, firstResult2);
+        vBox.getChildren().addAll(secondRound, secondResult, secondResult2);
+        vBox.getChildren().addAll(thirdRound, thirdResult, thirdResult2);
+        vBox.getChildren().addAll(total, totalPoint, totalPoint2);
+        vBox.getChildren().add(button);
+        root.getChildren().add(vBox);
     }
-
-    private static void endGame() {
-
-    }
-
-    private static void killCard(Card card) {
-
-    }
-
 
     public static boolean placeCard(HBox hBox, ImageView highScoreIcon) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
@@ -384,7 +420,7 @@ public class GameController {
                 setSizeSmaller(card);
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
-                if (card.getAbility() != null && card.getType().equals("spell") && !card.getName().equals("Decoy"))
+                if (card.getAbility() != null)
                     targetArray = getArrayMardoem(hBox);
                 AbilityActions.switchAction(card, targetArray);
                 updateCardEvent();
@@ -446,48 +482,56 @@ public class GameController {
         card.setSelect(false);
     }
 
-
-    public static void nextRound(ImageView highScoreImage) {
+    public static void nextRound(ImageView highScoreImage) throws IOException {
         updateBorder();
         User.getTurnUser().getBoard().setHasPlayedOne(false);
         User.getTurnUser().getOpponentUser().getBoard().setHasPlayedOne(false);
-        System.out.println(User.getTurnUser().getUsername());
-        System.out.println(User.getTurnUser().getOpponentUser().getUsername());
-        System.out.println(hBoxes.get(0));
         Card monster1 = null;
         Card monster2 = null;
-        double totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
-        double totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
+        int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+        int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
         // todo un commment them
-//        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
-//        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
+        calculatePoints(User.getTurnUser(), totalPoints1, totalPoints2);
+        calculatePoints(User.getTurnUser().getOpponentUser(), totalPoints2, totalPoints1);
         if (totalPoints1 > totalPoints2) {
             if (User.getTurnUser().getOpponentUser().isFullHealth()) {
                 User.getTurnUser().getOpponentUser().setFullHealth(false);
                 if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser());
                 }
-            } else System.exit(0);
+            } else {
+                endGame(User.getTurnUser());
+                return;
+            }
         } else if (totalPoints1 < totalPoints2) {
             if (User.getTurnUser().isFullHealth()) {
                 if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser().getOpponentUser());
                 }
                 User.getTurnUser().setFullHealth(false);
-            } else System.exit(0);
+            } else {
+                endGame(User.getTurnUser().getOpponentUser());
+                return;
+            }
         } else {
             if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
                     if (User.getTurnUser().getOpponentUser().isFullHealth())
                         User.getTurnUser().getOpponentUser().setFullHealth(false);
-                    else System.exit(0);
+                    else {
+                        endGame(User.getTurnUser());
+                        return;
+                    }
                 }
             }
             if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                     if (User.getTurnUser().getOpponentUser().isFullHealth())
                         User.getTurnUser().getOpponentUser().setFullHealth(false);
-                    else System.exit(0);
+                    else {
+                        endGame(User.getTurnUser().getOpponentUser());
+                        return;
+                    }
                 }
             }
         }
@@ -497,12 +541,6 @@ public class GameController {
         if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")) {
             monster2 = monstersAction(hBoxes.subList(3, 6));
         }
-        if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
-            skelligeAction(User.getTurnUser());
-        }
-        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")) {
-            skelligeAction(User.getTurnUser().getOpponentUser());
-        }
         turnStarter();
         putInBurntCards(User.getTurnUser());
         putInBurntCards(User.getTurnUser().getOpponentUser());
@@ -511,6 +549,12 @@ public class GameController {
         for (HBox hBox : hBoxes) {
             ArrayList<Card> target = getArrayPlace(hBox);
             target.clear();
+        }
+        if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
+            skelligeAction(User.getTurnUser());
+        }
+        if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")) {
+            skelligeAction(User.getTurnUser().getOpponentUser());
         }
         // ali hard code
         User.getTurnUser().getOpponentUser().getBoard().getWeather().clear();
@@ -555,15 +599,33 @@ public class GameController {
         setImagesOfBoard(User.getTurnUser());
     }
 
-
     private static void skelligeAction(User user) {
         if (user.getActiveGame().getSecondRoundPointMe() > -0.9) {
-            for (int i = 0; i < 2; i++) {
+            ArrayList<Card> nonSpellCards = new ArrayList<>();
+            for (Card card : user.getBoard().getBurnedCard()) {
+                if (card.getType().equals("weather") || card.getType().equals("spell")) continue;
+                nonSpellCards.add(card);
+            }
+
+            while (nonSpellCards.size() > 2) {
                 Random random = new Random();
-                int rand = random.nextInt(0, user.getDeck().size());
-                Card card = user.getDeck().get(rand);
-                user.getDeck().remove(card);
-                user.getBoard().getHand().add(card);
+                nonSpellCards.remove(nonSpellCards.get(random.nextInt(0, nonSpellCards.size())));
+            }
+            for (Card card : nonSpellCards) {
+                switch (card.getType()) {
+                    case "closeCombatUnit", "agileUnit" -> {
+                        user.getBoard().getCloseCombat().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                    case "rangedUnit" -> {
+                        user.getBoard().getRanged().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                    case "siegeUnit" -> {
+                        user.getBoard().getSiege().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                }
             }
         }
     }
@@ -594,8 +656,7 @@ public class GameController {
         return allCards.get(random.nextInt(0, allCards.size()));
     }
 
-
-    private static void calculatePoints(User user, double userPoints, double opponentPoints) {
+    private static void calculatePoints(User user, int userPoints, int opponentPoints) {
         if (user.getActiveGame().getFirstRoundPointMe() < 0) {
             user.getActiveGame().setFirstRoundPointMe(userPoints);
             user.getActiveGame().setFirstRoundPointOpponent(opponentPoints);
@@ -650,7 +711,6 @@ public class GameController {
         if (user.getBoard().getWeather() != null)
             user.getBoard().getBurnedCard().addAll(user.getBoard().getWeather());
     }
-
 
     public static void updateBorder() {
         User user1 = User.getTurnUser();

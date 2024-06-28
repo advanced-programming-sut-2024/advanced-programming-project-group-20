@@ -109,7 +109,6 @@ public class PreGameController {
         ArrayList<Card> allCards = neutral.getCollection();
         allCards.addAll(faction.getCollection());
         for (Card card : allCards) {
-            System.out.println(card.getName());
             ImageView imageView = new ImageView(card.getImage());
             imageView.setFitHeight(300);
             imageView.setFitWidth(135);

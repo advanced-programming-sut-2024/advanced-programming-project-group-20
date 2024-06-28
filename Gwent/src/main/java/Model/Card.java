@@ -53,12 +53,14 @@ public class Card extends Pane {
         this.setPrefWidth(70);
     }
 
-    public static int maxPowerFinder() {
+    public static int maxPowerFinder(boolean spell) {
         int max = 0;
         ArrayList<Card> allCards = new ArrayList<>();
-        allCards.addAll(User.getTurnUser().getBoard().getCloseCombat());
-        allCards.addAll(User.getTurnUser().getBoard().getSiege());
-        allCards.addAll(User.getTurnUser().getBoard().getRanged());
+        if (spell) {
+            allCards.addAll(User.getTurnUser().getBoard().getCloseCombat());
+            allCards.addAll(User.getTurnUser().getBoard().getSiege());
+            allCards.addAll(User.getTurnUser().getBoard().getRanged());
+        }
         allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
         allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getSiege());
         allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getRanged());

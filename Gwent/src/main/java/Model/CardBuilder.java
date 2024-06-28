@@ -90,7 +90,7 @@ public class CardBuilder {
                     true, 8, faction, 1);
             case "IsengrimFaoiltiarna" -> new Card(cardName, "closeCombatUnit", "hero&moralBoost",
                             false, 10, faction, 1);
-            case "MahakamanDefender" -> new Card(cardName, "closeCombatUnit", "hero&moralBoost",
+            case "MahakamanDefender" -> new Card(cardName, "closeCombatUnit", null,
                     false, 5, faction, 5);
 
 

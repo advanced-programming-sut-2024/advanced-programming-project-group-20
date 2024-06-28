@@ -29,7 +29,13 @@ public class AbilityActions {
     }
 
     public static void medic() {
-        if (User.getTurnUser().getBoard().getBurnedCard().isEmpty())
+        ArrayList<Card> normalCards = new ArrayList<>();
+        for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
+            if(card.getAbility() == null && !(card.getAbility().contains("hero") ||
+                    card.getType().equals("weather") || card.getType().equals("spell")))
+                normalCards.add(card);
+        }
+        if (normalCards.isEmpty())
             return;
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
@@ -41,27 +47,23 @@ public class AbilityActions {
         hBox.setSpacing(100);
         hBox.setAlignment(Pos.CENTER);
         root.getChildren().add(hBox);
-        for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
-            if (card.getAbility() == null || !(card.getAbility().contains("hero") || card.getType().equals("weather") || card.getType().equals("spell"))) {
-                System.out.println(card.getName());
-                if (!hBox.getChildren().contains(card))
-                    hBox.getChildren().add(card);
-                setSizeSmaller(card, 2.5);
-                card.setOnMouseClicked(mouseEvent -> {
-                    card.setSelect(false);
-                    root.getChildren().remove(hBox);
-                    User.getTurnUser().getBoard().getBurnedCard().remove(card);
-                    User.getTurnUser().getBoard().getHand().add(card);
-                    card.setOnMouseClicked(null);
-                    for (Node node : hBox.getChildren()) {
-                        if (((Pane) node).getHeight() > 100) {
-                            setSizeSmaller((Card) node, 0.4);
-                        }
+        for (Card card : normalCards) {
+            if (!hBox.getChildren().contains(card))
+                hBox.getChildren().add(card);
+            setSizeSmaller(card, 2.5);
+            card.setOnMouseClicked(mouseEvent -> {
+                card.setSelect(false);
+                root.getChildren().remove(hBox);
+                User.getTurnUser().getBoard().getBurnedCard().remove(card);
+                User.getTurnUser().getBoard().getHand().add(card);
+                card.setOnMouseClicked(null);
+                for (Node node : hBox.getChildren()) {
+                    if (((Pane) node).getHeight() > 100) {
+                        setSizeSmaller((Card) node, 0.4);
                     }
-                    ApplicationController.setEnable(root);
-
-                });
-            }
+                }
+                ApplicationController.setEnable(root);
+            });
         }
     }
 
@@ -111,7 +113,7 @@ public class AbilityActions {
     }
 
     public static void scorch(Card scorch) {
-        if (!scorch.getType().equals("spell")) {
+        if (scorch.getType().equals("closeCombatUnit")) {
             ArrayList<Card> shouldBurn = new ArrayList<>();
             int maxPointOfCards = 0;
             for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
@@ -128,11 +130,28 @@ public class AbilityActions {
             }
             User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
             User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
+        } else if (scorch.getType().equals("siegeUnit")) {
+            ArrayList<Card> shouldBurn = new ArrayList<>();
+            int maxPointOfCards = 0;
+            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getSiege()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() > maxPointOfCards) {
+                    maxPointOfCards = card.getRealPower();
+                }
+            }
+            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getSiege()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() == maxPointOfCards) {
+                    shouldBurn.add(card);
+                }
+            }
+            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+            User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
         } else {
-            int maxPower = Card.maxPowerFinder();
+            int maxPower = Card.maxPowerFinder(scorch.getType().equals("spell"));
             ArrayList<Card> iterator = new ArrayList<>(User.getTurnUser().getBoard().getCloseCombat());
             for (Card card : iterator) {
-                if (card.getRealPower() == maxPower) {
+                if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                     User.getTurnUser().getBoard().getCloseCombat().remove(card);
                     User.getTurnUser().getBoard().getBurnedCard().add(card);
@@ -140,7 +159,7 @@ public class AbilityActions {
             }
             iterator = new ArrayList<>(User.getTurnUser().getBoard().getRanged());
             for (Card card : iterator) {
-                if (card.getRealPower() == maxPower) {
+                if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                     User.getTurnUser().getBoard().getRanged().remove(card);
                     User.getTurnUser().getBoard().getBurnedCard().add(card);
@@ -148,7 +167,7 @@ public class AbilityActions {
             }
             iterator = new ArrayList<>(User.getTurnUser().getBoard().getSiege());
             for (Card card : iterator) {
-                if (card.getRealPower() == maxPower) {
+                if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                     User.getTurnUser().getBoard().getSiege().remove(card);
                     User.getTurnUser().getBoard().getBurnedCard().add(card);
