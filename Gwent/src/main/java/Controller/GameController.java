@@ -1,25 +1,33 @@
 package Controller;
 
 import Model.*;
+import View.MainMenu;
+import View.PreGameMenu;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 
 
 public class GameController {
@@ -53,16 +61,8 @@ public class GameController {
         GameController.highScoreIcon = highScoreIcon;
     }
 
-    public static HBox getDeckHbox() {
-        return deckHbox;
-    }
-
     public static void setDeckHbox(HBox deckHbox) {
         GameController.deckHbox = deckHbox;
-    }
-
-    public static ArrayList<HBox> gethBoxes() {
-        return hBoxes;
     }
 
     public static void sethBoxes(ArrayList<HBox> hBoxes) {
@@ -70,12 +70,14 @@ public class GameController {
     }
 
     public static void setImagesOfBoard(User user) {
+        if (user.isFirstTurn()) {
+            vetoCard(user);
+            return;
+        }
         updateBorder();
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
-        // image and lable of deck back
         setImageOfDeckBack(user, 686);
         setImageOfDeckBack(user.getOpponentUser(), 60);
-        // set number of card in each row
         setImageCartNumber(user, 420, 50, getTotalHboxPower(hBoxes.get(5)));
         setImageCartNumber(user, 420, 157, getTotalHboxPower(hBoxes.get(4)));
         setImageCartNumber(user, 420, 272, getTotalHboxPower(hBoxes.get(3)));
@@ -93,6 +95,75 @@ public class GameController {
         setLeaderImage(User.getTurnUser().getOpponentUser(), 64);
     }
 
+    private static void vetoCard(User user) {
+        Pane root = ApplicationController.getRoot();
+        for (Node node : root.getChildren()) {
+            node.setDisable(true);
+        }
+        Button button = new Button("SKIP");
+        button.setStyle("-fx-background-color: #000000; -fx-text-fill: white; -fx-font-size: 36px;");
+        button.setAlignment(Pos.CENTER);
+        button.setLayoutY(600);
+        button.setLayoutX((1520 - button.getWidth()) / 2);
+        root.getChildren().add(button);
+        HBox hbox = new HBox(10);
+        hbox.setAlignment(Pos.CENTER);
+        hbox.setMaxWidth(1540);
+        hbox.setLayoutY(300);
+        hbox.setLayoutX(20);
+        for (Card card : user.getBoard().getHand()) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitWidth(140);
+            imageView.setPreserveRatio(true);
+            hbox.getChildren().add(imageView);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                Random random = new Random();
+                Card newCard = user.getDeck().get(random.nextInt(0, user.getDeck().size()));
+                user.getDeck().remove(newCard);
+                user.getBoard().getHand().add(newCard);
+                user.getBoard().getHand().remove(card);
+                user.getDeck().add(card);
+                hbox.getChildren().add(newCard);
+                hbox.getChildren().clear();
+                secondVeto(hbox, user, button);
+            });
+        }
+        button.setOnMouseClicked(mouseEvent -> {
+            root.getChildren().remove(hbox);
+            for (Node node1 : ApplicationController.getRoot().getChildren()) {
+                node1.setDisable(false);
+            }
+            user.setFirstTurn(false);
+            setImagesOfBoard(user);
+            root.getChildren().remove(button);
+        });
+        root.getChildren().add(hbox);
+    }
+
+    private static void secondVeto(HBox hbox, User user, Button button) {
+        for (Card card : user.getBoard().getHand()) {
+            ImageView imageView = new ImageView(card.getImage());
+            hbox.getChildren().add(imageView);
+            imageView.setFitWidth(140);
+            imageView.setPreserveRatio(true);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                Random random = new Random();
+                Card newCard = user.getDeck().get(random.nextInt(0, user.getDeck().size()));
+                user.getDeck().remove(newCard);
+                user.getBoard().getHand().add(newCard);
+                user.getBoard().getHand().remove(card);
+                user.getDeck().add(card);
+                ApplicationController.getRoot().getChildren().removeAll(hbox, button);
+                for (Node node1 : ApplicationController.getRoot().getChildren()) {
+                    node1.setDisable(false);
+                }
+                user.setFirstTurn(false);
+                setImagesOfBoard(user);
+                updateCardEvent();
+            });
+        }
+    }
+
     private static void setLeaderImage(User user, int height) {
         ImageView leader = new ImageView();
         leader.setImage(new Image(String.valueOf(GameController.class.getResource("/Leaders/" + user.getLeader().getName() + ".jpg"))));
@@ -100,9 +171,14 @@ public class GameController {
             leader.setOnMouseClicked(mouseEvent -> {
                 user.getLeader().action();
                 user.getLeader().setUsed(true);
+                updateBorder();
             });
         }
         ApplicationController.getRoot().getChildren().add(leader);
+        if (user.getLeader().isUsed()) {
+            GaussianBlur gaussianBlur = new GaussianBlur(10);
+            leader.setEffect(gaussianBlur);
+        }
         leader.setY(height);
         leader.setX(113);
         leader.setFitHeight(115);
@@ -110,9 +186,9 @@ public class GameController {
     }
 
     public static void setActiveLeader(User turnUser) {
-        ImageView activeLeader = new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/icon_leader_active.png")));
+        ImageView activeLeader;
+        activeLeader = new ImageView(new Image(GameController.class.getResourceAsStream("/someImages/icon_leader_active.png")));
         ApplicationController.getRoot().getChildren().add(activeLeader);
-        // todo if for avtive
         activeLeader.setX(207);
         if (0 == 1)
             activeLeader.setY(108);
@@ -191,7 +267,6 @@ public class GameController {
         label.setTextAlignment(TextAlignment.CENTER);
     }
 
-
     private static void setImageCartNumber(User user, int width, int height, int number) {
         Label label = new Label(String.valueOf(number));
         label.setId("labelNumber");
@@ -207,7 +282,6 @@ public class GameController {
         imageView.setY(height);
         imageView.setFitWidth(80);
         imageView.setFitHeight(110);
-        //todo number of lable
         Label label = new Label();
         label.setId("label");
         label.setLayoutX(1418);
@@ -220,7 +294,6 @@ public class GameController {
         label.setMinWidth(20);
     }
 
-
     public static void putCardInDeck(Card card, ArrayList<Card> hand) {
         if (!card.isSelect()) {
             boolean isAnySelected = false;
@@ -231,27 +304,31 @@ public class GameController {
                 }
             }
             if (!isAnySelected) {
-                if(card.getName().equals("Mardroeme")){
-                    hBoxes.get(7).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                    hBoxes.get(8).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                    hBoxes.get(9).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                if (card.getType().equals("spell") && !card.getName().equals("Decoy")) {
+                    if (hBoxes.get(7).getChildren().isEmpty())
+                        hBoxes.get(7).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    if (hBoxes.get(8).getChildren().isEmpty())
+                        hBoxes.get(8).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    if (hBoxes.get(9).getChildren().isEmpty())
+                        hBoxes.get(9).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                     setSizeBigger(card);
+                } else {
+                    if (getHbox(card) >= 100)
+                        hBoxes.get(getHbox(card) / 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
+                    setSizeBigger(card);
+                    if (card.getName().equals("Decoy")) {
+                        SpecialAction.decoy(card);
+                        return;
+                    }
+                    hBoxes.get(getHbox(card) % 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
                 }
-                if (getHbox(card) >= 100)
-                    hBoxes.get(getHbox(card) / 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
-                setSizeBigger(card);
-                if (card.getName().equals("Decoy")) {
-                    SpecialAction.decoy(card);
-                    return;
-                }
-                hBoxes.get(getHbox(card) % 100).setStyle("-fx-background-color: rgba(252,237,6,0.13);");
             }
         } else {
             if (card.isSelect()) {
-                for(HBox hBox:hBoxes)
+                for (HBox hBox : hBoxes)
                     hBox.setStyle(null);
                 if (card.getName().equals("Decoy")) {
-                    SpecialAction.decoyAction(card);
+                    updateCardEvent();
                 }
                 setSizeSmaller(card);
             }
@@ -289,8 +366,6 @@ public class GameController {
     }
 
     private static int getHbox(Card card) {
-        if (card.getName().equals("mardoeme"))
-            return 987;
         if (card.getAbility() != null && card.getAbility().contains("spy")) {
             return switch (card.getType()) {
                 case "closeCombatUnit" -> 3;
@@ -312,7 +387,6 @@ public class GameController {
 
     }
 
-
     private static int getTotalHboxPower(HBox hBox) {
         int total = 0;
         for (int i = 0; i < hBox.getChildren().size(); i++) {
@@ -322,22 +396,6 @@ public class GameController {
         }
         return total;
     }
-
-    public static String vetoCard(Card card) {
-
-        return null;
-    }
-
-    public static void showCardInfo(Card card, ImageView biggerCardImage) {
-        card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-        card.setOnMouseExited(event -> biggerCardImage.setImage(null));
-    }
-
-
-    public static void leaderAction() {
-
-    }
-
 
     public static void changeTurn(ImageView highScoreIcon, Label turnLabel) {
         if (!ApplicationController.getRoot().getChildren().contains(turnLabel))
@@ -356,48 +414,87 @@ public class GameController {
         waitForChange.play();
     }
 
-    public static boolean checkEnding() {
-        return true;
+    private static void endGame(User winner) throws IOException {
+        if (winner.getActiveGame().getThirdRoundPointMe() < 0) {
+            winner.getActiveGame().setThirdRoundPointMe(0);
+            winner.getActiveGame().setThirdRoundPointOpponent(0);
+            winner.getOpponentUser().getActiveGame().setThirdRoundPointMe(0);
+            winner.getOpponentUser().getActiveGame().setThirdRoundPointOpponent(0);
+        }
+        winner.getActiveGame().countTotalPoints();
+        winner.getOpponentUser().getActiveGame().countTotalPoints();
+        winner.getActiveGame().setWinner(winner.getUsername());
+        winner.getOpponentUser().getActiveGame().setWinner(winner.getUsername());
+        Pane root = ApplicationController.getRoot();
+        root.getChildren().clear();
+        ImageView imageView = new ImageView(new Image(String.valueOf(GameController.class.getResource("/backgrounds/Gwent_1.jpg"))));
+        imageView.setFitWidth(1540);
+        imageView.setFitHeight(890);
+        root.getChildren().add(imageView);
+        VBox vBox = new VBox(20);
+        vBox.setPrefSize(800, 800);
+        vBox.setLayoutX(400);
+        vBox.setLayoutY(50);
+        vBox.setAlignment(Pos.TOP_CENTER);
+        Label winnerLabel = new Label("Winner " + winner.getUsername());
+        winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
+        vBox.getChildren().add(winnerLabel);
+        Label firstRound = new Label("First Round:");
+        firstRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fb03f9;");
+        Label secondRound = new Label("Second Round:");
+        secondRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #09daf1;");
+        Label thirdRound = new Label("Third Round:");
+        thirdRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ff001e");
+        Label total = new Label("Total Points:");
+        total.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgb(0,0,0)");
+        Label firstResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getFirstRoundPointMe());
+        Label secondResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getSecondRoundPointMe());
+        Label thirdResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getThirdRoundPointMe());
+        Label totalPoint = new Label(winner.getUsername() + "  " + winner.getActiveGame().getTotalPointsMe());
+        Label firstResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getFirstRoundPointOpponent());
+        Label secondResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getSecondRoundPointOpponent());
+        Label thirdResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getThirdRoundPointOpponent());
+        Label totalPoint2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getTotalPointsOpponent());
+        Label[] labels = {firstResult, secondResult, thirdResult, totalPoint, firstResult2, secondResult2, thirdResult2, totalPoint2};
+        for (Label label : labels) {
+            label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white");
+        }
+        Button button = new Button("Back to Main Menu");
+        button.setStyle("-fx-background-color: #f6a107; -fx-font-size: 20px; -fx-font-weight: bold;");
+        button.setPrefWidth(250);
+        button.setPrefHeight(70);
+        button.setOnMouseClicked(mouseEvent -> {
+            MainMenu mainMenu = new MainMenu();
+            try {
+                mainMenu.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        winner.getGameHistories().add(winner.getActiveGame());
+        winner.getOpponentUser().getGameHistories().add(winner.getOpponentUser().getActiveGame());
+        vBox.getChildren().addAll(firstRound, firstResult, firstResult2);
+        vBox.getChildren().addAll(secondRound, secondResult, secondResult2);
+        vBox.getChildren().addAll(thirdRound, thirdResult, thirdResult2);
+        vBox.getChildren().addAll(total, totalPoint, totalPoint2);
+        vBox.getChildren().add(button);
+        root.getChildren().add(vBox);
     }
 
-    private static void endGame() {
-
-    }
-
-    private static void killCard(Card card) {
-
-    }
-
-
-    public static boolean placeCard(HBox hBox, ImageView highScoreIcon, CountDownLatch latch) {
+    public static boolean placeCard(HBox hBox, ImageView highScoreIcon) {
         for (Iterator<Card> cardIterator = User.getTurnUser().getBoard().getHand().iterator(); cardIterator.hasNext(); ) {
             Card card = cardIterator.next();
             ArrayList<Card> targetArray = getArrayPlace(hBox);
             if (card.isSelect() && !hBox.getStyle().isEmpty()) {
                 User.getTurnUser().getBoard().getHand().remove(card);
                 targetArray.add(card);
-                int power = card.getPower();
-                for (Card card1 : targetArray) {
-                    if (card1.getAbility() != null) {
-                        if (card1.getAbility().contains("moralBoost") && card.getAbility()!=null&&!card.getAbility().contains("hero")&&!card1.equals(card)) {
-                            card.setPower(card.getPower() + 1);
-                            ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
-                        }
-                        //tightBond
-                        if (!card.equals(card1)&&card1.getName().equals(card.getName()) && card1.getAbility().contains("tightBond")) {
-                            card.setPower(card.getPower() + power);
-                            ((Label) card.getChildren().get(1)).setText(String.valueOf(card.getPower()));
-                            card1.setPower(card1.getPower() + power);
-                            ((Label) card1.getChildren().get(1)).setText(String.valueOf(card1.getPower()));
-                        }
-                    }
-                }
-
                 card.setOnMouseClicked(null);
                 hBox.setStyle(null);
                 setSizeSmaller(card);
                 for (HBox hBox1 : hBoxes)
                     hBox1.setStyle(null);
+                if (card.getAbility() != null && card.getAbility().equals("mardoeme"))
+                    targetArray = getArrayMardoem(hBox);
                 AbilityActions.switchAction(card, targetArray);
                 updateCardEvent();
                 updateBorder();
@@ -407,6 +504,16 @@ public class GameController {
 
         }
         return false;
+    }
+
+    private static ArrayList<Card> getArrayMardoem(HBox hBox) {
+        if (hBoxes.get(7).equals(hBox))
+            return User.getTurnUser().getBoard().getSiege();
+        else if (hBoxes.get(8).equals(hBox))
+            return User.getTurnUser().getBoard().getRanged();
+        else if ((hBoxes.get(9).equals(hBox)))
+            return User.getTurnUser().getBoard().getCloseCombat();
+        else return null;
     }
 
     private static ArrayList<Card> getArrayPlace(HBox hBox) {
@@ -422,14 +529,22 @@ public class GameController {
             return User.getTurnUser().getOpponentUser().getBoard().getRanged();
         } else if (hBoxes.get(3).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getCloseCombat();
-        }else if (hBoxes.get(7).equals(hBox)) {
+        } else if (hBoxes.get(9).equals(hBox)) {
+            return User.getTurnUser().getBoard().getCloseNext();
+        } else if (hBoxes.get(8).equals(hBox)) {
+            return User.getTurnUser().getBoard().getRangedNext();
+        } else if (hBoxes.get(7).equals(hBox)) {
+            return User.getTurnUser().getBoard().getSiegeNext();
+        } else if (hBoxes.get(12).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getCloseNext();
-        }else if (hBoxes.get(8).equals(hBox)) {
+        } else if (hBoxes.get(11).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getRangedNext();
-        }else if (hBoxes.get(9).equals(hBox)) {
+        } else if (hBoxes.get(10).equals(hBox)) {
             return User.getTurnUser().getOpponentUser().getBoard().getSiegeNext();
+        } else if (hBoxes.get(6).equals(hBox)) {
+            return User.getTurnUser().getBoard().getWeather();
         }
-        return User.getTurnUser().getBoard().getWeather();
+        return null;
     }
 
     public static void setSizeSmaller(Card card) {
@@ -440,48 +555,56 @@ public class GameController {
         card.setSelect(false);
     }
 
-
-    public static void nextRound(ImageView highScoreImage) {
+    public static void nextRound(ImageView highScoreImage) throws IOException {
         updateBorder();
         User.getTurnUser().getBoard().setHasPlayedOne(false);
         User.getTurnUser().getOpponentUser().getBoard().setHasPlayedOne(false);
-        System.out.println(User.getTurnUser().getUsername());
-        System.out.println(User.getTurnUser().getOpponentUser().getUsername());
-        System.out.println(hBoxes.get(0));
         Card monster1 = null;
         Card monster2 = null;
-        double totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
-        double totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
+        int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+        int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
         // todo un commment them
-//        calculatePoints(User.getTurnUser(),totalPoints1, totalPoints2);
-//        calculatePoints(User.getTurnUser().getOpponentUser(),totalPoints2, totalPoints1);
+        calculatePoints(User.getTurnUser(), totalPoints1, totalPoints2);
+        calculatePoints(User.getTurnUser().getOpponentUser(), totalPoints2, totalPoints1);
         if (totalPoints1 > totalPoints2) {
             if (User.getTurnUser().getOpponentUser().isFullHealth()) {
                 User.getTurnUser().getOpponentUser().setFullHealth(false);
                 if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser());
                 }
-            } else System.exit(0);
+            } else {
+                endGame(User.getTurnUser());
+                return;
+            }
         } else if (totalPoints1 < totalPoints2) {
             if (User.getTurnUser().isFullHealth()) {
                 if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("NorthernRealms")) {
                     northernRealms(User.getTurnUser().getOpponentUser());
                 }
                 User.getTurnUser().setFullHealth(false);
-            } else System.exit(0);
+            } else {
+                endGame(User.getTurnUser().getOpponentUser());
+                return;
+            }
         } else {
             if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
                     if (User.getTurnUser().getOpponentUser().isFullHealth())
                         User.getTurnUser().getOpponentUser().setFullHealth(false);
-                    else System.exit(0);
+                    else {
+                        endGame(User.getTurnUser());
+                        return;
+                    }
                 }
             }
             if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                     if (User.getTurnUser().getOpponentUser().isFullHealth())
                         User.getTurnUser().getOpponentUser().setFullHealth(false);
-                    else System.exit(0);
+                    else {
+                        endGame(User.getTurnUser().getOpponentUser());
+                        return;
+                    }
                 }
             }
         }
@@ -491,21 +614,23 @@ public class GameController {
         if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")) {
             monster2 = monstersAction(hBoxes.subList(3, 6));
         }
+        turnStarter();
+        putInBurntCards(User.getTurnUser());
+        putInBurntCards(User.getTurnUser().getOpponentUser());
+        ArrayList<Card> transform1 = AbilityActions.transformers(User.getTurnUser());
+        ArrayList<Card> transform2 = AbilityActions.transformers(User.getTurnUser().getOpponentUser());
+        for (HBox hBox : hBoxes) {
+            ArrayList<Card> target = getArrayPlace(hBox);
+            target.clear();
+        }
         if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
             skelligeAction(User.getTurnUser());
         }
         if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Skellige")) {
             skelligeAction(User.getTurnUser().getOpponentUser());
         }
-        turnStarter();
-        putInBurntCards(User.getTurnUser());
-        putInBurntCards(User.getTurnUser().getOpponentUser());
-        Card transform1 = AbilityActions.transformers(User.getTurnUser());
-        Card transform2 = AbilityActions.transformers(User.getTurnUser().getOpponentUser());
-        for (HBox hBox : hBoxes) {
-            ArrayList<Card> target = getArrayPlace(hBox);
-            target.clear();
-        }
+        // ali hard code
+        User.getTurnUser().getOpponentUser().getBoard().getWeather().clear();
         if (monster1 != null) {
             if (monster1.getType().equals("siegeUnit")) {
                 User.getTurnUser().getBoard().getSiege().add(monster1);
@@ -524,11 +649,22 @@ public class GameController {
                 User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(monster2);
             }
         }
-        if (transform2 != null) {
-            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(transform2);
+        if (!transform2.isEmpty()) {
+            for (Card card : transform2) {
+                if (card.getType().equals("rangedUnit"))
+                    User.getTurnUser().getOpponentUser().getBoard().getRanged().add(card);
+                else
+                    User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().add(card);
+            }
+
         }
-        if (transform1 != null) {
-            User.getTurnUser().getBoard().getCloseCombat().add(transform1);
+        if (!transform1.isEmpty()) {
+            for (Card card : transform2) {
+                if (card.getType().equals("rangedUnit"))
+                    User.getTurnUser().getBoard().getRanged().add(card);
+                else
+                    User.getTurnUser().getBoard().getCloseCombat().add(card);
+            }
         }
         User.getTurnUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
         User.getTurnUser().getOpponentUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
@@ -536,15 +672,33 @@ public class GameController {
         setImagesOfBoard(User.getTurnUser());
     }
 
-
     private static void skelligeAction(User user) {
         if (user.getActiveGame().getSecondRoundPointMe() > -0.9) {
-            for (int i = 0; i < 2; i++) {
+            ArrayList<Card> nonSpellCards = new ArrayList<>();
+            for (Card card : user.getBoard().getBurnedCard()) {
+                if (card.getType().equals("weather") || card.getType().equals("spell")) continue;
+                nonSpellCards.add(card);
+            }
+
+            while (nonSpellCards.size() > 2) {
                 Random random = new Random();
-                int rand = random.nextInt(0, user.getDeck().size());
-                Card card = user.getDeck().get(rand);
-                user.getDeck().remove(card);
-                user.getBoard().getHand().add(card);
+                nonSpellCards.remove(nonSpellCards.get(random.nextInt(0, nonSpellCards.size())));
+            }
+            for (Card card : nonSpellCards) {
+                switch (card.getType()) {
+                    case "closeCombatUnit", "agileUnit" -> {
+                        user.getBoard().getCloseCombat().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                    case "rangedUnit" -> {
+                        user.getBoard().getRanged().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                    case "siegeUnit" -> {
+                        user.getBoard().getSiege().add(card);
+                        user.getBoard().getBurnedCard().remove(card);
+                    }
+                }
             }
         }
     }
@@ -575,8 +729,7 @@ public class GameController {
         return allCards.get(random.nextInt(0, allCards.size()));
     }
 
-
-    private static void calculatePoints(User user, double userPoints, double opponentPoints) {
+    private static void calculatePoints(User user, int userPoints, int opponentPoints) {
         if (user.getActiveGame().getFirstRoundPointMe() < 0) {
             user.getActiveGame().setFirstRoundPointMe(userPoints);
             user.getActiveGame().setFirstRoundPointOpponent(opponentPoints);
@@ -617,16 +770,22 @@ public class GameController {
 
     private static void putInBurntCards(User user) {
         if (user.getBoard().getSiege() != null)
-                user.getBoard().getBurnedCard().addAll(user.getBoard().getSiege());
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getSiege());
         if (user.getBoard().getRanged() != null)
-                user.getBoard().getBurnedCard().addAll(user.getBoard().getRanged());
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getRanged());
         if (user.getBoard().getCloseCombat() != null)
-                user.getBoard().getBurnedCard().addAll(user.getBoard().getCloseCombat());
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getCloseCombat());
+        if (user.getBoard().getCloseNext() != null)
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getCloseNext());
+        if (user.getBoard().getRangedNext() != null)
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getRangedNext());
+        if (user.getBoard().getSiegeNext() != null)
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getSiegeNext());
+        if (user.getBoard().getWeather() != null)
+            user.getBoard().getBurnedCard().addAll(user.getBoard().getWeather());
     }
 
-
     public static void updateBorder() {
-        // todo for mardoem
         User user1 = User.getTurnUser();
         User user2 = User.getTurnUser().getOpponentUser();
         for (HBox hBox : hBoxes) {
@@ -660,6 +819,24 @@ public class GameController {
         for (Card card : user2.getBoard().getWeather()) {
             hBoxes.get(6).getChildren().add(card);
         }
+        for (Card card : user1.getBoard().getSiegeNext()) {
+            hBoxes.get(7).getChildren().add(card);
+        }
+        for (Card card : user1.getBoard().getRangedNext()) {
+            hBoxes.get(8).getChildren().add(card);
+        }
+        for (Card card : user1.getBoard().getCloseNext()) {
+            hBoxes.get(9).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getCloseNext()) {
+            hBoxes.get(10).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getRangedNext()) {
+            hBoxes.get(11).getChildren().add(card);
+        }
+        for (Card card : user2.getBoard().getSiegeNext()) {
+            hBoxes.get(12).getChildren().add(card);
+        }
         setLabels(User.getTurnUser());
         setLabels(User.getTurnUser().getOpponentUser());
         setHighScoreIcon();
@@ -672,73 +849,162 @@ public class GameController {
         deckHbox.getChildren().clear();
         for (Card card : hand) {
             deckHbox.getChildren().add(card);
-            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+            card.setOnMouseEntered(event -> GameController.biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> GameController.biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
                 GameController.putCardInDeck(card, hand);
             });
         }
-        for (Card card:User.getTurnUser().getDeck()){
-            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
-            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+        for (Card card : User.getTurnUser().getDeck()) {
+            card.setOnMouseEntered(event -> GameController.biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> GameController.biggerCardImage.setImage(null));
             card.setOnMouseClicked(event -> {
                 GameController.putCardInDeck(card, hand);
             });
 
         }
+        setOnClickBoard();
     }
+
     public static void setLabels(User user) {
         for (Card card : user.getBoard().getHand()) {
-            Label label = (Label)card.getChildren().get(1);
+            Label label = (Label) card.getChildren().get(1);
             label.setText(String.valueOf(card.getPower()));
         }
         for (Card card : user.getBoard().getSiege()) {
-            Label label = (Label)card.getChildren().get(1);
-            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+            Label label = (Label) card.getChildren().get(1);
+            if (card.getAbility() != null && card.getAbility().contains("hero")) {
                 label.setText(String.valueOf(card.getPower()));
             } else {
                 int number = card.getPower();
-                number = SpecialAction.torrentialRain(number);
+                if (!SpecialAction.clearWeather())
+                    number = SpecialAction.torrentialRain(number);
                 if (user.getBoard().leaderBoost[0]) {
                     number *= 2;
                 } else {
-                    number = SpecialAction.commanderHorn(user.getBoard().getSiege(), card, number);
+                    ArrayList<Card> fullLine = new ArrayList<>();
+                    fullLine.addAll(user.getBoard().getSiege());
+                    fullLine.addAll(user.getBoard().getSiegeNext());
+                    number = SpecialAction.commanderHorn(fullLine, card, number);
                 }
+                number = AbilityActions.tightBond(card, user.getBoard().getSiege(), number);
                 number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
                 label.setText(String.valueOf(number));
             }
         }
         for (Card card : user.getBoard().getRanged()) {
-            Label label = (Label)card.getChildren().get(1);
+            Label label = (Label) card.getChildren().get(1);
             if (card.getAbility() != null && card.getAbility().equals("hero")) {
                 label.setText(String.valueOf(card.getPower()));
             } else {
                 int number = card.getPower();
-                number = SpecialAction.impenetrableFog(number);
+                if (!SpecialAction.clearWeather())
+                    number = SpecialAction.impenetrableFog(number);
                 if (user.getBoard().leaderBoost[1]) {
                     number *= 2;
                 } else {
-                    number = SpecialAction.commanderHorn(user.getBoard().getRanged(), card, number);
+                    ArrayList<Card> fullLine = new ArrayList<>();
+                    fullLine.addAll(user.getBoard().getRanged());
+                    fullLine.addAll(user.getBoard().getRangedNext());
+                    number = SpecialAction.commanderHorn(fullLine, card, number);
                 }
-                number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
+                number = AbilityActions.tightBond(card, user.getBoard().getRanged(), number);
+                number = SpecialAction.moralBoost(user.getBoard().getRanged(), card, number);
                 label.setText(String.valueOf(number));
             }
         }
         for (Card card : user.getBoard().getCloseCombat()) {
-            Label label = (Label)card.getChildren().get(1);
+            Label label = (Label) card.getChildren().get(1);
             if (card.getAbility() != null && card.getAbility().equals("hero")) {
                 label.setText(String.valueOf(card.getPower()));
             } else {
                 int number = card.getPower();
-                number = SpecialAction.bitingFrost(number);
+                if (!SpecialAction.clearWeather())
+                    number = SpecialAction.bitingFrost(number);
                 if (user.getBoard().leaderBoost[2]) {
                     number *= 2;
                 } else {
-                    number = SpecialAction.commanderHorn(user.getBoard().getSiege(),card, number);
+                    ArrayList<Card> fullLine = new ArrayList<>();
+                    fullLine.addAll(user.getBoard().getCloseCombat());
+                    fullLine.addAll(user.getBoard().getCloseNext());
+                    number = SpecialAction.commanderHorn(fullLine, card, number);
                 }
-                number = SpecialAction.moralBoost(user.getBoard().getSiege(), card, number);
+                number = AbilityActions.tightBond(card, user.getBoard().getCloseCombat(), number);
+                number = SpecialAction.moralBoost(user.getBoard().getCloseCombat(), card, number);
                 label.setText(String.valueOf(number));
             }
+        }
+    }
+
+    public static void setOnClickBoard() {
+        for (Card card : User.getTurnUser().getBoard().getSiege()) {
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+        }
+        for (Card card : User.getTurnUser().getBoard().getRanged()) {
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+        }
+        for (Card card : User.getTurnUser().getBoard().getCloseCombat()) {
+            card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
+            card.setOnMouseExited(event -> biggerCardImage.setImage(null));
+        }
+    }
+
+    public static void doCheat(String text) {
+        switch (text) {
+            case "1":
+                int num = User.getTurnUser().getDeck().size() - 1;
+                if (num < 1)
+                    break;
+                User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
+                User.getTurnUser().getDeck().remove(num);
+                break;
+            case "2":
+                AbilityActions.medic();
+                break;
+            case "3":
+                User.getTurnUser().setFullHealth(true);
+                break;
+            // 4 , 5 for leader works
+            case "4":
+                User.getTurnUser().getLeader().setUsed(false);
+            case "5":
+
+            case "6":
+                showOpponentCards(User.getTurnUser().getOpponentUser().getBoard().getHand());
+                break;
+            case "7":
+                showOpponentCards(User.getTurnUser().getOpponentUser().getDeck());
+
+                break;
+        }
+        setOnClickBoard();
+        updateBorder();
+        setImagesOfBoard(User.getTurnUser());
+
+    }
+
+    public static void showOpponentCards(ArrayList<Card> cards) {
+        Pane root = ApplicationController.getRoot();
+        ApplicationController.setDisable(root);
+        HBox hBox = new HBox();
+        hBox.setLayoutX(300);
+        hBox.setLayoutY(400);
+        hBox.setPrefHeight(300);
+        hBox.setPrefWidth(1000);
+        hBox.setSpacing(50);
+        hBox.setAlignment(Pos.CENTER);
+        root.getChildren().add(hBox);
+        for (Card card : cards) {
+            if (!hBox.getChildren().contains(card))
+                hBox.getChildren().add(card);
+            root.setOnMouseClicked(mouseEvent -> {
+                card.setSelect(false);
+                root.getChildren().remove(hBox);
+                card.setOnMouseClicked(null);
+                ApplicationController.setEnable(root);
+            });
         }
     }
 }

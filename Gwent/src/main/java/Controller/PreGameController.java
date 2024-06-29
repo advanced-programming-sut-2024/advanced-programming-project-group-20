@@ -20,6 +20,7 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 public class PreGameController {
@@ -42,6 +43,7 @@ public class PreGameController {
     private int strength = 0;
     private TilePane collectionContent;
     private TilePane deckContent;
+    private ArrayList<Card> collection = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -96,6 +98,13 @@ public class PreGameController {
 
     public void startGame() throws Exception {
         GameController.turnStarter();
+
+        User.getTurnUser().setFirstTurn(true);
+        User.getTurnUser().getOpponentUser().setFirstTurn(true);
+        User.getTurnUser().setFullHealth(true);
+        User.getTurnUser().getOpponentUser().setFullHealth(true);
+        User.getTurnUser().setPassed(false);
+        User.getTurnUser().getOpponentUser().setPassed(false);
         User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
         User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(), new Date()));
         GameMenu gameMenu = new GameMenu();
@@ -115,29 +124,69 @@ public class PreGameController {
         deckContent.setStyle("-fx-background-color: #161716");
         ArrayList<Card> allCards = neutral.getCollection();
         allCards.addAll(faction.getCollection());
-        for (Card card : allCards) {
-            ImageView imageView = new ImageView(card.getImage());
-            imageView.setFitHeight(300);
-            imageView.setFitWidth(135);
-            imageView.setOnMouseClicked(mouseEvent -> {
-                if (collectionContent.getChildren().contains(imageView)) {
-                    collectionContent.getChildren().remove(imageView);
-                    deckContent.getChildren().add(imageView);
-                    User.getTurnUser().getDeck().add(card);
-                    updateData();
-                } else if (deckContent.getChildren().contains(imageView)) {
-                    collectionContent.getChildren().add(imageView);
-                    deckContent.getChildren().remove(imageView);
-                    User.getTurnUser().getDeck().remove(card);
-                    updateData();
-                }
-            });
-            collectionContent.getChildren().add(imageView);
-        }
+        collection = allCards;
+        showDeck(deckContent, collectionContent);
+        showCollection(collectionContent, deckContent);
         collectionPane.setContent(collectionContent);
         deckPane.setContent(deckContent);
     }
 
+    private ArrayList<Card> sortCards(ArrayList<Card> allCards) {
+        ArrayList<Card> full = new ArrayList<>();
+        ArrayList<Card> spell = new ArrayList<>();
+        ArrayList<Card> units = new ArrayList<>(allCards);
+        for (Card card : allCards) {
+            if (card.getType().equals("weather")) {
+                full.add(card);
+                units.remove(card);
+            } else if (card.getType().equals("spell")) {
+                spell.add(card);
+                units.remove(card);
+            }
+        }
+        full.sort(Comparator.comparing(Card::getName));
+        spell.sort(Comparator.comparing(Card::getName));
+        units.sort(Comparator.comparingInt(Card::getPower).reversed().thenComparing(Card::getName));
+        full.addAll(spell);
+        full.addAll(units);
+        return full;
+    }
+
+    private void showCollection(TilePane collectionContent, TilePane deckContent) {
+        collectionContent.getChildren().clear();
+        collection = sortCards(collection);
+        for (Card card : collection) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitHeight(300);
+            imageView.setFitWidth(135);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                collection.remove(card);
+                User.getTurnUser().getDeck().add(card);
+                showCollection(collectionContent,deckContent);
+                showDeck(deckContent,collectionContent);
+                updateData();
+            });
+            collectionContent.getChildren().add(imageView);
+        }
+    }
+
+    private void showDeck(TilePane deckContent, TilePane collectionContent) {
+        deckContent.getChildren().clear();
+        User.getTurnUser().setDeck(sortCards(User.getTurnUser().getDeck()));
+        for (Card card : User.getTurnUser().getDeck()) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitHeight(300);
+            imageView.setFitWidth(135);
+            imageView.setOnMouseClicked(mouseEvent -> {
+                collection.add(card);
+                User.getTurnUser().getDeck().remove(card);
+                showCollection(collectionContent,deckContent);
+                showDeck(deckContent,collectionContent);
+                updateData();
+            });
+            deckContent.getChildren().add(imageView);
+        }
+    }
 
     public static void showInformation() {
     }
@@ -265,11 +314,6 @@ public class PreGameController {
         ApplicationController.setEnable(root);
     }
 
-    public static void addCardToDeck(String cardName, int count) {
-    }
-
-    public static void delete(String cardName, int count) {
-    }
 
     public void changeTurn() throws Exception {
         if (unitCard < 10) {

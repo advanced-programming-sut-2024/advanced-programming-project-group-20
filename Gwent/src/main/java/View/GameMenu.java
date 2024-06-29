@@ -9,18 +9,23 @@ import Model.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -33,6 +38,8 @@ public class GameMenu extends Application {
     public HBox opponentCloseNext;
     public HBox opponentRangedNext;
     public HBox opponentSiegeNext;
+    public TextField cheatText;
+    public Label cheatLabel;
     @FXML
     private ImageView activeLeader;
     public Label passedLabel;
@@ -50,16 +57,13 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
-    private final CountDownLatch latch = new CountDownLatch(1);
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
-    // I add this GameHistory(Hamid)
     private GameHistory gameHistory;
 
 
     @Override
     public void start(Stage stage) throws Exception {
-
         User.getTurnUser().setBoard(new Board());
         User.getTurnUser().getOpponentUser().setBoard(new Board());
         ApplicationController.setStage(stage);
@@ -68,20 +72,30 @@ public class GameMenu extends Application {
         Pane root = FXMLLoader.load(url);
         ApplicationController.setRoot(root);
         ApplicationController.setRootSize(root);
+        Scale scale = new Scale();
+        scale.xProperty().bind(Bindings.divide(root.widthProperty(), 1540));
+        scale.yProperty().bind(Bindings.divide(root.heightProperty(), 890));
+        root.getTransforms().add(scale);
         Scene scene = new Scene(root);
+        scene.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.F11) {
+                stage.setFullScreen(!stage.isFullScreen());
+            }
+        });
         stage.setScene(scene);
         ApplicationController.setStage(stage);
         stage.show();
+        stage.setHeight(740);
+        stage.setWidth(1280);
         stage.centerOnScreen();
-        stage.setHeight(900);
-        stage.setWidth(1600);
         ApplicationController.setGameMenu(this);
         GameController.setActiveLeader(User.getTurnUser());
-        System.out.println(turnSiege);
     }
 
     @FXML
     public void initialize() {
+        pane.getChildren().remove(cheatText);
+        pane.getChildren().remove(cheatLabel);
         pane.getChildren().remove(passedLabel);
         pane.getChildren().remove(turnLabel);
         passedLabel.setId("no");
@@ -99,11 +113,29 @@ public class GameMenu extends Application {
         GameController.setTurnLabel(turnLabel);
         GameController.setTurnBurnt(turnBurnt);
         GameController.setOpponentBurnt(opponentBurnt);
-        GameController.setImagesOfBoard(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser());
         GameController.setRandomHand(User.getTurnUser().getOpponentUser());
+        GameController.setImagesOfBoard(User.getTurnUser());
         GameController.updateCardEvent();
         placeCard();
+        startCheatMenu();
+    }
+
+    private void startCheatMenu() {
+        pane.setOnKeyPressed(event -> {
+            if (event.isShiftDown() && event.getCode() == KeyCode.CAPS) {
+                ApplicationController.getRoot().getChildren().add(cheatLabel);
+                ApplicationController.getRoot().getChildren().add(cheatText);
+                cheatText.setOnKeyPressed(keyEvent -> {
+                    if (keyEvent.getCode().equals(KeyCode.ENTER)) {
+                        GameController.doCheat(cheatText.getText());
+                        pane.getChildren().remove(cheatText);
+                        pane.getChildren().remove(cheatLabel);
+                    }
+                });
+            }
+        });
+
     }
 
     private void setHboxes() {
@@ -129,7 +161,7 @@ public class GameMenu extends Application {
         for (HBox hBox : hBoxes) {
             hBox.setOnMouseClicked(event -> {
                 if (!User.getTurnUser().getBoard().isHasPlayedOne()||User.getTurnUser().getOpponentUser().isPassed()) {
-                    if (GameController.placeCard(hBox, highScoreImage, latch)) {
+                    if (GameController.placeCard(hBox, highScoreImage)) {
                         GameController.updateCardEvent();
                         User.getTurnUser().getBoard().setHasPlayedOne(true);
                         for (Card card : User.getTurnUser().getBoard().getHand()) {
@@ -153,7 +185,7 @@ public class GameMenu extends Application {
     }
 
 
-    public void passTurn() {
+    public void passTurn() throws IOException {
         if (User.getTurnUser().getBoard().isHasPlayedOne())
             return;
         if (!User.getTurnUser().getOpponentUser().isPassed()) {
@@ -164,7 +196,6 @@ public class GameMenu extends Application {
             Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> GameController.updateCardEvent()));
             waitForChangeTurn.setCycleCount(1);
             waitForChangeTurn.play();
-
         } else {
             ApplicationController.getRoot().getChildren().remove(passedLabel);
             User.getTurnUser().getOpponentUser().setPassed(false);

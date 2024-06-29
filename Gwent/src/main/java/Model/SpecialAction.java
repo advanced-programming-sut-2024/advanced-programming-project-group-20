@@ -13,42 +13,72 @@ import java.util.concurrent.atomic.AtomicReference;
 public class SpecialAction {
     public static int bitingFrost(int number){
         for (Card card : User.getTurnUser().getBoard().getWeather()) {
-            if (card.getName().equals("BitingFrost"))
+            if (card.getName().equals("BitingFrost")) {
                 if (User.getTurnUser().getBoard().leaderBoost[4] ||
                         User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
                 }
+            }
         }
         for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
-            if (card.getName().equals("BitingFrost"))
+            if (card.getName().equals("BitingFrost")) {
                 if (User.getTurnUser().getBoard().leaderBoost[4] ||
                         User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
                 }
+            }
         }
         return number;
     }
 
     public static int impenetrableFog(int number){
         for (Card card : User.getTurnUser().getBoard().getWeather()) {
-            if (card.getName().equals("ImpenetrableFog")) return 1;
+            if (card.getName().equals("ImpenetrableFog") || card.getName().equals("SkelligeStorm")) {
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
+            }
         }
         for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
-            if (card.getName().equals("ImpenetrableFog")) return 1;
+            if (card.getName().equals("ImpenetrableFog") || card.getName().equals("SkelligeStorm")) {
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
+            }
         }
         return number;
     }
 
     public static int torrentialRain(int number){
         for (Card card : User.getTurnUser().getBoard().getWeather()) {
-            if (card.getName().equals("TorrentialRain")) return 1;
+            if (card.getName().equals("TorrentialRain") || card.getName().equals("SkelligeStorm")) {
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
+            }
         }
         for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
-            if (card.getName().equals("TorrentialRain")) return 1;
+            if (card.getName().equals("TorrentialRain") || card.getName().equals("SkelligeStorm")) {
+                if (User.getTurnUser().getBoard().leaderBoost[4] ||
+                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                    return (1 + number) / 2;
+                } else {
+                    return 1;
+                }
+            }
         }
         return number;
     }
@@ -121,6 +151,7 @@ public class SpecialAction {
     }
     public static int commanderHorn(ArrayList <Card> cards,Card target,int number) {
         for (Card card : cards) {
+            if (card.getAbility() == null) continue;
             if (card.getAbility().equals("commander'sHorn") && !card.equals(target)) {
                 return 2 * number;
             }
@@ -128,4 +159,13 @@ public class SpecialAction {
         return number;
     }
 
+    public static boolean clearWeather() {
+        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+            if (card.getName().equals("ClearWeather")) return true;
+        }
+        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+            if (card.getName().equals("ClearWeather")) return true;
+        }
+        return false;
+    }
 }

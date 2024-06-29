@@ -30,7 +30,7 @@ public class RegisterController {
     }
 
     public static void register(TextField usernameField, TextField passwordField, TextField emailField
-            , TextField nickNameField, TextField repeatedPasswordField, Label securityLable) {
+            , TextField nickNameField, TextField repeatedPasswordField) {
 
         if (usernameField.getText().isEmpty()) {
             ApplicationController.alert("invalid username", "username section is empty!");
@@ -66,12 +66,12 @@ public class RegisterController {
 
         } else {
             //first we show security questions then register
-            showSecurityQuestions(usernameField, passwordField, nickNameField, emailField, securityLable);
+            showSecurityQuestions(usernameField, passwordField, nickNameField, emailField);
         }
     }
 
     private static void showSecurityQuestions(TextField usernameField, TextField passwordField
-            , TextField nickNameField, TextField emailField, Label securityLable) {
+            , TextField nickNameField, TextField emailField) {
 
         ApplicationController.setDisable(RegisterMenu.root);
 //        puting white rectangle

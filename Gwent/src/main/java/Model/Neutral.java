@@ -23,6 +23,18 @@ public class Neutral {
         collection.add(CardBuilder.neutral("TorrentialRain"));
         collection.add(CardBuilder.neutral("TorrentialRain"));
         collection.add(CardBuilder.neutral("TorrentialRain"));
+        collection.add(CardBuilder.neutral("SkelligeStorm"));
+        collection.add(CardBuilder.neutral("SkelligeStorm"));
+        collection.add(CardBuilder.neutral("SkelligeStorm"));
+        collection.add(CardBuilder.neutral("ClearWeather"));
+        collection.add(CardBuilder.neutral("ClearWeather"));
+        collection.add(CardBuilder.neutral("ClearWeather"));
+        collection.add(CardBuilder.neutral("Scorch"));
+        collection.add(CardBuilder.neutral("Scorch"));
+        collection.add(CardBuilder.neutral("Scorch"));
+        collection.add(CardBuilder.neutral("Commander’shorn"));
+        collection.add(CardBuilder.neutral("Commander’shorn"));
+        collection.add(CardBuilder.neutral("Commander’shorn"));
         collection.add(CardBuilder.neutral("Decoy"));
         collection.add(CardBuilder.neutral("Decoy"));
         collection.add(CardBuilder.neutral("Decoy"));
@@ -38,7 +50,9 @@ public class Neutral {
         collection.add(CardBuilder.neutral("Villentretenmerth"));
         collection.add(CardBuilder.neutral("YenneferofVengerberg"));
         collection.add(CardBuilder.neutral("ZoltanChivay"));
-
+        collection.add(CardBuilder.neutral("Cow"));
+        collection.add(CardBuilder.neutral("GeraltofRivia"));
+        collection.add(CardBuilder.neutral("Vesemir"));
 
     }
 }

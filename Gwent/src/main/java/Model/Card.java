@@ -10,6 +10,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
+
 
 public class Card extends Pane {
     private String name;
@@ -52,6 +54,23 @@ public class Card extends Pane {
         this.setPrefWidth(70);
     }
 
+    public static int maxPowerFinder(boolean spell) {
+        int max = 0;
+        ArrayList<Card> allCards = new ArrayList<>();
+        if (spell) {
+            allCards.addAll(User.getTurnUser().getBoard().getCloseCombat());
+            allCards.addAll(User.getTurnUser().getBoard().getSiege());
+            allCards.addAll(User.getTurnUser().getBoard().getRanged());
+        }
+        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
+        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getSiege());
+        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+        for (Card card : allCards) {
+            if(card.getAbility() != null && card.getAbility().contains("hero")) continue;
+            if (card.getRealPower() > max) max = card.getRealPower();
+        }
+        return max;
+    }
 
     public void abilityAction() {
 
@@ -169,5 +188,9 @@ public class Card extends Pane {
         } else {
             return CardBuilder.scoiaTael(cardName, new ScoiaTael());
         }
+    }
+    public int getRealPower() {
+        Label label = (Label) this.getChildren().get(1);
+        return Integer.parseInt(label.getText());
     }
 }

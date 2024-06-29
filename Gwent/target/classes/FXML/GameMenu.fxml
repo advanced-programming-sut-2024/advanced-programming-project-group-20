@@ -56,6 +56,15 @@
    <HBox fx:id="opponentCloseNext" alignment="CENTER" layoutX="463.0" layoutY="233.0" prefHeight="100.0" prefWidth="95.0" />
    <HBox fx:id="opponentRangedNext" alignment="CENTER" layoutX="463.0" layoutY="121.0" prefHeight="100.0" prefWidth="95.0" />
    <HBox fx:id="opponentSiegeNext" alignment="CENTER" layoutX="463.0" layoutY="14.0" prefHeight="100.0" prefWidth="95.0" />
+   <Label fx:id="cheatLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="661.0" layoutY="221.0" prefHeight="67.0" prefWidth="237.0" text="Enter Cheat Code" textFill="#0c8e42">
+      <font>
+         <Font name="Algerian" size="24.0" />
+      </font>
+   </Label>
+   <TextField fx:id="cheatText" alignment="TOP_CENTER" layoutX="696.0" layoutY="288.0" prefHeight="90.0" prefWidth="166.0" style="-fx-background-color: rgba(27,89,3,0);">
+      <font>
+         <Font name="Agency FB Bold" size="23.0" />
+      </font></TextField>
 
 
 </AnchorPane>

@@ -45,6 +45,9 @@ public class Skellige extends Faction {
         Collection.add(CardBuilder.skellige("WarLongship", this));
         Collection.add(CardBuilder.skellige("DraigBon-Dhu", this));
         Collection.add(CardBuilder.skellige("Olaf", this));
+        Collection.add(CardBuilder.skellige("BlueboyLugos", this));
+        Collection.add(CardBuilder.skellige("ClanTordarrochArmorsmith", this));
+        Collection.add(CardBuilder.skellige("HolgerBlackhand", this));
 
     }
 }

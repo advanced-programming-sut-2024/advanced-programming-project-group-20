@@ -3,15 +3,11 @@ package Model;
 import Controller.ApplicationController;
 import Controller.GameController;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 
 import java.util.ArrayList;
-import java.util.Formattable;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -236,11 +232,13 @@ public class LeaderBuilder {
                             }
                         }
                         ImageView imageView = new ImageView();
+                        imageView.setFitWidth(hBox.getMaxWidth() / User.getTurnUser().getBoard().getBurnedCard().size() - 20);
+                        imageView.setPreserveRatio(true);
                         imageView.setImage(card.getImage());
                         imageView.setOnMouseClicked(mouseEvent -> {
                             User.getTurnUser().getBoard().getBurnedCard().remove(card);
                             User.getTurnUser().getBoard().getHand().add(card);
-                            GameController.updateBorder();
+                            GameController.updateCardEvent();
                             root.getChildren().remove(hBox);
                             for (Node node : root.getChildren()) {
                                 node.setDisable(false);

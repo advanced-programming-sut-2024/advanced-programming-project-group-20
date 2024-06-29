@@ -5,7 +5,9 @@ import View.GameMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class ApplicationController {
     private static Stage stage;
     private static Pane root;
+    private static Scene scene;
 
     private static GameMenu gameMenu;
 
@@ -110,4 +113,16 @@ public class ApplicationController {
             e.printStackTrace();
         }
     }
+
+
+    public static Scene getScene() {
+        return scene;
+    }
+
+    public static void setScene(Scene scene) {
+        ApplicationController.scene = scene;
+    }
+
+
+
 }

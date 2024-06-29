@@ -101,7 +101,7 @@ public class RegisterMenu extends Application {
     }
 
     public void register(MouseEvent mouseEvent) {
-        RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField, securityLable);
+        RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
     }
 
     //TODO delete this later
@@ -121,7 +121,4 @@ public class RegisterMenu extends Application {
         RegisterController.randomPassword(passwordField, repeatedPasswordField);
     }
 
-    public Label getSecurityLable() {
-        return securityLable;
-    }
 }
