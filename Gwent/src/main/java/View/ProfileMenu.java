@@ -22,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.Date;
 
 public class ProfileMenu extends Application {
@@ -30,6 +31,8 @@ public class ProfileMenu extends Application {
     public Button button2;
     public Button button3;
     public Pane informationPane;
+    @FXML
+    private ScrollPane scrollOfPointsTable;
     @FXML
     private ScrollPane scrollOfHistory;
     @FXML
@@ -61,6 +64,19 @@ public class ProfileMenu extends Application {
     public void initialize() {
         contentsOfProfileMenu();
         setHistoryContents();
+        setTablePointsContent();
+    }
+
+    private void setTablePointsContent() {
+        User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins));
+        for (User user: User.getAllUsers()){
+            TilePane collectionContent = new TilePane(5, 5);
+            collectionContent.setPrefWidth(scrollOfPointsTable.getPrefWidth());
+            collectionContent.setMinHeight(scrollOfPointsTable.getMinHeight());
+            TableView<User> tableView = new TableView<>();
+            tableView.setStyle("-fx-background-color: transparent");
+            tableView.setPrefWidth(1230);
+        }
     }
 
     private void setHistoryContents() {
