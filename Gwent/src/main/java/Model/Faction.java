@@ -10,9 +10,6 @@ public abstract class Faction {
     protected String name;
     transient protected ArrayList<Card> Collection = new ArrayList<>();
 
-    public void ability() {
-    }
-
     public String getName() {
         return name;
     }

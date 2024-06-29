@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class AbilityActions {
@@ -86,11 +87,39 @@ public class AbilityActions {
     }
 
     private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deckOrHand) {
-        for (int i = deckOrHand.size() - 1; i >= 0; i--) {
-            if (deckOrHand.get(i).getName().equals(card.getName()) && !deckOrHand.get(i).equals(card)) {
-                arrayListPlace.add(deckOrHand.get(i));
-                deckOrHand.get(i).setOnMouseClicked(null);
-                User.getTurnUser().getBoard().getHand().remove(deckOrHand.get(i));
+        if (card.getName().equals("ArachasBehemoth")) {
+            for (int i = deckOrHand.size() - 1; i >= 0; i--) {
+                if (deckOrHand.get(i).getName().equals("Arachas")) {
+                    User.getTurnUser().getBoard().getCloseCombat().add(deckOrHand.get(i));
+                    deckOrHand.get(i).setOnMouseClicked(null);
+                    deckOrHand.remove(deckOrHand.get(i));
+                }
+            }
+        } else if (card.getName().equals("GaunterO,Dimm")) {
+            for (int i = deckOrHand.size() - 1; i >= 0; i--) {
+                if (deckOrHand.get(i).getName().equals("GaunterO’DimmDarkness")) {
+                    User.getTurnUser().getBoard().getRanged().add(deckOrHand.get(i));
+                    deckOrHand.get(i).setOnMouseClicked(null);
+                    deckOrHand.remove(deckOrHand.get(i));
+                }
+            }
+        } else if (card.getName().equals("Cerys")) {
+            for (int i = deckOrHand.size() - 1; i >= 0; i--) {
+                if (deckOrHand.get(i).getName().equals("LightLongship")) {
+                    User.getTurnUser().getBoard().getRanged().add(deckOrHand.get(i));
+                    deckOrHand.get(i).setOnMouseClicked(null);
+                    deckOrHand.remove(deckOrHand.get(i));
+                }
+            }
+        } else {
+            String[] split = card.getName().split("[A-Z]");
+            for (int i = deckOrHand.size() - 1; i >= 0; i--) {
+                String[] splitName = deckOrHand.get(i).getName().split("[A-Z]");
+                if (split.length == splitName.length && splitName[1].equals(split[1])) {
+                    arrayListPlace.add(deckOrHand.get(i));
+                    deckOrHand.get(i).setOnMouseClicked(null);
+                    deckOrHand.remove(deckOrHand.get(i));
+                }
             }
         }
     }
@@ -217,19 +246,13 @@ public class AbilityActions {
         for (Card card : user.getBoard().getCloseCombat()) {
             if (card.getAbility() == null) continue;
             if (card.getAbility().contains("transformers")) {
-                user.getBoard().getBurnedCard().remove(card);
-                card.setPower(8);
-                card.setAbility(null);
-                transformers.add(card);
+                transformers.add(CardBuilder.skellige("Hemdall" , new Skellige()));
             }
         }
         for (Card card : user.getBoard().getRanged()) {
             if (card.getAbility() == null) continue;
             if (card.getAbility().contains("transformers")) {
-                user.getBoard().getBurnedCard().remove(card);
-                card.setPower(8);
-                card.setAbility(null);
-                transformers.add(card);
+                transformers.add(CardBuilder.neutral("Chort"));
             }
         }
         return transformers;
