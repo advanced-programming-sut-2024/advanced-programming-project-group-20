@@ -1,27 +1,12 @@
 package Controller;
 
-import Model.Board;
 import Model.User;
 import View.LoginMenu;
-import View.PrivateFieldAdapter;
 import View.RegisterMenu;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.stream.JsonReader;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.io.*;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 //import com.google.gson.Gson;
@@ -44,7 +29,9 @@ public class RegisterController {
         return true;
     }
 
-    public static void register(TextField usernameField, TextField passwordField, TextField emailField, TextField nickNameField, TextField repeatedPasswordField) {
+    public static void register(TextField usernameField, TextField passwordField, TextField emailField
+            , TextField nickNameField, TextField repeatedPasswordField, Label securityLable) {
+
         if (usernameField.getText().isEmpty()) {
             ApplicationController.alert("invalid username", "username section is empty!");
 
@@ -79,11 +66,13 @@ public class RegisterController {
 
         } else {
             //first we show security questions then register
-            showSecurityQuestions(usernameField, passwordField, nickNameField, emailField);
+            showSecurityQuestions(usernameField, passwordField, nickNameField, emailField, securityLable);
         }
     }
 
-    private static void showSecurityQuestions(TextField usernameField, TextField passwordField, TextField nickNameField, TextField emailField) {
+    private static void showSecurityQuestions(TextField usernameField, TextField passwordField
+            , TextField nickNameField, TextField emailField, Label securityLable) {
+
         ApplicationController.setDisable(RegisterMenu.root);
 //        puting white rectangle
         Rectangle whiteOverlay = new Rectangle(ApplicationController.getStage().getWidth(), ApplicationController.getStage().getWidth(), Color.rgb(255, 255, 255, 0.8));
@@ -114,7 +103,6 @@ public class RegisterController {
         label2.setLayoutY(400);
         label2.setPrefHeight(120);
         label2.setPrefWidth(500);
-//        label2.setStyle("-fx-background-color: #cb1f1f");
         label2.setStyle("-fx-font-size: 30");
 
         RegisterMenu.root.getChildren().add(label2);
@@ -136,6 +124,7 @@ public class RegisterController {
         textField2.setPrefHeight(50);
         textField2.setPrefWidth(200);
         textField2.setStyle("-fx-background-color: #ece7e7");
+
         RegisterMenu.root.getChildren().add(textField);
         RegisterMenu.root.getChildren().add(textField1);
         RegisterMenu.root.getChildren().add(textField2);
@@ -157,37 +146,15 @@ public class RegisterController {
             }
         });
         RegisterMenu.root.getChildren().add(button1);
-    }
-
-    private static void saveTheUserInGson(ArrayList<User> users) {
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        try (FileWriter writer = new FileWriter("users.json")) {
-//            gson.toJson(user, writer);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(users);
-        try (PrintWriter pw = new PrintWriter("users.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // Deserialization
 
     }
-
 
 
     public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-//User.getAllUsers().addAll(users);
-        saveTheUserInGson(User.getAllUsers());
-//        user.saveUserToJSon();
-//        Board.serializeUser(user, "users.ser");
-//        ArrayList<User> users = parseFile(new File("users.json"), User.class);
+        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

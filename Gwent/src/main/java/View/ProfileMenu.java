@@ -69,8 +69,8 @@ public class ProfileMenu extends Application {
         collectionContent.setPrefWidth(1230);
         collectionContent.setMinHeight(600);
         TableView<GameHistory> tableView = new TableView<>();
-tableView.setStyle("-fx-background-color: transparent");
-tableView.setPrefWidth(1230);
+        tableView.setStyle("-fx-background-color: transparent");
+        tableView.setPrefWidth(1230);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<GameHistory, String> nameOpponent = new TableColumn<>("Opponent");
         nameOpponent.setCellValueFactory(new PropertyValueFactory<>("opponentName"));
@@ -115,7 +115,7 @@ tableView.setPrefWidth(1230);
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         tableView.getColumns().add(winner);
 
-        for (GameHistory gameHistory: User.getLoggedUser().getGameHistories()){
+        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
             tableView.setItems(null);
         }
         collectionContent.getChildren().add(tableView);
@@ -186,7 +186,7 @@ tableView.setPrefWidth(1230);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
 
-    }
+        }
     }
 
     public void button2Clicked(ActionEvent actionEvent) {

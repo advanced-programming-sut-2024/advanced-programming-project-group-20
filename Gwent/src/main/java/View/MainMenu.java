@@ -1,6 +1,7 @@
 package View;
 
 import Controller.ApplicationController;
+import Controller.MainController;
 import Controller.RegisterController;
 
 import Model.Card;
@@ -62,18 +63,18 @@ public class MainMenu extends Application {
         }
     }
 
-    public void goToPreGameMenu(MouseEvent mouseEvent) throws Exception {
-        User user = User.getUserByName(opponentName.getText());
-        if (user == null) {
+    public void goToPregameMenu(MouseEvent mouseEvent) throws Exception {
+        if (!MainController.canGoPregameMenu(opponentName.getText())){
             ApplicationController.alert("Wrong Username", "There is no user with this username");
         } else {
-            User.setTurnUser(User.getLoggedUser());
-            User.getLoggedUser().setOpponentUser(user);
-            user.setOpponentUser(User.getLoggedUser());
-            PreGameMenu preGameMenu = new PreGameMenu();
-            preGameMenu.start(ApplicationController.getStage());
+                PreGameMenu preGameMenu = new PreGameMenu();
+                try {
+                    preGameMenu.start(ApplicationController.getStage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
-    }
 
     // TODO delete method below later
 

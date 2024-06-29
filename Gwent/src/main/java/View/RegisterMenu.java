@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -100,7 +101,7 @@ public class RegisterMenu extends Application {
     }
 
     public void register(MouseEvent mouseEvent) {
-        RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
+        RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField, securityLable);
     }
 
     //TODO delete this later
@@ -118,5 +119,9 @@ public class RegisterMenu extends Application {
 
     public void makeRandomPassword(MouseEvent mouseEvent) {
         RegisterController.randomPassword(passwordField, repeatedPasswordField);
+    }
+
+    public Label getSecurityLable() {
+        return securityLable;
     }
 }

@@ -1,6 +1,7 @@
 package Model;
 
 
+import Model.Factions.*;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -20,7 +21,7 @@ public class Card extends Pane {
     private int numberOfCartInGame;
     transient private Image image;
     transient private Image gameImage;
-    private boolean isSelect =false;
+    private boolean isSelect = false;
 
 
     public Card(String name, String type, String ability, boolean description
@@ -42,21 +43,21 @@ public class Card extends Pane {
         } else {
             this.gameImage = new Image(String.valueOf(Card.class.getResource("/gameCards/" + "Neutral" + "/" + name + ".jpg")));
         }
-        Rectangle rectangle = new Rectangle(70,100,new ImagePattern(gameImage));
+        Rectangle rectangle = new Rectangle(70, 100, new ImagePattern(gameImage));
         this.getChildren().add(rectangle);
         this.getChildren().add(new Label(String.valueOf(this.getPower())));
-        ((Label)this.getChildren().get(1)).setFont(new Font("Agency FB Bold",20));
-        ((Label)this.getChildren().get(1)).setTextFill(Color.RED);
+        ((Label) this.getChildren().get(1)).setFont(new Font("Agency FB Bold", 20));
+        ((Label) this.getChildren().get(1)).setTextFill(Color.RED);
         this.setPrefHeight(100);
         this.setPrefWidth(70);
     }
 
 
-
-    public void abilityAction(){
+    public void abilityAction() {
 
     }
-    public void DescriptionAction(){
+
+    public void DescriptionAction() {
 
     }
 
@@ -137,16 +138,36 @@ public class Card extends Pane {
         isSelect = select;
     }
 
-    public boolean hasAbility(Card card){
+    public boolean hasAbility(Card card) {
         return false;
     }
 
-    public  BackgroundImage createBackGroundImage(Image image) {
+    public BackgroundImage createBackGroundImage(Image image) {
         BackgroundImage backgroundImage = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         return backgroundImage;
+    }
+
+    public static Card giveCardByName(String cardName) {
+        Neutral neutral = new Neutral();
+        for (Card card : neutral.getCollection()) {
+            if (card.getName().equals(cardName)) {
+                return CardBuilder.neutral(cardName);
+            }
+        }
+        if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
+            return CardBuilder.skellige(cardName, new Skellige());
+        } else if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
+            return CardBuilder.northernRealms(cardName, new NorthernRealms());
+        } else if (User.getTurnUser().getFaction().getName().equals("Monsters")) {
+            return CardBuilder.monsters(cardName, new Monsters());
+        } else if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
+            return CardBuilder.nilfgaard(cardName, new Nilfgaard());
+        } else {
+            return CardBuilder.scoiaTael(cardName, new ScoiaTael());
+        }
     }
 }

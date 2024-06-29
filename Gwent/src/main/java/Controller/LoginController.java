@@ -43,7 +43,6 @@ public class LoginController {
                 confirmButton.setVisible(true);
                 securityAlert();
                 passwordField.setText("");
-//                System.out.println(usernameField.getText());
                 secureQuestionField.setText(User.getUserByName(usernameField.getText()).getSecureQuestion());
                 secureQuestionField.setVisible(true);
                 passwordField.setPromptText("security answer");

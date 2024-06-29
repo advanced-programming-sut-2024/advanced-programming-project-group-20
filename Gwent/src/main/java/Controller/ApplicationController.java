@@ -1,6 +1,9 @@
 package Controller;
 
+import Model.User;
 import View.GameMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -9,6 +12,10 @@ import javafx.scene.media.MediaPlayer;
 import View.RegisterMenu;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 
 public class ApplicationController {
@@ -91,6 +98,16 @@ public class ApplicationController {
     public static void setDisable(Pane root) {
         for (Node node: root.getChildren()) {
             node.setDisable(true);
+        }
+    }
+    public static void saveTheUsersInGson(ArrayList<User> users) {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(users);
+        try (PrintWriter pw = new PrintWriter("users.json")) {
+            pw.write(json);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

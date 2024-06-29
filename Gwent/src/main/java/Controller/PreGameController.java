@@ -3,7 +3,12 @@ package Controller;
 import Model.*;
 import Model.Factions.*;
 import View.GameMenu;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.stream.JsonReader;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -11,10 +16,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.FileChooser;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 public class PreGameController {
     public AnchorPane root;
@@ -34,16 +40,18 @@ public class PreGameController {
     private int specialCard = 0;
     private int heroCard = 0;
     private int strength = 0;
+    private TilePane collectionContent;
+    private TilePane deckContent;
 
     @FXML
     public void initialize() {
-        updateData();
         setContents();
+        loadLastDeckContent();
         showIcons();
     }
 
     private void showIcons() {
-        
+
     }
 
     private void setContents() {
@@ -86,11 +94,10 @@ public class PreGameController {
     }
 
 
-
     public void startGame() throws Exception {
         GameController.turnStarter();
-        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(),new Date()));
-        User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(),new Date()));
+        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
+        User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(), new Date()));
         GameMenu gameMenu = new GameMenu();
         gameMenu.start(ApplicationController.getStage());
     }
@@ -98,11 +105,11 @@ public class PreGameController {
     public void showCards() {
         Neutral neutral = new Neutral();
         Faction faction = User.getTurnUser().getFaction();
-        TilePane collectionContent = new TilePane(5, 5);
+        collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(418);
         collectionContent.setMinHeight(600);
         collectionContent.setStyle("-fx-background-color: #161716");
-        TilePane deckContent = new TilePane(5, 5);
+        deckContent = new TilePane(5, 5);
         deckContent.setMinHeight(600);
         deckContent.setPrefWidth(418);
         deckContent.setStyle("-fx-background-color: #161716");
@@ -135,16 +142,117 @@ public class PreGameController {
     public static void showInformation() {
     }
 
-    public static void saveDeckByAddress() {
+    public static void saveDeckByAddress(ArrayList<String> nameOfCards) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Gson File");
+
+        // Set extension filters
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("Gson Files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+
+        // Show save file dialog
+        File file = fileChooser.showSaveDialog(ApplicationController.getStage());
+
+        if (file != null) {
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(nameOfCards);
+            try (PrintWriter pw = new PrintWriter(file)) {
+                pw.write(json);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
+    public void loadGameByFile(ArrayList<String> gsonLines) {
+        deckContent = new TilePane(5, 5);
+        deckContent.setMinHeight(600);
+        deckContent.setPrefWidth(418);
+        deckContent.setStyle("-fx-background-color: #161716");
+        reloadDeck();
 
-    public static String loadGameByName() {
-        return null;
+        ArrayList<ImageView> imageViewsToShow = new ArrayList<>();
+
+        boolean isSetFactionAndLeader = false;
+        for (String gsonLine : gsonLines) {
+            if (!isSetFactionAndLeader) {
+                //set faction
+                isSetFactionAndLeader = canSetFactionAndLeader(gsonLine);
+            }
+
+            ImageView imageView;
+            if (!gsonLine.substring(0, gsonLine.indexOf(':')).equals("Neutral")) {
+                imageView = new ImageView(new Image(String.valueOf(PreGameController.class.getResource("/Cards/"
+                        + User.getTurnUser().getFaction().getName() + "/" + gsonLine
+                        .substring(gsonLine.lastIndexOf(':') + 1) + ".jpg"))));
+                //set Neutral cards
+            } else {
+                imageView = new ImageView(new Image(String.valueOf(PreGameController.class
+                        .getResource("/Cards/Neutral/" + gsonLine.substring(gsonLine.lastIndexOf(':') + 1) + ".jpg"))));
+            }
+
+            imageView.setFitHeight(300);
+            imageView.setFitWidth(135);
+            for (Node node : collectionContent.getChildren()) {
+                if (node instanceof ImageView && ((ImageView) node).getImage().getUrl().toString().equals(imageView.getImage().getUrl().toString())) {
+                    collectionContent.getChildren().remove(node);
+                    break;
+                }
+            }
+            setMouseClickForImageview(imageView, gsonLine);
+
+            User.getTurnUser().getDeck().add(Card.giveCardByName(gsonLine.substring(gsonLine.lastIndexOf(':') + 1)));
+            imageViewsToShow.add(imageView);
+        }
+
+        deckContent.getChildren().addAll(imageViewsToShow);
+        deckPane.setContent(deckContent);
+        collectionPane.setContent(collectionContent);
+        updateData();
     }
 
-    public static String loadGameByFile() {
-        return null;
+    private void setMouseClickForImageview(ImageView imageView, String gsonLines) {
+        imageView.setOnMouseClicked(mouseEvent -> {
+            if (collectionContent.getChildren().contains(imageView)) {
+                collectionContent.getChildren().remove(imageView);
+                deckContent.getChildren().add(imageView);
+                User.getTurnUser().getDeck().add(Card.giveCardByName(gsonLines.substring(gsonLines.lastIndexOf(':') + 1)));
+                updateData();
+            } else if (deckContent.getChildren().contains(imageView)) {
+                collectionContent.getChildren().add(imageView);
+                deckContent.getChildren().remove(imageView);
+                System.out.println(User.getTurnUser().getDeck().size());
+                for (Card card : User.getTurnUser().getDeck()) {
+                    if (card.getName().equals(gsonLines.substring(gsonLines.lastIndexOf(':') + 1))) {
+                        User.getTurnUser().getDeck().remove(card);
+                        break;
+                    }
+                }
+                updateData();
+            }
+        });
+    }
+
+    private boolean canSetFactionAndLeader(String gsonLines) {
+        if (!gsonLines.substring(0, gsonLines.indexOf(':')).equals("Neutral")) {
+            User.getTurnUser().setFaction(Faction.giveFactionByName(gsonLines.substring(0, gsonLines.indexOf(':'))));
+            //set leader
+            User.getTurnUser().setLeader(Leader
+                    .giveLeaderByName(gsonLines.substring(gsonLines.indexOf(':') + 1, gsonLines.lastIndexOf(':'))));
+            setContents();
+            return true;
+        }
+        return false;
+    }
+
+    private void reloadDeck() {
+        User.getTurnUser().getDeck().clear();
+        totalCard = 0;
+        unitCard = 0;
+        specialCard = 0;
+        heroCard = 0;
+        strength = 0;
     }
 
 
@@ -165,7 +273,7 @@ public class PreGameController {
 
     public void changeTurn() throws Exception {
         if (unitCard < 10) {
-            ApplicationController.alert("Low Unit Card","You should choose at least 22 unit card");
+            ApplicationController.alert("Low Unit Card", "You should choose at least 22 unit card");
             return;
         } else if (specialCard > 10) {
             ApplicationController.alert("Extra Special Card", "You can't have more than 10 special card");
@@ -173,10 +281,56 @@ public class PreGameController {
         }
         if (User.getTurnUser().equals(User.getLoggedUser())) {
             User.setTurnUser(User.getTurnUser().getOpponentUser());
+            saveLastDeckContent();
             setContents();
             updateData();
         } else {
             startGame();
+        }
+    }
+
+    private void saveLastDeckContent() {
+        Faction faction = User.getTurnUser().getFaction();
+        Neutral neutral = new Neutral();
+        ArrayList<Card> allCards = neutral.getCollection();
+        allCards.addAll(faction.getCollection());
+        ArrayList<String> nameOfCards = new ArrayList<>();
+        for (Node node : deckContent.getChildren()) {
+            if (node instanceof ImageView) {
+                for (Card card : allCards) {
+                    System.out.println(((ImageView) node).getImage().getUrl() + "           node");
+                    System.out.println(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg"));
+                    System.out.println("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg");
+                    if ((((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() != null)
+                            || (!((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() == null)) {
+
+
+                    } else if (((ImageView) node).getImage().getUrl().toString().contains("Neutral")) {
+
+                        if (((ImageView) node).getImage().getUrl().toString()
+                                .equals(PreGameController.class.getResource("/Cards/Neutral/" + card.getName() + ".jpg").toString())) {
+
+                            nameOfCards.add("Neutral:" + User.getTurnUser().getLeader().getName()
+                                    + ":" + card.getName());
+                            break;
+                        }
+
+                    } else if (((ImageView) node).getImage().getUrl().toString()
+                            .equals(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg").toString())) {
+                        nameOfCards.add(User.getTurnUser().getFaction().getName() + ":" + User.getTurnUser().getLeader().getName()
+                                + ":" + card.getName());
+                        break;
+                    }
+                }
+            }
+        }
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(nameOfCards);
+        try (PrintWriter pw = new PrintWriter("lastDeckContent.json")) {
+            pw.write(json);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -190,7 +344,7 @@ public class PreGameController {
         monsters.setFitWidth(256);
         monsters.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Monsters());
-            User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -203,7 +357,7 @@ public class PreGameController {
         nilfgaard.setFitWidth(256);
         nilfgaard.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Nilfgaard());
-            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -216,7 +370,7 @@ public class PreGameController {
         northernRealms.setFitWidth(256);
         northernRealms.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new NorthernRealms());
-            User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -229,7 +383,7 @@ public class PreGameController {
         skellige.setFitWidth(256);
         skellige.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Skellige());
-            User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -242,7 +396,7 @@ public class PreGameController {
         scoiaTael.setFitWidth(256);
         scoiaTael.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new ScoiaTael());
-            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf",User.getTurnUser().getFaction()));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf", User.getTurnUser().getFaction()));
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -265,12 +419,10 @@ public class PreGameController {
             case "Monsters" -> monsterLeader("KingOfTheWildHunt", "CommanderOfRedRiders", "DestroyerOfWorlds"
                     , "BringerOfDeath", "TheTreacherous");
             case "Skellige" -> skelligeLeader("CrachAnCraite", "KingBran");
-            case "Nilfgaard" ->
-                    nilfgaardLeader("EmperorOfNilfgaard", "HisImperialMajesty", "TheRelentless"
-                            , "InvaderOfNorth", "TheWhiteFlame");
-            case "ScoiaTael" ->
-                    scoiaTaelLeader("PurebloodElf", "DaisyOfTheValley", "TheBeautiful"
-                            , "HopeOfTheAenSeidhe", "QueenOfDolBlathanna");
+            case "Nilfgaard" -> nilfgaardLeader("EmperorOfNilfgaard", "HisImperialMajesty", "TheRelentless"
+                    , "InvaderOfNorth", "TheWhiteFlame");
+            case "ScoiaTael" -> scoiaTaelLeader("PurebloodElf", "DaisyOfTheValley", "TheBeautiful"
+                    , "HopeOfTheAenSeidhe", "QueenOfDolBlathanna");
             default -> northernRealmsLeader("LordOfCommanderOfTheNorth", "KingOfTemperia", "TheSteal-Forged"
                     , "TheSiegemaster", "SunOfMedell");
         }
@@ -324,7 +476,6 @@ public class PreGameController {
         root.getChildren().add(copper);
         root.getChildren().add(bronze);
     }
-
 
 
     private void showLeadersOfFactionsWith5Leaders(Faction faction, String leader1, String leader2, String leader3, String leader4, String leader5) {
@@ -388,16 +539,131 @@ public class PreGameController {
 
     private void addLeaderToUserLeader(Faction faction, String leaderName) {
         if (faction instanceof Monsters) {
-            User.getTurnUser().setLeader(LeaderBuilder.monsters(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.monsters(leaderName, faction));
         } else if (faction instanceof Skellige) {
-            User.getTurnUser().setLeader(LeaderBuilder.skellige(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.skellige(leaderName, faction));
         } else if (faction instanceof ScoiaTael) {
-            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.scoiaTael(leaderName, faction));
         } else if (faction instanceof Nilfgaard) {
-            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.nilfgaard(leaderName, faction));
         } else {
-            User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName,faction));
+            User.getTurnUser().setLeader(LeaderBuilder.northernRealms(leaderName, faction));
         }
     }
 
+    public void uploadDeck(MouseEvent mouseEvent) {
+        Faction faction = User.getTurnUser().getFaction();
+        Neutral neutral = new Neutral();
+        ArrayList<Card> allCards = neutral.getCollection();
+        allCards.addAll(faction.getCollection());
+        ArrayList<String> nameOfCards = new ArrayList<>();
+        for (Node node : deckContent.getChildren()) {
+            if (node instanceof ImageView) {
+                for (Card card : allCards) {
+                    System.out.println(((ImageView) node).getImage().getUrl() + "           node");
+                    System.out.println(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg"));
+                    System.out.println("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg");
+                    if ((((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() != null)
+                            || (!((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() == null)) {
+
+
+                    } else if (((ImageView) node).getImage().getUrl().toString().contains("Neutral")) {
+
+                        if (((ImageView) node).getImage().getUrl().toString()
+                                .equals(PreGameController.class.getResource("/Cards/Neutral/" + card.getName() + ".jpg").toString())) {
+
+                            nameOfCards.add("Neutral:" + User.getTurnUser().getLeader().getName()
+                                    + ":" + card.getName());
+                            break;
+                        }
+
+                    } else if (((ImageView) node).getImage().getUrl().toString()
+                            .equals(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg").toString())) {
+                        nameOfCards.add(User.getTurnUser().getFaction().getName() + ":" + User.getTurnUser().getLeader().getName()
+                                + ":" + card.getName());
+                        break;
+                    }
+                }
+            }
+        }
+        boolean haveCardExceptNeutral = false;
+        for (String s : nameOfCards) {
+            if (!s.substring(0, s.indexOf(':')).equals("Neutral")) {
+                haveCardExceptNeutral = true;
+                break;
+            }
+        }
+        if (!haveCardExceptNeutral) {
+            ApplicationController.alert("no Unit Cards!", "Choose at least one unit card");
+            return;
+        }
+        saveDeckByAddress(nameOfCards);
+    }
+
+    public void downloadDeck(MouseEvent mouseEvent) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open JSON File");
+
+        // Set extension filter for JSON files
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("JSON Files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+
+        // Show open file dialog
+        File file = fileChooser.showOpenDialog(ApplicationController.getStage());
+
+        if (file != null) {
+            ArrayList<String> gsonLines = new ArrayList<>();
+            Gson gson = new Gson();
+            try {
+                JsonArray a = gson.fromJson(new FileReader(file), JsonArray.class);
+                a.forEach(e -> {
+                    try {
+                        JsonReader reader = new JsonReader(new StringReader(e.toString()));
+                        reader.setLenient(true);
+                        Object object = gson.fromJson(reader, Object.class);
+                        if (!object.getClass().equals(String.class)){
+                            ApplicationController.alert("invalid format!", "choose a valid formatted gsonFile");
+                            return;
+                        }
+                        gsonLines.add((String) object);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            for (String line: gsonLines){
+                if (!line.matches(".*:.*:.*")){
+                    ApplicationController.alert("invalid format!", "choose a valid formatted gsonFile");
+                    return;
+                }
+            }
+            loadGameByFile(gsonLines);
+        }
+    }
+
+    private void loadLastDeckContent() {
+        ArrayList<String> arr = new ArrayList<>();
+        Gson gson = new Gson();
+        try {
+            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
+            a.forEach(e -> {
+                try {
+                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
+                    reader.setLenient(true);
+                    String obj = gson.fromJson(reader, String.class);
+                    arr.add(obj);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        loadGameByFile(arr);
+    }
+
 }
+

@@ -34,6 +34,8 @@ public class ProfileController {
             ApplicationController.alert("no changes!", "change at least one parameter");
         } else {
             changeInformation(username.getText(), password.getText(), email.getText(), nickname.getText());
+            ApplicationController.saveTheUsersInGson(User.getAllUsers());
+
         }
     }
     public static void changeInformation(String usernameField, String passwordField, String emailField, String nickNameField) {

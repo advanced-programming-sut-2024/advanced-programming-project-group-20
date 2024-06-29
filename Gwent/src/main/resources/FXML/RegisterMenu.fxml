@@ -30,4 +30,5 @@
    <Button layoutX="170.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#gotoMainMenu" prefHeight="30.0" prefWidth="147.0" stylesheets="@Register.css" text="go to main menu!" />
    <Button layoutX="192.0" layoutY="383.0" mnemonicParsing="false" onMouseClicked="#makeRandomPassword" stylesheets="@Register.css" text="Random password" />
 
+
 </AnchorPane>

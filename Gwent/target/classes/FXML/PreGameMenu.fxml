@@ -6,7 +6,7 @@
 
 <AnchorPane fx:id="root" prefHeight="720" prefWidth="1280.0" style="-fx-background-color: #161716;" stylesheets="@PreGame.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PreGameController">
     <children>
-        <ScrollPane fx:id="collectionPane" layoutX="70.0" style="-fx-border-color: #161716" layoutY="85.0" prefHeight="600.0" prefWidth="435.0">
+        <ScrollPane fx:id="collectionPane" layoutX="70.0" layoutY="85.0" prefHeight="600.0" prefWidth="435.0" style="-fx-border-color: #161716">
         </ScrollPane>
         <ScrollPane fx:id="deckPane" layoutX="775.0" layoutY="85.0" prefHeight="600.0" prefWidth="435.0">
         </ScrollPane>
@@ -47,5 +47,7 @@
          <image>
             <Image url="@../someImages/deck_stats_unit.png" />
          </image></ImageView>
+      <Button layoutX="351.0" onMouseClicked="#uploadDeck" layoutY="25.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="155.0" text="upload deck" />
+      <Button layoutX="774.0" onMouseClicked="#downloadDeck" layoutY="25.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="155.0" text="download deck" />
     </children>
 </AnchorPane>

@@ -6,18 +6,22 @@
 
 <AnchorPane prefHeight="720.0" prefWidth="900.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainMenu">
     <children>
-        <Button id="ProfileTransmit" layoutX="379.0" layoutY="310.0" onMouseClicked="#goToProfileMenu" prefWidth="172.0" styleClass="button" text="Profile menu" />
-        <Button id="GameTransmit" layoutX="379.0" layoutY="211.0" onMouseClicked="#goToPreGameMenu" prefWidth="172.0" styleClass="button" text="Game menu" />
+        <Label layoutX="263.0" layoutY="149.0" prefHeight="375.0" prefWidth="390.0" style="-fx-background-color: rgba(18,18,19,0.85)" />
 
-        <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" text="Main menu">
+        <Button id="ProfileTransmit" layoutX="366.0" layoutY="319.0" onMouseClicked="#goToProfileMenu" prefHeight="36.0" prefWidth="198.0" styleClass="button" text="Profile menu" />
+        <Button id="GameTransmit" layoutX="363.0" layoutY="209.0" onMouseClicked="#goToPregameMenu" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />
+
+        <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" style="-fx-text-fill: #11ff00" text="Main menu">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button layoutX="406.0" layoutY="374.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
+        <Button layoutX="404.0" layoutY="376.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
 
 
-      <TextField alignment="TOP_CENTER" layoutX="380.0" layoutY="251.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" fx:id="opponentName"/>
-        <Button layoutX="109.0" onMouseClicked="#directToGameMenu" layoutY="88.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="221.0" text="Mohandes Go to Game Directly:)" />
+      <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="378.0" layoutY="266.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
+        <Button layoutX="109.0" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#directToGameMenu" prefHeight="30.0" prefWidth="221.0" text="Mohandes Go to Game Directly:)" />
+
+
     </children>
 </AnchorPane>
