@@ -75,7 +75,7 @@ public class PreGameController {
         heroCard = 0;
         strength = 0;
         for (Card card : User.getTurnUser().getDeck()) {
-            if (card.getFaction() == null) {
+            if (card.getType().equals("weather") || card.getType().equals("spell")) {
                 specialCard++;
             } else {
                 unitCard++;

@@ -35,3 +35,14 @@
     -fx-border-color: rgba(0, 64, 255, 0);
     -fx-border-width: 1px;
 }
+/*.scroll-bar:vertical {*/
+/*    -fx-background-color: blue; !* Color for vertical scroll bar *!*/
+/*}*/
+
+/*.scroll-bar:horizontal {*/
+/*    -fx-background-color: green; !* Color for horizontal scroll bar *!*/
+/*}*/
+
+/*.scroll-bar .thumb {*/
+/*    -fx-background-color: yellow; !* Color for the scroll thumb *!*/
+/*}*/
