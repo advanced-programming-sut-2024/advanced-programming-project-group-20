@@ -415,16 +415,32 @@ public class GameController {
     }
 
     private static void endGame(User winner) throws IOException {
-        if (winner.getActiveGame().getThirdRoundPointMe() < 0) {
-            winner.getActiveGame().setThirdRoundPointMe(0);
-            winner.getActiveGame().setThirdRoundPointOpponent(0);
-            winner.getOpponentUser().getActiveGame().setThirdRoundPointMe(0);
-            winner.getOpponentUser().getActiveGame().setThirdRoundPointOpponent(0);
+        Label winnerLabel;
+        if (winner == null) {
+            User.getTurnUser().getActiveGame().setWinner(null);
+            User.getTurnUser().getOpponentUser().getActiveGame().setWinner(null);
+            winnerLabel = new Label("Draw");
+            winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #0472ef;");
+            User.getTurnUser().setNumberOfDraws(User.getTurnUser().getNumberOfDraws() + 1);
+            User.getTurnUser().getOpponentUser().setNumberOfDraws(User.getTurnUser().getOpponentUser().getNumberOfDraws() + 1);
+        } else {
+            User.getTurnUser().getActiveGame().setWinner(winner.getUsername());
+            User.getTurnUser().getOpponentUser().getActiveGame().setWinner(winner.getUsername());
+            winnerLabel = new Label("Winner " + winner.getUsername());
+            winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
+            winner.setNumberOfWins(winner.getNumberOfWins() + 1);
+            winner.getOpponentUser().setNumberOfLose(winner.getOpponentUser().getNumberOfLose() + 1);
         }
-        winner.getActiveGame().countTotalPoints();
-        winner.getOpponentUser().getActiveGame().countTotalPoints();
-        winner.getActiveGame().setWinner(winner.getUsername());
-        winner.getOpponentUser().getActiveGame().setWinner(winner.getUsername());
+        if (User.getTurnUser().getActiveGame().getThirdRoundPointMe() < 0) {
+            User.getTurnUser().getActiveGame().setThirdRoundPointMe(0);
+            User.getTurnUser().getActiveGame().setThirdRoundPointOpponent(0);
+            User.getTurnUser().getOpponentUser().getActiveGame().setThirdRoundPointMe(0);
+            User.getTurnUser().getOpponentUser().getActiveGame().setThirdRoundPointOpponent(0);
+        }
+        User.getTurnUser().getOpponentUser().setNumberOfGames(User.getTurnUser().getOpponentUser().getNumberOfGames() + 1);
+        User.getTurnUser().setNumberOfGames(User.getTurnUser().getNumberOfGames() + 1);
+        User.getTurnUser().getActiveGame().countTotalPoints();
+        User.getTurnUser().getOpponentUser().getActiveGame().countTotalPoints();
         Pane root = ApplicationController.getRoot();
         root.getChildren().clear();
         ImageView imageView = new ImageView(new Image(String.valueOf(GameController.class.getResource("/backgrounds/Gwent_1.jpg"))));
@@ -436,8 +452,6 @@ public class GameController {
         vBox.setLayoutX(400);
         vBox.setLayoutY(50);
         vBox.setAlignment(Pos.TOP_CENTER);
-        Label winnerLabel = new Label("Winner " + winner.getUsername());
-        winnerLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #0e5201;");
         vBox.getChildren().add(winnerLabel);
         Label firstRound = new Label("First Round:");
         firstRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #fb03f9;");
@@ -447,18 +461,34 @@ public class GameController {
         thirdRound.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #ff001e");
         Label total = new Label("Total Points:");
         total.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: rgb(0,0,0)");
-        Label firstResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getFirstRoundPointMe());
-        Label secondResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getSecondRoundPointMe());
-        Label thirdResult = new Label(winner.getUsername() + "  " + winner.getActiveGame().getThirdRoundPointMe());
-        Label totalPoint = new Label(winner.getUsername() + "  " + winner.getActiveGame().getTotalPointsMe());
-        Label firstResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getFirstRoundPointOpponent());
-        Label secondResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getSecondRoundPointOpponent());
-        Label thirdResult2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getThirdRoundPointOpponent());
-        Label totalPoint2 = new Label(winner.getOpponentUser().getUsername() + "  " + winner.getActiveGame().getTotalPointsOpponent());
+        Label firstResult = new Label(User.getTurnUser().getUsername() + "  " + User.getTurnUser().getActiveGame().getFirstRoundPointMe());
+        Label secondResult = new Label(User.getTurnUser().getUsername() + "  " + User.getTurnUser().getActiveGame().getSecondRoundPointMe());
+        Label thirdResult = new Label(User.getTurnUser().getUsername() + "  " + User.getTurnUser().getActiveGame().getThirdRoundPointMe());
+        Label totalPoint = new Label(User.getTurnUser().getUsername() + "  " + User.getTurnUser().getActiveGame().getTotalPointsMe());
+        Label firstResult2 = new Label(User.getTurnUser().getOpponentUser().getUsername() + "  " +
+                User.getTurnUser().getActiveGame().getFirstRoundPointOpponent());
+        Label secondResult2 = new Label(User.getTurnUser().getOpponentUser().getUsername() + "  " +
+                User.getTurnUser().getActiveGame().getSecondRoundPointOpponent());
+        Label thirdResult2 = new Label(User.getTurnUser().getOpponentUser().getUsername() + "  " +
+                User.getTurnUser().getActiveGame().getThirdRoundPointOpponent());
+        Label totalPoint2 = new Label(User.getTurnUser().getOpponentUser().getUsername() + "  " +
+                User.getTurnUser().getActiveGame().getTotalPointsOpponent());
         Label[] labels = {firstResult, secondResult, thirdResult, totalPoint, firstResult2, secondResult2, thirdResult2, totalPoint2};
         for (Label label : labels) {
             label.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white");
         }
+        Button button = getButton();
+        User.getTurnUser().getGameHistories().add(User.getTurnUser().getActiveGame());
+        User.getTurnUser().getOpponentUser().getGameHistories().add(User.getTurnUser().getOpponentUser().getActiveGame());
+        vBox.getChildren().addAll(firstRound, firstResult, firstResult2);
+        vBox.getChildren().addAll(secondRound, secondResult, secondResult2);
+        vBox.getChildren().addAll(thirdRound, thirdResult, thirdResult2);
+        vBox.getChildren().addAll(total, totalPoint, totalPoint2);
+        vBox.getChildren().add(button);
+        root.getChildren().add(vBox);
+    }
+
+    private static Button getButton() {
         Button button = new Button("Back to Main Menu");
         button.setStyle("-fx-background-color: #f6a107; -fx-font-size: 20px; -fx-font-weight: bold;");
         button.setPrefWidth(250);
@@ -471,14 +501,7 @@ public class GameController {
                 throw new RuntimeException(e);
             }
         });
-        winner.getGameHistories().add(winner.getActiveGame());
-        winner.getOpponentUser().getGameHistories().add(winner.getOpponentUser().getActiveGame());
-        vBox.getChildren().addAll(firstRound, firstResult, firstResult2);
-        vBox.getChildren().addAll(secondRound, secondResult, secondResult2);
-        vBox.getChildren().addAll(thirdRound, thirdResult, thirdResult2);
-        vBox.getChildren().addAll(total, totalPoint, totalPoint2);
-        vBox.getChildren().add(button);
-        root.getChildren().add(vBox);
+        return button;
     }
 
     public static boolean placeCard(HBox hBox, ImageView highScoreIcon) {
@@ -563,7 +586,6 @@ public class GameController {
         Card monster2 = null;
         int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
         int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
-        // todo un commment them
         calculatePoints(User.getTurnUser(), totalPoints1, totalPoints2);
         calculatePoints(User.getTurnUser().getOpponentUser(), totalPoints2, totalPoints1);
         if (totalPoints1 > totalPoints2) {
@@ -608,13 +630,15 @@ public class GameController {
                 }
             }
         }
+        if (User.getTurnUser().getActiveGame().getThirdRoundPointMe() > 0) {
+            endGame(null);
+        }
         if (User.getTurnUser().getFaction().getName().equals("Monsters")) {
             monster1 = monstersAction(hBoxes.subList(0, 3));
         }
         if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Monsters")) {
             monster2 = monstersAction(hBoxes.subList(3, 6));
         }
-        turnStarter();
         putInBurntCards(User.getTurnUser());
         putInBurntCards(User.getTurnUser().getOpponentUser());
         ArrayList<Card> transform1 = AbilityActions.transformers(User.getTurnUser());
@@ -659,13 +683,14 @@ public class GameController {
 
         }
         if (!transform1.isEmpty()) {
-            for (Card card : transform2) {
+            for (Card card : transform1) {
                 if (card.getType().equals("rangedUnit"))
                     User.getTurnUser().getBoard().getRanged().add(card);
                 else
                     User.getTurnUser().getBoard().getCloseCombat().add(card);
             }
         }
+        turnStarter();
         User.getTurnUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
         User.getTurnUser().getOpponentUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
         updateBorder();
@@ -726,7 +751,10 @@ public class GameController {
             allCards.add(card);
         }
         Random random = new Random();
-        return allCards.get(random.nextInt(0, allCards.size()));
+        if (!allCards.isEmpty())
+            return allCards.get(random.nextInt(0, allCards.size()));
+        else
+            return null;
     }
 
     private static void calculatePoints(User user, int userPoints, int opponentPoints) {

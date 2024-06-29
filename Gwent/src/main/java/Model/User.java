@@ -80,17 +80,6 @@ public class User {
         return 0;
     }
 
-    public int getSoldiers() {
-        return 0;
-    }
-
-    public int numberOfHeroes() {
-        return 0;
-
-    }
-    public double strengthOfCards(){
-        return 0;
-    }
 
     public Board getBoard() {
         return board;
@@ -164,30 +153,6 @@ public class User {
         this.opponentUser = opponentUser;
     }
 
-    public ArrayList<ArrayList<Card>> getDecks() {
-        return decks;
-    }
-
-    public void setDecks(ArrayList<ArrayList<Card>> decks) {
-        this.decks = decks;
-    }
-
-    public ArrayList<ArrayList<Card>> getDecksByName() {
-        return decksByName;
-    }
-
-    public void setDecksByName(ArrayList<ArrayList<Card>> decksByName) {
-        this.decksByName = decksByName;
-    }
-
-    public ArrayList<ArrayList<Card>> getDecksByAddress() {
-        return decksByAddress;
-    }
-
-    public void setDecksByAddress(ArrayList<ArrayList<Card>> decksByAddress) {
-        this.decksByAddress = decksByAddress;
-    }
-
     public ArrayList<Card> getDeck() {
         return deck;
     }
@@ -198,10 +163,6 @@ public class User {
 
     public ArrayList<GameHistory> getGameHistories() {
         return gameHistories;
-    }
-
-    public void setGameHistories(ArrayList<GameHistory> gameHistories) {
-        this.gameHistories = gameHistories;
     }
 
     public int getNumberOfDraws() {
@@ -270,10 +231,6 @@ public class User {
 
     public String getSecureQuestion() {
         return secureQuestion;
-    }
-
-    public void setSecureQuestion(String secureQuestion) {
-        this.secureQuestion = secureQuestion;
     }
 
     public String getSecureAnswer() {

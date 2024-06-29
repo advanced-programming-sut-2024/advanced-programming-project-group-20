@@ -22,10 +22,6 @@ public class ProfileController {
         User.getLoggedUser().setEmail(email);
     }
 
-    public static String showUserInfo() {
-        return null;
-    }
-
     public static void saveChanges(TextField username, TextField password, TextField email, TextField nickname) {
         if (User.getLoggedUser().getUsername().equals(username.getText())
                 && User.getLoggedUser().getPassword().equals(password.getText())
