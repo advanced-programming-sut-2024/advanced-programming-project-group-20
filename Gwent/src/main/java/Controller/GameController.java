@@ -618,8 +618,7 @@ public class GameController {
                         return;
                     }
                 }
-            }
-            if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
+            } else if (User.getTurnUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
                 if (!User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
                     if (User.getTurnUser().getOpponentUser().isFullHealth())
                         User.getTurnUser().getOpponentUser().setFullHealth(false);
@@ -627,6 +626,20 @@ public class GameController {
                         endGame(User.getTurnUser().getOpponentUser());
                         return;
                     }
+                }
+            } else {
+                if (!User.getTurnUser().isFullHealth() && !User.getTurnUser().getOpponentUser().isFullHealth()) {
+                    endGame(null);
+                    return;
+                } else if (User.getTurnUser().isFullHealth() && User.getTurnUser().getOpponentUser().isFullHealth()) {
+                    User.getTurnUser().getOpponentUser().setFullHealth(false);
+                    User.getTurnUser().setFullHealth(false);
+                } else if (User.getTurnUser().isFullHealth()) {
+                    endGame(User.getTurnUser());
+                    return;
+                } else {
+                    endGame(User.getTurnUser().getOpponentUser());
+                    return;
                 }
             }
         }

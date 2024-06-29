@@ -87,6 +87,7 @@ public class GameMenu extends Application {
         stage.show();
         stage.setHeight(740);
         stage.setWidth(1280);
+        stage.setHeight(741);
         stage.centerOnScreen();
         GameController.setActiveLeader(User.getTurnUser());
     }
