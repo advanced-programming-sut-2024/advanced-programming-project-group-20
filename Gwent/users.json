@@ -1,0 +1,36 @@
+[
+  {
+    "gameHistories": [],
+    "username": "ali",
+    "password": "M9f{[QV{",
+    "nickName": "alir",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "ali",
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "ali@ali.com",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true
+  },
+  {
+    "gameHistories": [],
+    "username": "man",
+    "password": "T4b(j{XM",
+    "nickName": "man",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "ali",
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "man@man.man",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true
+  }
+]
