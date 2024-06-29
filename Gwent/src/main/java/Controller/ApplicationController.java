@@ -68,14 +68,6 @@ public class ApplicationController {
         }
     }
 
-    public static GameMenu getGameMenu() {
-        return gameMenu;
-    }
-
-    public static void setGameMenu(GameMenu gameMenu) {
-        ApplicationController.gameMenu = gameMenu;
-    }
-
     public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
         Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
         BackgroundImage backgroundImage = new BackgroundImage(image,
@@ -94,15 +86,17 @@ public class ApplicationController {
     }
 
     public static void setEnable(Pane root) {
-        for (Node node: root.getChildren()) {
+        for (Node node : root.getChildren()) {
             node.setDisable(false);
         }
     }
+
     public static void setDisable(Pane root) {
-        for (Node node: root.getChildren()) {
+        for (Node node : root.getChildren()) {
             node.setDisable(true);
         }
     }
+
     public static void saveTheUsersInGson(ArrayList<User> users) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -122,7 +116,5 @@ public class ApplicationController {
     public static void setScene(Scene scene) {
         ApplicationController.scene = scene;
     }
-
-
 
 }

@@ -135,12 +135,12 @@ public class LoginController {
                     alert.setHeaderText("Congratulations New Password:)");
                     alert.setContentText("Your Password Changed Successfully");
                     alert.show();
-                LoginMenu.root.getChildren().removeAll(whiteOverlay, button, label1, label, textField1, textField, label4);
-                confirmButton.setVisible(false);
-                forgetButton.setVisible(true);
-                secureQuestionField.setVisible(false);
-                usernameField.setText("");
-                passwordField.setText("");
+                    LoginMenu.root.getChildren().removeAll(whiteOverlay, button, label1, label, textField1, textField, label4);
+                    confirmButton.setVisible(false);
+                    forgetButton.setVisible(true);
+                    secureQuestionField.setVisible(false);
+                    usernameField.setText("");
+                    passwordField.setText("");
                 }
             } else {
                 ApplicationController.alert("Unsimilarity wrong", "Repeated password is different with password!");

@@ -41,20 +41,19 @@ public class PreGameController {
     private int specialCard = 0;
     private int heroCard = 0;
     private int strength = 0;
-    private TilePane collectionContent;
     private TilePane deckContent;
     private ArrayList<Card> collection = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        setContents();
+        ArrayList<Card> allCards = new Neutral().getCollection();
+        allCards.addAll(User.getTurnUser().getFaction().getCollection());
+        collection = allCards;
         loadLastDeckContent();
-        showIcons();
+        setContents();
     }
 
-    private void showIcons() {
 
-    }
 
     private void setContents() {
         //TODO put write image
@@ -95,7 +94,6 @@ public class PreGameController {
         heroLabel.setText("Hero Cards: " + heroCard);
     }
 
-
     public void startGame() throws Exception {
         GameController.turnStarter();
 
@@ -112,9 +110,7 @@ public class PreGameController {
     }
 
     public void showCards() {
-        Neutral neutral = new Neutral();
-        Faction faction = User.getTurnUser().getFaction();
-        collectionContent = new TilePane(5, 5);
+        TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(418);
         collectionContent.setMinHeight(600);
         collectionContent.setStyle("-fx-background-color: #161716");
@@ -122,9 +118,6 @@ public class PreGameController {
         deckContent.setMinHeight(600);
         deckContent.setPrefWidth(418);
         deckContent.setStyle("-fx-background-color: #161716");
-        ArrayList<Card> allCards = neutral.getCollection();
-        allCards.addAll(faction.getCollection());
-        collection = allCards;
         showDeck(deckContent, collectionContent);
         showCollection(collectionContent, deckContent);
         collectionPane.setContent(collectionContent);
@@ -188,9 +181,6 @@ public class PreGameController {
         }
     }
 
-    public static void showInformation() {
-    }
-
     public static void saveDeckByAddress(ArrayList<String> nameOfCards) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Gson File");
@@ -215,13 +205,9 @@ public class PreGameController {
     }
 
     public void loadGameByFile(ArrayList<String> gsonLines) {
-        deckContent = new TilePane(5, 5);
-        deckContent.setMinHeight(600);
-        deckContent.setPrefWidth(418);
-        deckContent.setStyle("-fx-background-color: #161716");
         reloadDeck();
 
-        ArrayList<ImageView> imageViewsToShow = new ArrayList<>();
+        ArrayList<Card> deckCards = new ArrayList<>();
 
         boolean isSetFactionAndLeader = false;
         for (String gsonLine : gsonLines) {
@@ -230,57 +216,25 @@ public class PreGameController {
                 isSetFactionAndLeader = canSetFactionAndLeader(gsonLine);
             }
 
-            ImageView imageView;
+            Card card;
             if (!gsonLine.substring(0, gsonLine.indexOf(':')).equals("Neutral")) {
-                imageView = new ImageView(new Image(String.valueOf(PreGameController.class.getResource("/Cards/"
-                        + User.getTurnUser().getFaction().getName() + "/" + gsonLine
-                        .substring(gsonLine.lastIndexOf(':') + 1) + ".jpg"))));
+                card = Card.giveCardByName(gsonLine.substring(gsonLine.lastIndexOf(':') + 1));
                 //set Neutral cards
             } else {
-                imageView = new ImageView(new Image(String.valueOf(PreGameController.class
-                        .getResource("/Cards/Neutral/" + gsonLine.substring(gsonLine.lastIndexOf(':') + 1) + ".jpg"))));
+                card = Card.giveCardByName(gsonLine.substring(gsonLine.lastIndexOf(':') + 1));
             }
 
-            imageView.setFitHeight(300);
-            imageView.setFitWidth(135);
-            for (Node node : collectionContent.getChildren()) {
-                if (node instanceof ImageView && ((ImageView) node).getImage().getUrl().toString().equals(imageView.getImage().getUrl().toString())) {
-                    collectionContent.getChildren().remove(node);
+            for (Card card1 : collection) {
+                if (card1.getName().equals(card.getName())) {
+                    collection.remove(card1);
                     break;
                 }
             }
-            setMouseClickForImageview(imageView, gsonLine);
-
             User.getTurnUser().getDeck().add(Card.giveCardByName(gsonLine.substring(gsonLine.lastIndexOf(':') + 1)));
-            imageViewsToShow.add(imageView);
         }
 
-        deckContent.getChildren().addAll(imageViewsToShow);
-        deckPane.setContent(deckContent);
-        collectionPane.setContent(collectionContent);
         updateData();
-    }
-
-    private void setMouseClickForImageview(ImageView imageView, String gsonLines) {
-        imageView.setOnMouseClicked(mouseEvent -> {
-            if (collectionContent.getChildren().contains(imageView)) {
-                collectionContent.getChildren().remove(imageView);
-                deckContent.getChildren().add(imageView);
-                User.getTurnUser().getDeck().add(Card.giveCardByName(gsonLines.substring(gsonLines.lastIndexOf(':') + 1)));
-                updateData();
-            } else if (deckContent.getChildren().contains(imageView)) {
-                collectionContent.getChildren().add(imageView);
-                deckContent.getChildren().remove(imageView);
-                System.out.println(User.getTurnUser().getDeck().size());
-                for (Card card : User.getTurnUser().getDeck()) {
-                    if (card.getName().equals(gsonLines.substring(gsonLines.lastIndexOf(':') + 1))) {
-                        User.getTurnUser().getDeck().remove(card);
-                        break;
-                    }
-                }
-                updateData();
-            }
-        });
+        showCards();
     }
 
     private boolean canSetFactionAndLeader(String gsonLines) {
@@ -304,7 +258,6 @@ public class PreGameController {
         strength = 0;
     }
 
-
     public void selectLeaders(ArrayList<ImageView> leaders) {
         for (ImageView imageView : leaders) {
             root.getChildren().remove(imageView);
@@ -313,7 +266,6 @@ public class PreGameController {
                 ("/Leaders/" + User.getTurnUser().getLeader().getName() + ".jpg").toExternalForm()));
         ApplicationController.setEnable(root);
     }
-
 
     public void changeTurn() throws Exception {
         if (unitCard < 10) {
@@ -325,6 +277,9 @@ public class PreGameController {
         }
         if (User.getTurnUser().equals(User.getLoggedUser())) {
             User.setTurnUser(User.getTurnUser().getOpponentUser());
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            collection = allCards;
             saveLastDeckContent();
             setContents();
             updateData();
@@ -389,6 +344,10 @@ public class PreGameController {
         monsters.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Monsters());
             User.getTurnUser().setLeader(LeaderBuilder.monsters("KingOfTheWildHunt", User.getTurnUser().getFaction()));
+            User.getTurnUser().getDeck().clear();
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            collection = allCards;
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -402,6 +361,10 @@ public class PreGameController {
         nilfgaard.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Nilfgaard());
             User.getTurnUser().setLeader(LeaderBuilder.nilfgaard("EmperorOfNilfgaard", User.getTurnUser().getFaction()));
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            User.getTurnUser().getDeck().clear();
+            collection = allCards;
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -415,12 +378,17 @@ public class PreGameController {
         northernRealms.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new NorthernRealms());
             User.getTurnUser().setLeader(LeaderBuilder.northernRealms("LordOfCommanderOfTheNorth", User.getTurnUser().getFaction()));
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            User.getTurnUser().getDeck().clear();
+            collection = allCards;
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
             root.getChildren().remove(northernRealms);
             root.getChildren().remove(skellige);
             root.getChildren().remove(scoiaTael);
+
         });
         skellige.setLayoutX(768);
         skellige.setFitHeight(720);
@@ -428,8 +396,11 @@ public class PreGameController {
         skellige.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new Skellige());
             User.getTurnUser().setLeader(LeaderBuilder.skellige("CrachAnCraite", User.getTurnUser().getFaction()));
+            User.getTurnUser().getDeck().clear();
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            collection = allCards;root.getChildren().remove(monsters);
             setContents();
-            root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
             root.getChildren().remove(northernRealms);
             root.getChildren().remove(skellige);
@@ -441,6 +412,10 @@ public class PreGameController {
         scoiaTael.setOnMouseClicked(mouseEvent1 -> {
             User.getTurnUser().setFaction(new ScoiaTael());
             User.getTurnUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf", User.getTurnUser().getFaction()));
+            ArrayList<Card> allCards = new Neutral().getCollection();
+            allCards.addAll(User.getTurnUser().getFaction().getCollection());
+            collection = allCards;
+            User.getTurnUser().getDeck().clear();
             setContents();
             root.getChildren().remove(monsters);
             root.getChildren().remove(nilfgaard);
@@ -520,7 +495,6 @@ public class PreGameController {
         root.getChildren().add(copper);
         root.getChildren().add(bronze);
     }
-
 
     private void showLeadersOfFactionsWith5Leaders(Faction faction, String leader1, String leader2, String leader3, String leader4, String leader5) {
         ImageView copper = new ImageView(new Image(String.valueOf(Nilfgaard.class.getResource("/Leaders/" + leader1 + ".jpg"))));
@@ -604,9 +578,6 @@ public class PreGameController {
         for (Node node : deckContent.getChildren()) {
             if (node instanceof ImageView) {
                 for (Card card : allCards) {
-                    System.out.println(((ImageView) node).getImage().getUrl() + "           node");
-                    System.out.println(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg"));
-                    System.out.println("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg");
                     if ((((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() != null)
                             || (!((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() == null)) {
 
@@ -685,6 +656,7 @@ public class PreGameController {
                 }
             }
             loadGameByFile(gsonLines);
+
         }
     }
 

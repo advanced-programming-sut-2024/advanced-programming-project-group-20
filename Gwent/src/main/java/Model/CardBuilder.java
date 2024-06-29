@@ -20,7 +20,9 @@ public class CardBuilder {
                     false, 6, faction, 1);
             case "Cerys" -> new Card(cardName, "closeCombatUnit", "hero&muster",
                     true, 10, faction, 1);
-            case "Kambi" -> new Card(cardName, "closeCombatUnit", "hero&transformers",
+            case "Kambi" -> new Card(cardName, "closeCombatUnit", "transformers",
+                    true, 0, faction, 1);
+            case "Hemdall" -> new Card(cardName, "closeCombatUnit", "hero",
                     true, 11, faction, 1);
             case "BirnaBran" -> new Card(cardName, "closeCombatUnit", "medic",
                     false, 2, faction, 1);
@@ -47,7 +49,7 @@ public class CardBuilder {
             case "Olaf" -> new Card(cardName, "agileUnit", "moralBoost",
                     false, 12, faction, 1);
             case "HolgerBlackhand" -> new Card(cardName, "siegeUnit", null,
-                    false, 12, faction, 1);
+                    false, 4, faction, 1);
             default -> null;
         };
     }
@@ -100,7 +102,7 @@ public class CardBuilder {
 
     public static Card northernRealms(String cardName, Faction faction) {
         return switch (cardName) {
-            case "Ballista" -> new Card(cardName, "siegeUnit", null,
+            case "Ballista", "Trebuchet" -> new Card(cardName, "siegeUnit", null,
                     false, 6, faction, 2);
             case "BlueStripesCommando" -> new Card(cardName, "closeCombatUnit", "tightBond",
                     false, 4, faction, 3);
@@ -141,8 +143,6 @@ public class CardBuilder {
                     false, 2, faction, 1);
             case "Dethmold" -> new Card(cardName, "rangedUnit", null,
                     false, 6, faction, 1);
-            case "Trebuchet" -> new Card(cardName, "siegeUnit", null,
-                    false, 6, faction, 2);
             default -> null;
         };
     }
@@ -289,6 +289,8 @@ public class CardBuilder {
                     false, 7, null, 1);
             case "Cow" -> new Card(cardName, "rangedUnit", "transformers",
                     false, 0, null, 1);
+            case "Chort" -> new Card(cardName, "rangedUnit", null,
+                    false, 8, null, 1);
             default -> null;
         };
     }

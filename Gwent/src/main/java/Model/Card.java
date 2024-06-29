@@ -72,14 +72,6 @@ public class Card extends Pane {
         return max;
     }
 
-    public void abilityAction() {
-
-    }
-
-    public void DescriptionAction() {
-
-    }
-
     public String getName() {
         return name;
     }
@@ -90,10 +82,6 @@ public class Card extends Pane {
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
 
@@ -121,28 +109,9 @@ public class Card extends Pane {
         this.faction = faction;
     }
 
-    public boolean isDescription() {
-        return description;
-    }
-
-    public void setDescription(boolean description) {
-        this.description = description;
-    }
-
-    public int getNumberOfCartInGame() {
-        return numberOfCartInGame;
-    }
-
-    public void setNumberOfCartInGame(int numberOfCartInGame) {
-        this.numberOfCartInGame = numberOfCartInGame;
-    }
 
     public Image getGameImage() {
         return gameImage;
-    }
-
-    public void setGameImage(Image gameImage) {
-        this.gameImage = gameImage;
     }
 
     public Image getImage() {
@@ -155,10 +124,6 @@ public class Card extends Pane {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public boolean hasAbility(Card card) {
-        return false;
     }
 
     public BackgroundImage createBackGroundImage(Image image) {

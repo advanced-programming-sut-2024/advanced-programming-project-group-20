@@ -246,7 +246,13 @@ public class LeaderBuilder {
                         });
                         hBox.getChildren().add(imageView);
                     }
-                    root.getChildren().add(hBox);
+                    if (hBox.getChildren().isEmpty()) {
+                        for (Node node : root.getChildren()) {
+                            node.setDisable(false);
+                        }
+                    }
+                    else
+                        root.getChildren().add(hBox);
                 }
             };
             case "CommanderOfRedRiders" -> new Leader(faction, "CommanderOfRedRiders") {
@@ -460,30 +466,36 @@ public class LeaderBuilder {
                 @Override
                 public void action() {
                     ArrayList<Card> allNonHeroes = new ArrayList<>();
-                    for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
+                    ArrayList<Card> iterator = new ArrayList<>(User.getTurnUser().getBoard().getBurnedCard());
+                    for (Card card : iterator) {
                         if (card.getAbility() != null){
                             if (card.getAbility().contains("hero")) {
                                 continue;
                             }
                         }
+                        User.getTurnUser().getBoard().getBurnedCard().remove(card);
                         allNonHeroes.add(card);
                     }
-                    for (Card card : User.getTurnUser().getOpponentUser().getBoard().getBurnedCard()) {
+                    iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getBurnedCard());
+                    for (Card card : iterator) {
                         if (card.getAbility() != null){
                             if (card.getAbility().contains("hero")) {
                                 continue;
                             }
                         }
+                        User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().remove(card);
                         allNonHeroes.add(card);
                     }
                     Random random = new Random();
-                    for (int i = 0; i < allNonHeroes.size() / 2; i++) {
+                    int size = allNonHeroes.size();
+                    for (int i = 0; i < size / 2; i++) {
                         int num = random.nextInt(0, allNonHeroes.size());
                         User.getTurnUser().getBoard().getHand().add(allNonHeroes.get(num));
                         allNonHeroes.remove(num);
                     }
                     User.getTurnUser().getOpponentUser().getBoard().getHand().addAll(allNonHeroes);
                     GameController.updateBorder();
+                    GameController.updateCardEvent();
                 }
             };
             case "KingBran" -> new Leader(faction, "KingBran") {
