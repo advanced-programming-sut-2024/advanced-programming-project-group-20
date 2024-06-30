@@ -35,6 +35,9 @@ public class User {
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
+    private int rank;
+
+
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
@@ -77,10 +80,12 @@ public class User {
     }
 
     public int getRank() {
-        return 0;
+        return rank;
     }
 
-
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
     public Board getBoard() {
         return board;
     }

@@ -27,10 +27,14 @@ import java.util.Date;
 
 public class ProfileMenu extends Application {
     public static Pane root;
-    public Button button1;
-    public Button button2;
-    public Button button3;
-    public Pane informationPane;
+    @FXML
+    private Button button1;
+    @FXML
+    private Button button2;
+    @FXML
+    private Button button3;
+    @FXML
+    private Pane informationPane;
     @FXML
     private ScrollPane scrollOfPointsTable;
     @FXML
@@ -64,19 +68,46 @@ public class ProfileMenu extends Application {
     public void initialize() {
         contentsOfProfileMenu();
         setHistoryContents();
+        //first we set the rank then set table point
+        setRankOfUsers();
         setTablePointsContent();
+    }
+
+    private void setRankOfUsers() {
+        User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins).reversed());
+        for (int i = 0; i < User.getAllUsers().size(); i++) {
+            User.getAllUsers().get(i).setRank(i + 1);
+        }
     }
 
     private void setTablePointsContent() {
         User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins));
-        for (User user: User.getAllUsers()){
-            TilePane collectionContent = new TilePane(5, 5);
-            collectionContent.setPrefWidth(scrollOfPointsTable.getPrefWidth());
-            collectionContent.setMinHeight(scrollOfPointsTable.getMinHeight());
-            TableView<User> tableView = new TableView<>();
-            tableView.setStyle("-fx-background-color: transparent");
-            tableView.setPrefWidth(1230);
+
+        TilePane collectionContent = new TilePane(5, 5);
+        collectionContent.setPrefWidth(500);
+        collectionContent.setMinHeight(600);
+        TableView<User> tableView = new TableView<>();
+        tableView.setStyle("-fx-background-color: transparent");
+        tableView.setPrefWidth(500);
+        tableView.setPrefHeight(600);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<User, String> rank = new TableColumn<>("rank");
+        rank.setCellValueFactory(new PropertyValueFactory<>("rank"));
+        tableView.getColumns().add(rank);
+
+        TableColumn<User, Date> name = new TableColumn<>("name");
+        name.setCellValueFactory(new PropertyValueFactory<>("username"));
+        tableView.getColumns().add(name);
+
+        TableColumn<User, Double> numberOfWins = new TableColumn<>("number of wins");
+        numberOfWins.setCellValueFactory(new PropertyValueFactory<>("numberOfWins"));
+        tableView.getColumns().add(numberOfWins);
+
+        for (User user : User.getAllUsers()) {
+            tableView.getItems().add(user);
         }
+        collectionContent.getChildren().add(tableView);
+        scrollOfPointsTable.setContent(collectionContent);
     }
 
     private void setHistoryContents() {
@@ -132,7 +163,7 @@ public class ProfileMenu extends Application {
         tableView.getColumns().add(winner);
 
         for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-            tableView.setItems(null);
+            tableView.getItems().add(gameHistory);
         }
         collectionContent.getChildren().add(tableView);
         scrollOfHistory.setContent(collectionContent);
@@ -198,10 +229,10 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.0);
         button3.setScaleX(1.0);
         button3.setScaleY(1.0);
+        scrollOfPointsTable.setVisible(true);
         scrollOfHistory.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
-
         }
     }
 
@@ -212,6 +243,7 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.2);
         button3.setScaleX(1.0);
         button3.setScaleY(1.0);
+        scrollOfPointsTable.setVisible(false);
         scrollOfHistory.setVisible(true);
         for (Node node : informationPane.getChildren())
             node.setVisible(false);
@@ -224,6 +256,7 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.0);
         button3.setScaleX(1.2);
         button3.setScaleY(1.2);
+        scrollOfPointsTable.setVisible(false);
         scrollOfHistory.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(true);

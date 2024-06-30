@@ -7,5 +7,5 @@ module grafic {
     opens View to javafx.fxml;
     exports Controller;
     opens Controller to javafx.fxml;
-    opens Model to com.google.gson;
+    opens Model to com.google.gson, javafx.base;
 }
