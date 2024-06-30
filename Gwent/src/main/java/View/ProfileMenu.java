@@ -81,7 +81,7 @@ public class ProfileMenu extends Application {
     }
 
     private void setTablePointsContent() {
-        User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins));
+//        User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins).reversed());
 
         TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(500);
@@ -118,11 +118,15 @@ public class ProfileMenu extends Application {
         TableView<GameHistory> tableView = new TableView<>();
         tableView.setStyle("-fx-background-color: transparent");
         tableView.setPrefWidth(1230);
+        tableView.setPrefHeight(600);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         TableColumn<GameHistory, String> nameOpponent = new TableColumn<>("Opponent");
         nameOpponent.setCellValueFactory(new PropertyValueFactory<>("opponentName"));
         tableView.getColumns().add(nameOpponent);
+
         TableColumn<GameHistory, Date> date = new TableColumn<>("Date");
+        date.prefWidthProperty().bind(tableView.widthProperty().multiply(0.1)); // 30%
+
         date.setCellValueFactory(new PropertyValueFactory<>("date"));
         tableView.getColumns().add(date);
 

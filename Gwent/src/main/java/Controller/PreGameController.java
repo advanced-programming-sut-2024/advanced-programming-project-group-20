@@ -49,7 +49,7 @@ public class PreGameController {
         ArrayList<Card> allCards = new Neutral().getCollection();
         allCards.addAll(User.getTurnUser().getFaction().getCollection());
         collection = allCards;
-        loadLastDeckContent();
+//        loadLastDeckContent();
         setContents();
     }
 
@@ -297,9 +297,6 @@ public class PreGameController {
         for (Node node : deckContent.getChildren()) {
             if (node instanceof ImageView) {
                 for (Card card : allCards) {
-                    System.out.println(((ImageView) node).getImage().getUrl() + "           node");
-                    System.out.println(PreGameController.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg"));
-                    System.out.println("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg");
                     if ((((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() != null)
                             || (!((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() == null)) {
 
@@ -659,27 +656,27 @@ public class PreGameController {
 
         }
     }
-
-    private void loadLastDeckContent() {
-        ArrayList<String> arr = new ArrayList<>();
-        Gson gson = new Gson();
-        try {
-            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
-            a.forEach(e -> {
-                try {
-                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
-                    reader.setLenient(true);
-                    String obj = gson.fromJson(reader, String.class);
-                    arr.add(obj);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        loadGameByFile(arr);
-    }
+//TODO last deck content
+//    private void loadLastDeckContent() {
+//        ArrayList<String> arr = new ArrayList<>();
+//        Gson gson = new Gson();
+//        try {
+//            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
+//            a.forEach(e -> {
+//                try {
+//                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
+//                    reader.setLenient(true);
+//                    String obj = gson.fromJson(reader, String.class);
+//                    arr.add(obj);
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//            });
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        loadGameByFile(arr);
+//    }
 
 }
 
