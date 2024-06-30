@@ -1,5 +1,6 @@
 package Model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GameHistory {
@@ -14,16 +15,17 @@ public class GameHistory {
     private int thirdRoundPointOpponent = -1;
     private int totalPointsMe;
     private int totalPointsOpponent;
-    private Date date;
+    private String date;
 
     public GameHistory(User opponent, Date date) {
         this.opponentName = opponent.getUsername();
-        this.date = date;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        this.date = sdf.format(date);
     }
 
     public void countTotalPoints() {
-        totalPointsMe = firstRoundPointMe + secondRoundPointMe + totalPointsMe;
-        totalPointsOpponent = firstRoundPointOpponent + secondRoundPointOpponent + totalPointsOpponent;
+        totalPointsMe = firstRoundPointMe + secondRoundPointMe + thirdRoundPointMe;
+        totalPointsOpponent = firstRoundPointOpponent + secondRoundPointOpponent + thirdRoundPointOpponent;
     }
 
     public String getWinner() {
@@ -88,5 +90,21 @@ public class GameHistory {
 
     public int getTotalPointsOpponent() {
         return totalPointsOpponent;
+    }
+
+    public String getOpponentName() {
+        return opponentName;
+    }
+
+    public void setOpponentName(String opponentName) {
+        this.opponentName = opponentName;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
