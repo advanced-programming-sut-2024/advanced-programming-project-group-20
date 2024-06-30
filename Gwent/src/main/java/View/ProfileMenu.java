@@ -66,10 +66,9 @@ public class ProfileMenu extends Application {
 
     @FXML
     public void initialize() {
+        setRankOfUsers();
         contentsOfProfileMenu();
         setHistoryContents();
-        //first we set the rank then set table point
-        setRankOfUsers();
         setTablePointsContent();
     }
 

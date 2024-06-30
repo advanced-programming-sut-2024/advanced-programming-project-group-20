@@ -486,6 +486,8 @@ public class GameController {
         vBox.getChildren().addAll(total, totalPoint, totalPoint2);
         vBox.getChildren().add(button);
         root.getChildren().add(vBox);
+        //saving the gameHistory
+        ApplicationController.saveTheUsersInGson(User.getAllUsers());
     }
 
     private static Button getButton() {
