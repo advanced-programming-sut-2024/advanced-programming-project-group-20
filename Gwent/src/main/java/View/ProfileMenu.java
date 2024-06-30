@@ -178,11 +178,16 @@ public class ProfileMenu extends Application {
         password.setText(User.getLoggedUser().getPassword());
         email.setText(User.getLoggedUser().getEmail());
         nickname.setText(User.getLoggedUser().getNickName());
-        //Todo what is top score?
-//        topScoreLabel.setText();
 
+        double topTotalScore = 0;
+        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+            if (gameHistory.getTotalPointsMe() > topTotalScore){
+                topTotalScore = gameHistory.getTotalPointsMe();
+            }
+        }
+        topScoreLabel.setText(topScoreLabel.getText() + topTotalScore);
         totalGamesLabel.setText(totalGamesLabel.getText() + User.getLoggedUser().getNumberOfGames());
-        rankLabel.setText(rankLabel.getText() + ProfileController.rankCounter());
+        rankLabel.setText(rankLabel.getText() + User.getLoggedUser().getRank());
         winLabel.setText(winLabel.getText() + User.getLoggedUser().getNumberOfWins());
         drawLabel.setText(drawLabel.getText() + User.getLoggedUser().getNumberOfDraws());
         loseLabel.setText(loseLabel.getText() + User.getLoggedUser().getNumberOfLose());

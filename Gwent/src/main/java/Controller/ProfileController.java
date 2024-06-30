@@ -75,15 +75,4 @@ public class ProfileController {
         alert.setHeaderText("your information changed successfully");
         alert.show();
     }
-
-    public static String rankCounter() {
-        int rank = 0;
-        for (User user: User.getAllUsers()){
-            //TODO if two won are equal ?
-            if (user != User.getLoggedUser() && user.getNumberOfWins() > User.getLoggedUser().getNumberOfWins()){
-                rank++;
-            }
-        }
-        return String.valueOf(rank);
-    }
 }
