@@ -172,6 +172,8 @@ public class GameController {
                 user.getLeader().action();
                 user.getLeader().setUsed(true);
                 updateBorder();
+                GaussianBlur gaussianBlur = new GaussianBlur(10);
+                leader.setEffect(gaussianBlur);
             });
         }
         ApplicationController.getRoot().getChildren().add(leader);
@@ -1028,39 +1030,6 @@ public class GameController {
         }
     }
 
-    public static void doCheat(String text) {
-        switch (text) {
-            case "1":
-                int num = User.getTurnUser().getDeck().size() - 1;
-                if (num < 1)
-                    break;
-                User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
-                User.getTurnUser().getDeck().remove(num);
-                break;
-            case "2":
-                AbilityActions.medic();
-                break;
-            case "3":
-                User.getTurnUser().setFullHealth(true);
-                break;
-            // 4 , 5 for leader works
-            case "4":
-                User.getTurnUser().getLeader().setUsed(false);
-            case "5":
-
-            case "6":
-                showOpponentCards(User.getTurnUser().getOpponentUser().getBoard().getHand());
-                break;
-            case "7":
-                showOpponentCards(User.getTurnUser().getOpponentUser().getDeck());
-
-                break;
-        }
-        setOnClickBoard();
-        updateBorder();
-        setImagesOfBoard(User.getTurnUser());
-
-    }
 
     public static void showOpponentCards(ArrayList<Card> cards) {
         Pane root = ApplicationController.getRoot();

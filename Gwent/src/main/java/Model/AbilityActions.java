@@ -38,8 +38,11 @@ public class AbilityActions {
                     card.getType().equals("weather") || card.getType().equals("spell")))
                 normalCards.add(card);
         }
-        if (normalCards.isEmpty())
+        if (normalCards.isEmpty()) {
+            GameController.updateBorder();
             return;
+        }
+
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
         HBox hBox = new HBox(10);

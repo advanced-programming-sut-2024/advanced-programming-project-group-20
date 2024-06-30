@@ -81,6 +81,10 @@ public class MainMenu extends Application {
 
 
     public void directToGameMenu(MouseEvent mouseEvent) {
+        User.getLoggedUser().setOpponentUser(User.getUserByName("ali"));
+        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+        User.getLoggedUser().readyForGame();
+        User.getLoggedUser().getOpponentUser().readyForGame();
         ScoiaTael scoiaTael = new ScoiaTael();
         User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
         User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
@@ -96,8 +100,6 @@ public class MainMenu extends Application {
 
 
         Skellige skellige =new Skellige();
-        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
-        User.getLoggedUser().setOpponentUser(new User("Ali", "1", "1", "1", "1", "1"));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
         User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
