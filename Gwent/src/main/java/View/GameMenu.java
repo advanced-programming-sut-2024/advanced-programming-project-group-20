@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -124,13 +125,18 @@ public class GameMenu extends Application {
     private void startCheatMenu() {
         pane.setOnKeyPressed(event -> {
             if (event.isShiftDown() && event.getCode() == KeyCode.CAPS) {
-                ApplicationController.getRoot().getChildren().add(cheatLabel);
-                ApplicationController.getRoot().getChildren().add(cheatText);
+                if (!ApplicationController.getRoot().getChildren().contains(cheatLabel)) {
+                    ApplicationController.getRoot().getChildren().add(cheatLabel);
+                    ApplicationController.getRoot().getChildren().add(cheatText);
+                    GaussianBlur gaussianBlur = new GaussianBlur(10);
+                    pane.setEffect(gaussianBlur);
+                }
                 cheatText.setOnKeyPressed(keyEvent -> {
                     if (keyEvent.getCode().equals(KeyCode.ENTER)) {
                         GameController.doCheat(cheatText.getText());
                         pane.getChildren().remove(cheatText);
                         pane.getChildren().remove(cheatLabel);
+                        pane.setEffect(null);
                     }
                 });
             }

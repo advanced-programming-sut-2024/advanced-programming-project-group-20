@@ -13,6 +13,8 @@ public class MainController {
         User.setTurnUser(User.getLoggedUser());
         User.getLoggedUser().setOpponentUser(user);
         user.setOpponentUser(User.getLoggedUser());
+        user.readyForGame();
+        User.getLoggedUser().readyForGame();
         return true;
     }
 

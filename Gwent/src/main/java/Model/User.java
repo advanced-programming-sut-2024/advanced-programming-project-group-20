@@ -53,6 +53,15 @@ public class User {
         numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
     }
 
+    public void readyForGame() {
+        this.board = new Board();
+        this.faction = new Nilfgaard();
+        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
+        this.deck = new ArrayList<>();
+        isPassed = false;
+        isFullHealth = true;
+        firstTurn = true;
+    }
     public GameHistory getActiveGame() {
         return activeGame;
     }

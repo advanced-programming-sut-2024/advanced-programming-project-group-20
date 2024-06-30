@@ -69,6 +69,7 @@ public class MainMenu extends Application {
         } else {
                 PreGameMenu preGameMenu = new PreGameMenu();
                 try {
+
                     preGameMenu.start(ApplicationController.getStage());
                 } catch (Exception e) {
                     throw new RuntimeException(e);

@@ -163,7 +163,7 @@ public class CardBuilder {
                     false, 4, faction, 1);
             case "Puttkammer" -> new Card(cardName, "rangedUnit", null,
                     false, 3, faction, 1);
-            case "AssirevarAnahid" -> new Card(cardName, "rangedUnit", null,
+            case "AssirevarAnahid", "FringillaVigo" -> new Card(cardName, "rangedUnit", null,
                     false, 6, faction, 1);
             case "BlackInfantryArcher" -> new Card(cardName, "rangedUnit", null,
                     false, 10, faction, 2);
@@ -171,8 +171,6 @@ public class CardBuilder {
                     false, 10, faction, 1);
             case "RenualdAepMatsen" -> new Card(cardName, "rangedUnit", null,
                     false, 5, faction, 1);
-            case "FringillaVigo" -> new Card(cardName, "rangedUnit", null,
-                    false, 6, faction, 1);
             case "RottenMangonel" -> new Card(cardName, "siegeUnit", null,
                     false, 3, faction, 1);
             case "HeavyZerrikanianFireScorpion" -> new Card(cardName, "siegeUnit", null,
