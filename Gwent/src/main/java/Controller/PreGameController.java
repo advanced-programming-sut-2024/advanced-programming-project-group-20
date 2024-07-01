@@ -97,13 +97,6 @@ public class PreGameController {
 
     public void startGame() throws Exception {
         GameController.turnStarter();
-
-        User.getTurnUser().setFirstTurn(true);
-        User.getTurnUser().getOpponentUser().setFirstTurn(true);
-        User.getTurnUser().setFullHealth(true);
-        User.getTurnUser().getOpponentUser().setFullHealth(true);
-        User.getTurnUser().setPassed(false);
-        User.getTurnUser().getOpponentUser().setPassed(false);
         User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
         User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(), new Date()));
         GameMenu gameMenu = new GameMenu();
@@ -277,11 +270,12 @@ public class PreGameController {
             return;
         }
         if (User.getTurnUser().equals(User.getLoggedUser())) {
-            User.setTurnUser(User.getTurnUser().getOpponentUser());
             ArrayList<Card> allCards = new Neutral().getCollection();
             allCards.addAll(User.getTurnUser().getFaction().getCollection());
             collection = allCards;
-            saveLastDeckContent();
+//            saveLastDeckContent();
+            User.setTurnUser(User.getTurnUser().getOpponentUser());
+//            System.out.println(User.getTurnUser().getFaction().getName());
             setContents();
             updateData();
         } else {
@@ -658,26 +652,26 @@ public class PreGameController {
         }
     }
 //TODO last deck content
-//    private void loadLastDeckContent() {
-//        ArrayList<String> arr = new ArrayList<>();
-//        Gson gson = new Gson();
-//        try {
-//            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
-//            a.forEach(e -> {
-//                try {
-//                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
-//                    reader.setLenient(true);
-//                    String obj = gson.fromJson(reader, String.class);
-//                    arr.add(obj);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        loadGameByFile(arr);
-//    }
+    private void loadLastDeckContent() {
+        ArrayList<String> arr = new ArrayList<>();
+        Gson gson = new Gson();
+        try {
+            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
+            a.forEach(e -> {
+                try {
+                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
+                    reader.setLenient(true);
+                    String obj = gson.fromJson(reader, String.class);
+                    arr.add(obj);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        loadGameByFile(arr);
+    }
 
 }
 

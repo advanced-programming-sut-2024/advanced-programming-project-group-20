@@ -74,6 +74,7 @@ public class RegisterMenu extends Application {
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader(file), JsonArray.class);
+            if (a == null) return arr;
             a.forEach(e -> {
                 try {
                     JsonReader reader = new JsonReader(new StringReader(e.toString()));
@@ -119,8 +120,12 @@ public class RegisterMenu extends Application {
 
     //TODO delete this later
     public void gotoMainMenu(MouseEvent mouseEvent) {
-        User user = new User("hamid", "1", "1", "1", "1", "1");
-        User user1 = new User("ali", "1", "1", "1", "1", "1");
+        User user = User.getUserByName("hamid");
+        if(user == null)
+            user = new User("hamid","1","1","1","1","1");
+        User user1 = User.getUserByName("ali");
+        if (user1 == null)
+            user1 = new User("ali", "1", "1", "1", "1", "1");
         User.setLoggedUser(user);
         try {
             new MainMenu().start(ApplicationController.getStage());

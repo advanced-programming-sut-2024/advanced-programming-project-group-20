@@ -9,25 +9,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.Random;
 
-//import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
 public class RegisterController {
-    //  public AnchorPane root;
-    private static void pickQuestion(int questionNumber, String answer, String answerConfirm) {
-
-    }
-
-    public static String login(String username, String password) {
-        return null;
-    }
-
-    public static String forgetPassword(String username) {
-        return null;
-    }
-
-    private static boolean checkAnswer(int questionNumber, String answer) {
-        return true;
-    }
 
     public static void register(TextField usernameField, TextField passwordField, TextField emailField
             , TextField nickNameField, TextField repeatedPasswordField) {
@@ -193,6 +175,4 @@ public class RegisterController {
             }
         });
     }
-
-
 }
