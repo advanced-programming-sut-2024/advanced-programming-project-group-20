@@ -49,10 +49,7 @@ public class PreGameController {
         ArrayList<Card> allCards = new Neutral().getCollection();
         allCards.addAll(User.getTurnUser().getFaction().getCollection());
         collection = allCards;
-<<<<<<< HEAD
         //todo uncoment this line
-=======
->>>>>>> 116cef4d6a1a7e9736583a31262d97f07b8e02f5
 //        loadLastDeckContent();
         setContents();
     }

@@ -1,6 +1,7 @@
 package View;
 
 import Controller.ApplicationController;
+//import Controller.RegisterController;
 import Controller.RegisterController;
 import Model.GameHistory;
 import Model.User;
@@ -18,11 +19,15 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import webConnection.Client;
+import webConnection.Packet;
+import webConnection.Receiver;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RegisterMenu extends Application {
@@ -64,8 +69,7 @@ public class RegisterMenu extends Application {
         stage.show();
     }
 
-    public static ArrayList<User> parseFile(File file, Class<User> eClass)
-    {
+    public static ArrayList<User> parseFile(File file, Class<User> eClass) {
         ArrayList<User> arr = new ArrayList<>();
         Gson gson = new Gson();
         try {
@@ -86,6 +90,9 @@ public class RegisterMenu extends Application {
         return arr;
     }
 
+    public static void printRespond(String respond) {
+        System.out.println(respond);
+    }
 
     private void SetHeightAndWidth(Stage stage) {
         stage.setX((Screen.getPrimary().getVisualBounds().getWidth() - stage.getWidth() - 400) / 2);
@@ -101,7 +108,13 @@ public class RegisterMenu extends Application {
     }
 
     public void register(MouseEvent mouseEvent) {
-        RegisterController.register(usernameField, passwordField, emailField, nickNameField, repeatedPasswordField);
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(usernameField.getText());
+        objects.add(passwordField.getText());
+        objects.add(emailField.getText());
+     objects.add(nickNameField.getText());
+        objects.add(repeatedPasswordField.getText());
+        Client.getConnection().doInServer("RegisterController", "register", objects);
     }
 
     //TODO delete this later
@@ -117,8 +130,8 @@ public class RegisterMenu extends Application {
         ApplicationController.getStage().setWidth(900);
     }
 
-    public void makeRandomPassword(MouseEvent mouseEvent) {
-        RegisterController.randomPassword(passwordField, repeatedPasswordField);
-    }
+//    public void makeRandomPassword(MouseEvent mouseEvent) {
+//        RegisterController.randomPassword(passwordField, repeatedPasswordField);
+//    }
 
 }

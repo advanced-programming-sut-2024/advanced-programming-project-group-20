@@ -1,19 +1,16 @@
 package Controller;
 
 import Model.User;
-import View.GameMenu;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import View.RegisterMenu;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
@@ -26,7 +23,6 @@ public class ApplicationController {
     private static Pane root;
     private static Scene scene;
 
-    private static GameMenu gameMenu;
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
@@ -69,38 +65,20 @@ public class ApplicationController {
         }
     }
 
-    public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
-        Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
-        BackgroundImage backgroundImage = new BackgroundImage(image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        return backgroundImage;
-    }
+//    public static BackgroundImage createBackGroundImage(String imageAddress, double height, double width) {
+//        Image image = new Image(RegisterMenu.class.getResource(imageAddress).toExternalForm(), width, height, false, false);
+//        BackgroundImage backgroundImage = new BackgroundImage(image,
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundPosition.DEFAULT,
+//                BackgroundSize.DEFAULT);
+//        return backgroundImage;
+//    }
 
     public static void alert(String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(headerText);
         alert.setContentText(contentText);
-        alert.show();
-    }
-
-    public static void alert2(ArrayList<Object> objects) {
-        System.out.println(objects.get(0));
-        System.out.println(objects.get(1));
-        Platform.runLater(() -> {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText((String)objects.get(1));
-        alert.setContentText((String)objects.get(0));
-        alert.show();        });
-
-    }
-    public static void alert2(String a) {
-
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(a);
-        alert.setContentText(a);
         alert.show();
     }
 
