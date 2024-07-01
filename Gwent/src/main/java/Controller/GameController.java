@@ -486,7 +486,13 @@ public class GameController {
         vBox.getChildren().addAll(total, totalPoint, totalPoint2);
         vBox.getChildren().add(button);
         root.getChildren().add(vBox);
-        //saving the gameHistory
+        //set some information and saving the gameHistory
+        User.getLoggedUser().setFullHealth(true);
+        User.getLoggedUser().getOpponentUser().setFullHealth(true);
+        User.getLoggedUser().setPassed(false);
+        User.getLoggedUser().getOpponentUser().setPassed(false);
+        User.getLoggedUser().setFirstTurn(true);
+        User.getLoggedUser().getOpponentUser().setFirstTurn(true);
         ApplicationController.saveTheUsersInGson(User.getAllUsers());
     }
 

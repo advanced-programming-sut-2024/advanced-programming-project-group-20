@@ -70,6 +70,7 @@ public class RegisterMenu extends Application {
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader(file), JsonArray.class);
+            if (a == null) return arr;
             a.forEach(e -> {
                 try {
                     JsonReader reader = new JsonReader(new StringReader(e.toString()));

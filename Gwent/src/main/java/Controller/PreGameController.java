@@ -49,7 +49,7 @@ public class PreGameController {
         ArrayList<Card> allCards = new Neutral().getCollection();
         allCards.addAll(User.getTurnUser().getFaction().getCollection());
         collection = allCards;
-        loadLastDeckContent();
+//        loadLastDeckContent();
         setContents();
     }
 
@@ -276,11 +276,12 @@ public class PreGameController {
             return;
         }
         if (User.getTurnUser().equals(User.getLoggedUser())) {
-            User.setTurnUser(User.getTurnUser().getOpponentUser());
             ArrayList<Card> allCards = new Neutral().getCollection();
             allCards.addAll(User.getTurnUser().getFaction().getCollection());
             collection = allCards;
-            saveLastDeckContent();
+//            saveLastDeckContent();
+            User.setTurnUser(User.getTurnUser().getOpponentUser());
+//            System.out.println(User.getTurnUser().getFaction().getName());
             setContents();
             updateData();
         } else {
