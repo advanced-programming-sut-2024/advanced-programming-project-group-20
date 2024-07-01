@@ -5,6 +5,7 @@ import Controller.GameController;
 import Model.Factions.Skellige;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -37,45 +38,37 @@ public class AbilityActions {
                     card.getType().equals("weather") || card.getType().equals("spell")))
                 normalCards.add(card);
         }
-        if (normalCards.isEmpty())
+        if (normalCards.isEmpty()) {
+            GameController.updateBorder();
             return;
+        }
+
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
-        HBox hBox = new HBox();
-        hBox.setLayoutX(300);
-        hBox.setLayoutY(400);
+        HBox hBox = new HBox(10);
+        hBox.setLayoutX(10);
+        hBox.setLayoutY(150);
         hBox.setPrefHeight(300);
         hBox.setPrefWidth(1000);
         hBox.setSpacing(100);
-        hBox.setAlignment(Pos.CENTER);
+        hBox.setAlignment(Pos.TOP_CENTER);
         root.getChildren().add(hBox);
         for (Card card : normalCards) {
-            if (!hBox.getChildren().contains(card))
-                hBox.getChildren().add(card);
-            setSizeSmaller(card, 2.5);
-            card.setOnMouseClicked(mouseEvent -> {
+            ImageView imageView = new ImageView(card.getImage());
+            hBox.getChildren().add(imageView);
+            imageView.setFitWidth(1400 / normalCards.size());
+            if (imageView.getFitWidth() > 300) imageView.setFitWidth(300);
+            imageView.setPreserveRatio(true);
+            imageView.setOnMouseClicked(mouseEvent -> {
                 card.setSelect(false);
                 root.getChildren().remove(hBox);
                 User.getTurnUser().getBoard().getBurnedCard().remove(card);
                 User.getTurnUser().getBoard().getHand().add(card);
                 card.setOnMouseClicked(null);
-                for (Node node : hBox.getChildren()) {
-                    if (((Pane) node).getHeight() > 100) {
-                        setSizeSmaller((Card) node, 0.4);
-                    }
-                }
                 ApplicationController.setEnable(root);
                 GameController.updateBorder();
             });
         }
-    }
-
-    private static void setSizeSmaller(Card card, double scale) {
-        card.setPrefWidth(card.getPrefWidth() * scale);
-        card.setPrefHeight(card.getPrefHeight() * scale);
-        ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * scale);
-        ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * scale);
-        card.setSelect(false);
     }
 
 
@@ -138,7 +131,8 @@ public class AbilityActions {
         if (card.getAbility() == null || !card.getAbility().contains("tightBond")) return number;
         int multi = 0;
         for (Card card1 : unit) {
-            if (card1.getPower() == card.getPower()) multi++;
+            if (card1.getPower() == card.getPower() && card1.getAbility() != null &&
+                    card1.getAbility().contains("tightBond")) multi++;
         }
         return multi * number;
     }

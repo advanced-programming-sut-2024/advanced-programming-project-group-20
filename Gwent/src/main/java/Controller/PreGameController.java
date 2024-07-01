@@ -96,13 +96,6 @@ public class PreGameController {
 
     public void startGame() throws Exception {
         GameController.turnStarter();
-
-        User.getTurnUser().setFirstTurn(true);
-        User.getTurnUser().getOpponentUser().setFirstTurn(true);
-        User.getTurnUser().setFullHealth(true);
-        User.getTurnUser().getOpponentUser().setFullHealth(true);
-        User.getTurnUser().setPassed(false);
-        User.getTurnUser().getOpponentUser().setPassed(false);
         User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
         User.getLoggedUser().getOpponentUser().setActiveGame(new GameHistory(User.getLoggedUser(), new Date()));
         GameMenu gameMenu = new GameMenu();

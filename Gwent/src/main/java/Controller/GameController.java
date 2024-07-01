@@ -172,6 +172,8 @@ public class GameController {
                 user.getLeader().action();
                 user.getLeader().setUsed(true);
                 updateBorder();
+                GaussianBlur gaussianBlur = new GaussianBlur(10);
+                leader.setEffect(gaussianBlur);
             });
         }
         ApplicationController.getRoot().getChildren().add(leader);
@@ -345,13 +347,44 @@ public class GameController {
     }
 
     public static void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
-        if (!User.getTurnUser().getBoard().getBurnedCard().isEmpty())
+        if (!User.getTurnUser().getBoard().getBurnedCard().isEmpty()) {
             turnBurnt.setImage(User.getTurnUser().getBoard().getBurnedCard().getLast().getGameImage());
-        else turnBurnt.setImage(null);
-        if (!User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().isEmpty())
+            turnBurnt.setOnMouseClicked(mouseEvent -> {
+                showBurned(User.getTurnUser());
+            });
+        } else turnBurnt.setImage(null);
+        if (!User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().isEmpty()) {
             opponentBurnt.setImage(User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().getLast().getGameImage());
-        else
-            opponentBurnt.setImage(null);
+            opponentBurnt.setOnMouseClicked(mouseEvent -> {
+                showBurned(User.getTurnUser().getOpponentUser());
+            });
+        } else opponentBurnt.setImage(null);
+    }
+
+    private static void showBurned(User turnUser) {
+        HBox hBox = new HBox(5);
+        hBox.setLayoutY(200);
+        hBox.setLayoutX(10);
+        hBox.setPrefWidth(1530);
+        hBox.setAlignment(Pos.TOP_CENTER);
+        for(Card card : turnUser.getBoard().getBurnedCard()) {
+            ImageView imageView = new ImageView(card.getImage());
+            imageView.setFitWidth((double) 1540 / (turnUser.getBoard().getBurnedCard().size() + 2));
+            if (imageView.getFitWidth() > 300) imageView.setFitWidth(300);
+            imageView.setPreserveRatio(true);
+            hBox.getChildren().add(imageView);
+        }
+        Pane root = ApplicationController.getRoot();
+        ApplicationController.setDisable(root);
+        root.getChildren().add(hBox);
+        root.setOnMouseClicked(mouseEvent -> {
+            root.setOnMouseClicked(mouseEvent1 -> {
+                root.getChildren().remove(hBox);
+                ApplicationController.setEnable(root);
+                root.setOnMouseClicked(null);
+            });
+        });
+
     }
 
     public static void setRandomHand(User user) {
@@ -527,9 +560,12 @@ public class GameController {
                 if (card.getAbility() != null && card.getAbility().equals("mardoeme"))
                     targetArray = getArrayMardoem(hBox);
                 AbilityActions.switchAction(card, targetArray);
-                updateCardEvent();
-                updateBorder();
-                setImagesOfBoard(User.getTurnUser());
+                if (card.getAbility() == null || !card.getAbility().equals("medic")) {
+                    updateCardEvent();
+                    updateBorder();
+                    setImagesOfBoard(User.getTurnUser());
+                }
+
                 return true;
             }
 
@@ -943,7 +979,7 @@ public class GameController {
         }
         for (Card card : user.getBoard().getRanged()) {
             Label label = (Label) card.getChildren().get(1);
-            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+            if (card.getAbility() != null && card.getAbility().contains("hero")) {
                 label.setText(String.valueOf(card.getPower()));
             } else {
                 int number = card.getPower();
@@ -964,7 +1000,7 @@ public class GameController {
         }
         for (Card card : user.getBoard().getCloseCombat()) {
             Label label = (Label) card.getChildren().get(1);
-            if (card.getAbility() != null && card.getAbility().equals("hero")) {
+            if (card.getAbility() != null && card.getAbility().contains("hero")) {
                 label.setText(String.valueOf(card.getPower()));
             } else {
                 int number = card.getPower();
@@ -1000,39 +1036,6 @@ public class GameController {
         }
     }
 
-    public static void doCheat(String text) {
-        switch (text) {
-            case "1":
-                int num = User.getTurnUser().getDeck().size() - 1;
-                if (num < 1)
-                    break;
-                User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
-                User.getTurnUser().getDeck().remove(num);
-                break;
-            case "2":
-                AbilityActions.medic();
-                break;
-            case "3":
-                User.getTurnUser().setFullHealth(true);
-                break;
-            // 4 , 5 for leader works
-            case "4":
-                User.getTurnUser().getLeader().setUsed(false);
-            case "5":
-
-            case "6":
-                showOpponentCards(User.getTurnUser().getOpponentUser().getBoard().getHand());
-                break;
-            case "7":
-                showOpponentCards(User.getTurnUser().getOpponentUser().getDeck());
-
-                break;
-        }
-        setOnClickBoard();
-        updateBorder();
-        setImagesOfBoard(User.getTurnUser());
-
-    }
 
     public static void showOpponentCards(ArrayList<Card> cards) {
         Pane root = ApplicationController.getRoot();

@@ -2,20 +2,19 @@ package View;
 
 import Controller.ApplicationController;
 import Controller.GameController;
-import Model.Board;
-import Model.Card;
-import Model.GameHistory;
-import Model.User;
+import Model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
@@ -28,6 +27,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
@@ -124,13 +124,22 @@ public class GameMenu extends Application {
     private void startCheatMenu() {
         pane.setOnKeyPressed(event -> {
             if (event.isShiftDown() && event.getCode() == KeyCode.CAPS) {
-                ApplicationController.getRoot().getChildren().add(cheatLabel);
-                ApplicationController.getRoot().getChildren().add(cheatText);
+                if (!ApplicationController.getRoot().getChildren().contains(cheatLabel)) {
+                    GaussianBlur gaussianBlur = new GaussianBlur(10);
+                    for (Node node : ApplicationController.getRoot().getChildren()) {
+                        node.setEffect(gaussianBlur);
+                    }
+                    ApplicationController.getRoot().getChildren().add(cheatLabel);
+                    ApplicationController.getRoot().getChildren().add(cheatText);
+                }
                 cheatText.setOnKeyPressed(keyEvent -> {
                     if (keyEvent.getCode().equals(KeyCode.ENTER)) {
-                        GameController.doCheat(cheatText.getText());
+                        doCheat(cheatText.getText());
                         pane.getChildren().remove(cheatText);
                         pane.getChildren().remove(cheatLabel);
+                        for (Node node : ApplicationController.getRoot().getChildren()) {
+                            node.setEffect(null);
+                        }
                     }
                 });
             }
@@ -138,6 +147,42 @@ public class GameMenu extends Application {
 
     }
 
+    public void doCheat(String text) {
+        switch (text) {
+            case "1":
+                int num = User.getTurnUser().getDeck().size() - 1;
+                if (num < 1)
+                    break;
+                User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
+                User.getTurnUser().getDeck().remove(num);
+                break;
+            case "2":
+                AbilityActions.medic();
+                break;
+            case "3":
+                User.getTurnUser().setFullHealth(true);
+                break;
+            case "4":
+                User.getTurnUser().getLeader().setUsed(false);
+                break;
+            case "5":
+                User.getTurnUser().getOpponentUser().setPassed(true);
+                if (!ApplicationController.getRoot().getChildren().contains(passedLabel))
+                    ApplicationController.getRoot().getChildren().add(passedLabel);
+                break;
+            case "6":
+                GameController.showOpponentCards(User.getTurnUser().getOpponentUser().getBoard().getHand());
+                break;
+            case "7":
+                GameController.showOpponentCards(User.getTurnUser().getOpponentUser().getDeck());
+
+                break;
+        }
+        cheatText.setText("");
+        GameController.setOnClickBoard();
+        GameController.setImagesOfBoard(User.getTurnUser());
+
+    }
     private void setHboxes() {
         hBoxes.add(turnSiege);
         hBoxes.add(turnRanged);
@@ -153,9 +198,6 @@ public class GameMenu extends Application {
         hBoxes.add(opponentRangedNext);
         hBoxes.add(opponentSiegeNext);
     }
-
-
-
 
     public void placeCard() {
         for (HBox hBox : hBoxes) {
@@ -192,8 +234,10 @@ public class GameMenu extends Application {
             GameController.updateCardEvent();
             User.getTurnUser().setPassed(true);
             GameController.changeTurn(highScoreImage, turnLabel);
-            ApplicationController.getRoot().getChildren().add(passedLabel);
-            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> GameController.updateCardEvent()));
+            Timeline waitForChangeTurn = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
+                GameController.updateCardEvent();
+                ApplicationController.getRoot().getChildren().add(passedLabel);
+            }));
             waitForChangeTurn.setCycleCount(1);
             waitForChangeTurn.play();
         } else {
