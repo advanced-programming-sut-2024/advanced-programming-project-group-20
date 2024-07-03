@@ -10,9 +10,8 @@ public class MainController {
         if (user == null) {
             return false;
         }
-        User.setTurnUser(User.getLoggedUser());
-        User.getLoggedUser().setOpponentUser(user);
-        user.setOpponentUser(User.getLoggedUser());
+        User.getLoggedUser().setOppName(user.getOppName());
+        user.setOppName(User.getLoggedUser().getOppName());
         return true;
     }
 

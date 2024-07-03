@@ -21,14 +21,15 @@ public class Connection extends Thread {
     private DataOutputStream out;
     private boolean isInScoreboard = false;
     private boolean isInMainMenu = false;
-
     private User currentUser;
+    private static ArrayList<Connection> connections = new ArrayList<>();
 
     public Connection(Socket socket) throws IOException {
         System.out.println("New connection form: ip=" + socket.getInetAddress().getHostAddress() + " port= " + socket.getPort());
         this.socket = socket;
         this.in = new DataInputStream(socket.getInputStream());
         this.out = new DataOutputStream(socket.getOutputStream());
+        connections.add(this);
     }
 
     @Override
@@ -54,14 +55,24 @@ public class Connection extends Thread {
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
 
-        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters().get(0));
-            Field[] fields = SendingPacket.class.getDeclaredFields();
-            for (Field field: fields)
-                field.setAccessible(true);
-            new ObjectOutputStream(out).writeObject(new Gson().toJson(result));
+        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (result == null) return;
+        Field[] fields = SendingPacket.class.getDeclaredFields();
+        for (Field field: fields)
+            field.setAccessible(true);
+        new ObjectOutputStream(out).writeObject(new Gson().toJson(result));
         for (Field field: fields)
             field.setAccessible(false);
-        out.writeUTF("");
+        System.out.println("1");
+    }
+
+    public void sendOrder(SendingPacket sendingPacket) throws IOException {
+        Field[] fields = SendingPacket.class.getDeclaredFields();
+          for (Field field: fields)
+            field.setAccessible(true);
+        new ObjectOutputStream(out).writeObject(new Gson().toJson(sendingPacket));
+        for (Field field: fields)
+            field.setAccessible(false);
     }
 
 //    public static void sendNotification(String menuName, String methodName, Connection connection) {
@@ -99,5 +110,16 @@ public class Connection extends Thread {
 
     public void setInMainMenu(boolean inMainMenu) {
         isInMainMenu = inMainMenu;
+    }
+
+    public static Connection getConnectionByUser(User user) {
+        for (Connection connection : connections) {
+            if (connection.getCurrentUser().equals(user)) return connection;
+        }
+        return null;
+    }
+
+    public static ArrayList<Connection> getConnections() {
+        return connections;
     }
 }

@@ -11,10 +11,9 @@ public class NorthernRealms extends Faction {
     public NorthernRealms() {
         Collection = new ArrayList<>();
         name = "NorthernRealms";
-        CreateAllCards();
     }
 
-    private void CreateAllCards() {
+    public void createAllCards() {
         Collection.add(CardBuilder.northernRealms("Ballista", this));
         Collection.add(CardBuilder.northernRealms("Ballista", this));
         Collection.add(CardBuilder.northernRealms("Catapult", this));

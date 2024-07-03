@@ -1,11 +1,10 @@
 package Model;
 
 import Controller.ApplicationController;
-import Controller.GameController;
 import Model.Factions.Skellige;
+import View.GameMenu;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -15,75 +14,83 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class AbilityActions {
-    public static void switchAction(Card card, ArrayList<Card> arrayListPlace) {
+    public static void switchAction(Card card, ArrayList<Card> arrayListPlace, User user) {
         if (card.getAbility() != null) {
             if (card.getAbility().contains("spy"))
-                spy();
+                spy(user);
             if (card.getAbility().contains("scorch"))
-                scorch(card);
+                scorch(card,user);
             if (card.getAbility().contains("medic"))
-                medic();
+                medic(user);
             if (card.getAbility().contains("muster"))
-                muster(arrayListPlace, card);
+                muster(arrayListPlace, card, user);
             if (card.getAbility().contains("mardoeme"))
-                mardroeme(arrayListPlace);
+                mardroeme(arrayListPlace, user);
         }
 
     }
 
-    public static void medic() {
+    public static void medic(User user) {
         ArrayList<Card> normalCards = new ArrayList<>();
-        for (Card card : User.getTurnUser().getBoard().getBurnedCard()) {
+        for (Card card : user.getBoard().getBurnedCard()) {
             if(card.getAbility() == null || !(card.getAbility().contains("hero") ||
                     card.getType().equals("weather") || card.getType().equals("spell")))
                 normalCards.add(card);
         }
-        if (normalCards.isEmpty()) {
-            GameController.updateBorder();
+        if (normalCards.isEmpty())
             return;
-        }
-
         Pane root = ApplicationController.getRoot();
         ApplicationController.setDisable(root);
-        HBox hBox = new HBox(10);
-        hBox.setLayoutX(10);
-        hBox.setLayoutY(150);
+        HBox hBox = new HBox();
+        hBox.setLayoutX(300);
+        hBox.setLayoutY(400);
         hBox.setPrefHeight(300);
         hBox.setPrefWidth(1000);
         hBox.setSpacing(100);
-        hBox.setAlignment(Pos.TOP_CENTER);
+        hBox.setAlignment(Pos.CENTER);
         root.getChildren().add(hBox);
         for (Card card : normalCards) {
-            ImageView imageView = new ImageView(card.getImage());
-            hBox.getChildren().add(imageView);
-            imageView.setFitWidth(1400 / normalCards.size());
-            if (imageView.getFitWidth() > 300) imageView.setFitWidth(300);
-            imageView.setPreserveRatio(true);
-            imageView.setOnMouseClicked(mouseEvent -> {
+            if (!hBox.getChildren().contains(card))
+                hBox.getChildren().add(card);
+            setSizeSmaller(card, 2.5);
+            card.setOnMouseClicked(mouseEvent -> {
                 card.setSelect(false);
                 root.getChildren().remove(hBox);
-                User.getTurnUser().getBoard().getBurnedCard().remove(card);
-                User.getTurnUser().getBoard().getHand().add(card);
+                user.getBoard().getBurnedCard().remove(card);
+                user.getBoard().getHand().add(card);
                 card.setOnMouseClicked(null);
+                for (Node node : hBox.getChildren()) {
+                    if (((Pane) node).getHeight() > 100) {
+                        setSizeSmaller((Card) node, 0.4);
+                    }
+                }
                 ApplicationController.setEnable(root);
-                GameController.updateBorder();
+                GameMenu.getGameMenu().updateBorder();
             });
         }
     }
 
-
-    public static void muster(ArrayList<Card> arrayListPlace, Card card) {
-        ArrayList<Card> hand = User.getTurnUser().getBoard().getHand();
-        ArrayList<Card> deck = User.getTurnUser().getDeck();
-        findMusters(arrayListPlace, card, hand);
-        findMusters(arrayListPlace, card, deck);
+    private static void setSizeSmaller(Card card, double scale) {
+        card.setPrefWidth(card.getPrefWidth() * scale);
+        card.setPrefHeight(card.getPrefHeight() * scale);
+        ((Rectangle) card.getChildren().get(0)).setHeight(((Rectangle) card.getChildren().get(0)).getHeight() * scale);
+        ((Rectangle) card.getChildren().get(0)).setWidth(((Rectangle) card.getChildren().get(0)).getWidth() * scale);
+        card.setSelect(false);
     }
 
-    private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deckOrHand) {
+
+    public static void muster(ArrayList<Card> arrayListPlace, Card card, User user) {
+        ArrayList<Card> hand = user.getBoard().getHand();
+        ArrayList<Card> deck = user.getDeck();
+        findMusters(arrayListPlace, card, hand, user);
+        findMusters(arrayListPlace, card, deck, user);
+    }
+
+    private static void findMusters(ArrayList<Card> arrayListPlace, Card card, ArrayList<Card> deckOrHand, User user) {
         if (card.getName().equals("ArachasBehemoth")) {
             for (int i = deckOrHand.size() - 1; i >= 0; i--) {
                 if (deckOrHand.get(i).getName().equals("Arachas")) {
-                    User.getTurnUser().getBoard().getCloseCombat().add(deckOrHand.get(i));
+                    user.getBoard().getCloseCombat().add(deckOrHand.get(i));
                     deckOrHand.get(i).setOnMouseClicked(null);
                     deckOrHand.remove(deckOrHand.get(i));
                 }
@@ -91,7 +98,7 @@ public class AbilityActions {
         } else if (card.getName().equals("GaunterO,Dimm")) {
             for (int i = deckOrHand.size() - 1; i >= 0; i--) {
                 if (deckOrHand.get(i).getName().equals("GaunterO’DimmDarkness")) {
-                    User.getTurnUser().getBoard().getRanged().add(deckOrHand.get(i));
+                    user.getBoard().getRanged().add(deckOrHand.get(i));
                     deckOrHand.get(i).setOnMouseClicked(null);
                     deckOrHand.remove(deckOrHand.get(i));
                 }
@@ -99,7 +106,7 @@ public class AbilityActions {
         } else if (card.getName().equals("Cerys")) {
             for (int i = deckOrHand.size() - 1; i >= 0; i--) {
                 if (deckOrHand.get(i).getName().equals("LightLongship")) {
-                    User.getTurnUser().getBoard().getRanged().add(deckOrHand.get(i));
+                    user.getBoard().getRanged().add(deckOrHand.get(i));
                     deckOrHand.get(i).setOnMouseClicked(null);
                     deckOrHand.remove(deckOrHand.get(i));
                 }
@@ -117,116 +124,115 @@ public class AbilityActions {
         }
     }
 
-    public static void spy() {
+    public static void spy(User user) {
         Random random = new Random();
-        int num = random.nextInt(0, User.getTurnUser().getDeck().size());
-        User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
-        User.getTurnUser().getDeck().remove(num);
-        num = random.nextInt(0, User.getTurnUser().getDeck().size());
-        User.getTurnUser().getBoard().getHand().add(User.getTurnUser().getDeck().get(num));
-        User.getTurnUser().getDeck().remove(num);
+        int num = random.nextInt(0, user.getDeck().size());
+        user.getBoard().getHand().add(user.getDeck().get(num));
+        user.getDeck().remove(num);
+        num = random.nextInt(0, user.getDeck().size());
+        user.getBoard().getHand().add(user.getDeck().get(num));
+        user.getDeck().remove(num);
     }
 
     public static int tightBond(Card card, ArrayList<Card> unit, int number) {
         if (card.getAbility() == null || !card.getAbility().contains("tightBond")) return number;
         int multi = 0;
         for (Card card1 : unit) {
-            if (card1.getPower() == card.getPower() && card1.getAbility() != null &&
-                    card1.getAbility().contains("tightBond")) multi++;
+            if (card1.getPower() == card.getPower()) multi++;
         }
         return multi * number;
     }
 
-    public static void scorch(Card scorch) {
+    public static void scorch(Card scorch, User user) {
         if (scorch.getType().equals("closeCombatUnit")) {
             ArrayList<Card> shouldBurn = new ArrayList<>();
             int maxPointOfCards = 0;
-            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
+            for (Card card : user.getOpponentUser().getBoard().getCloseCombat()) {
                 if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                 if (card.getRealPower() > maxPointOfCards) {
                     maxPointOfCards = card.getRealPower();
                 }
             }
-            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getCloseCombat()) {
+            for (Card card : user.getOpponentUser().getBoard().getCloseCombat()) {
                 if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                 if (card.getRealPower() == maxPointOfCards) {
                     shouldBurn.add(card);
                 }
             }
-            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
-            User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
+            user.getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+            user.getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
         } else if (scorch.getType().equals("siegeUnit")) {
             ArrayList<Card> shouldBurn = new ArrayList<>();
             int maxPointOfCards = 0;
-            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getSiege()) {
+            for (Card card : user.getOpponentUser().getBoard().getSiege()) {
                 if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                 if (card.getRealPower() > maxPointOfCards) {
                     maxPointOfCards = card.getRealPower();
                 }
             }
-            for (Card card : User.getTurnUser().getOpponentUser().getBoard().getSiege()) {
+            for (Card card : user.getOpponentUser().getBoard().getSiege()) {
                 if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
                 if (card.getRealPower() == maxPointOfCards) {
                     shouldBurn.add(card);
                 }
             }
-            User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
-            User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
+            user.getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+            user.getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
         } else {
             int maxPower = Card.maxPowerFinder(scorch.getType().equals("spell"));
-            ArrayList<Card> iterator = new ArrayList<>(User.getTurnUser().getBoard().getCloseCombat());
+            ArrayList<Card> iterator = new ArrayList<>(user.getBoard().getCloseCombat());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getBoard().getCloseCombat().remove(card);
-                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                    user.getBoard().getCloseCombat().remove(card);
+                    user.getBoard().getBurnedCard().add(card);
                 }
             }
-            iterator = new ArrayList<>(User.getTurnUser().getBoard().getRanged());
+            iterator = new ArrayList<>(user.getBoard().getRanged());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getBoard().getRanged().remove(card);
-                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                    user.getBoard().getRanged().remove(card);
+                    user.getBoard().getBurnedCard().add(card);
                 }
             }
-            iterator = new ArrayList<>(User.getTurnUser().getBoard().getSiege());
+            iterator = new ArrayList<>(user.getBoard().getSiege());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower && scorch.getType().equals("spell")) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getBoard().getSiege().remove(card);
-                    User.getTurnUser().getBoard().getBurnedCard().add(card);
+                    user.getBoard().getSiege().remove(card);
+                    user.getBoard().getBurnedCard().add(card);
                 }
             }
-            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
+            iterator = new ArrayList<>(user.getOpponentUser().getBoard().getCloseCombat());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getOpponentUser().getBoard().getCloseCombat().remove(card);
-                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                    user.getOpponentUser().getBoard().getCloseCombat().remove(card);
+                    user.getOpponentUser().getBoard().getBurnedCard().add(card);
                 }
             }
-            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+            iterator = new ArrayList<>(user.getOpponentUser().getBoard().getRanged());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getOpponentUser().getBoard().getRanged().remove(card);
-                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                    user.getOpponentUser().getBoard().getRanged().remove(card);
+                    user.getOpponentUser().getBoard().getBurnedCard().add(card);
                 }
             }
-            iterator = new ArrayList<>(User.getTurnUser().getOpponentUser().getBoard().getSiege());
+            iterator = new ArrayList<>(user.getOpponentUser().getBoard().getSiege());
             for (Card card : iterator) {
                 if (card.getRealPower() == maxPower) {
                     if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
-                    User.getTurnUser().getOpponentUser().getBoard().getSiege().remove(card);
-                    User.getTurnUser().getOpponentUser().getBoard().getBurnedCard().add(card);
+                    user.getOpponentUser().getBoard().getSiege().remove(card);
+                    user.getOpponentUser().getBoard().getBurnedCard().add(card);
                 }
             }
         }
 
     }
 
-    public static void mardroeme(ArrayList<Card> arrayListPlace) {
+    public static void mardroeme(ArrayList<Card> arrayListPlace, User user) {
         Skellige skellige = new Skellige();
         for (int i = arrayListPlace.size() - 1; i >= 0; i--) {
             if (arrayListPlace.get(i).getAbility().contains("berserker"))

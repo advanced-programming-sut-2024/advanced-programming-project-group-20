@@ -20,7 +20,6 @@ public class Board {
     private ArrayList<Card> siegeNext = new ArrayList<>();
     private ArrayList<Card> rangedNext = new ArrayList<>();
     private ArrayList<Card> closeNext = new ArrayList<>();
-    private Leader leader;
     private boolean hasPlayedOne = false;
     private ArrayList<Card> weather = new ArrayList<>();
     public boolean[] leaderBoost = {false, false, false, false, false};

@@ -40,7 +40,6 @@ public class Receiver extends Thread {
             try {
                 receivedPacket = (String) new ObjectInputStream(in).readObject();
                 System.out.println(receivedPacket);
-                isReceivedPacketAccessible = false;
                 JSONObject packet = new JSONObject(receivedPacket);
                 new serverCommander(packet).start();
             }

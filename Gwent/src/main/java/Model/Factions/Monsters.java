@@ -10,10 +10,9 @@ public class Monsters extends Faction {
     public Monsters() {
         Collection = new ArrayList<>();
         name = "Monsters";
-        CreateAllCards();
     }
 
-    private void CreateAllCards() {
+    public void createAllCards() {
         Collection.add(CardBuilder.monsters("Draug", this));
         Collection.add(CardBuilder.monsters("Leshen", this));
         Collection.add(CardBuilder.monsters("Kayran", this));

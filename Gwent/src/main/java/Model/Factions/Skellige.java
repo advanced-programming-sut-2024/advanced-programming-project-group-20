@@ -9,10 +9,9 @@ public class Skellige extends Faction {
     public Skellige() {
         Collection = new ArrayList<>();
         name = "Skellige";
-        CreateAllCards();
     }
 
-    private void CreateAllCards() {
+    public void createAllCards() {
         Collection.add(CardBuilder.skellige("Mardroeme", this));
         Collection.add(CardBuilder.skellige("Mardroeme", this));
         Collection.add(CardBuilder.skellige("Mardroeme", this));

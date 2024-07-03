@@ -64,66 +64,66 @@ public class MainMenu extends Application {
     }
 
     public void goToPregameMenu(MouseEvent mouseEvent) throws Exception {
-        if (!MainController.canGoPregameMenu(opponentName.getText())){
-            ApplicationController.alert("Wrong Username", "There is no user with this username");
-        } else {
-                PreGameMenu preGameMenu = new PreGameMenu();
-                try {
-
-                    preGameMenu.start(ApplicationController.getStage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+//        if (!MainController.canGoPregameMenu(opponentName.getText())){
+//            ApplicationController.alert("Wrong Username", "There is no user with this username");
+//        } else {
+//                PreGameMenu preGameMenu = new PreGameMenu();
+//                try {
+//
+//                    preGameMenu.start(ApplicationController.getStage());
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
         }
 
     // TODO delete method below later
 
 
     public void directToGameMenu(MouseEvent mouseEvent) {
-        User.getLoggedUser().setOpponentUser(User.getUserByName("ali"));
-        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
-        User.getLoggedUser().readyForGame();
-        User.getLoggedUser().getOpponentUser().readyForGame();
-        ScoiaTael scoiaTael = new ScoiaTael();
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Ciaranaep", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Eithne", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Seasenthessis", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("DennisCranmer", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Schirru", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("IsengrimFaoiltiarna", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Milva", scoiaTael));
-        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
-
-
-        Skellige skellige =new Skellige();
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Svanrige", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Udalryk", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Cerys", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
-        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
-        User.setTurnUser(User.getLoggedUser());
-        try {
-            new GameMenu().start(ApplicationController.getStage());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        User.getLoggedUser().setOpponentUser(User.getUserByName("ali"));
+//        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+//        User.getLoggedUser().readyForGame();
+//        User.getLoggedUser().getOpponentUser().readyForGame();
+//        ScoiaTael scoiaTael = new ScoiaTael();
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("HavekarHealer", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Ciaranaep", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Eithne", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Seasenthessis", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("DennisCranmer", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Schirru", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("IsengrimFaoiltiarna", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.scoiaTael("Milva", scoiaTael));
+//        User.getLoggedUser().getDeck().add(CardBuilder.neutral("Decoy"));
+//
+//
+//        Skellige skellige =new Skellige();
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Mardroeme", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Berserker", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Svanrige", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Udalryk", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("ClanAnCraite", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("Cerys", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.skellige("BirnaBran", skellige));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
+//        User.getLoggedUser().getOpponentUser().getDeck().add(CardBuilder.neutral("Decoy"));
+//        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+//        User.setTurnUser(User.getLoggedUser());
+//        try {
+//            new GameMenu().start(ApplicationController.getStage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

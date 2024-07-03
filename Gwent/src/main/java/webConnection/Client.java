@@ -1,5 +1,7 @@
 package webConnection;
 
+import Model.Card;
+import Model.CardNames;
 import View.RegisterMenu;
 
 import java.net.Socket;
@@ -11,8 +13,9 @@ public class Client {
     public static void main(String[] args) {
         try {
             connection = new Connection(new Socket("localhost", 15551));
+            CardNames.fillArrayLists();
             RegisterMenu.main(args);
-        } catch (Exception e) {
+                    } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

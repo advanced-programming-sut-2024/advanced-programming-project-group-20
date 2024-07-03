@@ -66,6 +66,7 @@ public class Connection extends Thread {
     public void doInServer (String className, String methodName, Object... parameters){
         Packet packet = new Packet(OperationType.VOID, className, methodName, parameters);
         sendData(packet);
+
     }
 
     private void sendData (Packet packet){

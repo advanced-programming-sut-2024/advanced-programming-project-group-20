@@ -25,7 +25,7 @@ public class LoginController {
             ApplicationController.alert("wrong password", "enter the password correctly");
 
         } else {
-            User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
+            //User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
 //            MainMenu mainMenu = new MainMenu();
             try {
 //                mainMenu.start(ApplicationController.getStage());

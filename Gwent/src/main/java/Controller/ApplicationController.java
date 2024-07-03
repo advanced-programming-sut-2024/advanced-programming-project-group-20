@@ -19,18 +19,17 @@ import javafx.stage.Stage;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class ApplicationController {
     private static Stage stage;
     private static Pane root;
     private static Scene scene;
-
-    private static GameMenu gameMenu;
-
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
     private static MediaPlayer mediaPlayer;
+
 
 
     public static Stage getStage() {

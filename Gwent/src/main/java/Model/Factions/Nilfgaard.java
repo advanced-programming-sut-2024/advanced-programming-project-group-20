@@ -11,10 +11,9 @@ public class Nilfgaard extends Faction {
     public Nilfgaard() {
         Collection = new ArrayList<>();
         name = "Nilfgaard";
-        CreateAllCards();
     }
 
-    private void CreateAllCards() {
+    public void createAllCards() {
         Collection.add(CardBuilder.nilfgaard("ImperaBrigadeGuard", this));
         Collection.add(CardBuilder.nilfgaard("ImperaBrigadeGuard", this));
         Collection.add(CardBuilder.nilfgaard("ImperaBrigadeGuard", this));

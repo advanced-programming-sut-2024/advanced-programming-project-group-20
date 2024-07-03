@@ -3,12 +3,14 @@ package View;
 import Controller.ApplicationController;
 //import Controller.RegisterController;
 import Controller.RegisterController;
+import Model.Factions.Nilfgaard;
 import Model.GameHistory;
 import Model.User;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -50,6 +52,7 @@ public class RegisterMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        if (User.getLoggedUser() != null) System.out.println(User.getLoggedUser().getUsername());
         //setting title and Icon
         ApplicationController.setStage(stage);
         stage.setTitle("Gwent");
@@ -113,26 +116,36 @@ public class RegisterMenu extends Application {
         objects.add(usernameField.getText());
         objects.add(passwordField.getText());
         objects.add(emailField.getText());
-     objects.add(nickNameField.getText());
+        objects.add(nickNameField.getText());
         objects.add(repeatedPasswordField.getText());
         Client.getConnection().doInServer("RegisterController", "register", objects);
     }
 
     //TODO delete this later
-    public void gotoMainMenu(MouseEvent mouseEvent) {
-        User user = User.getUserByName("hamid");
-        if(user == null)
-            user = new User("hamid","1","1","1","1","1");
-        User user1 = User.getUserByName("ali");
-        if (user1 == null)
-            user1 = new User("ali", "1", "1", "1", "1", "1");
+    public void gotoMainMenu(MouseEvent mouseEvent) throws Exception {
+        Object[] objects = new Object[2];
+        objects[0] = "hamid";
+        objects[1] = "ali";
+        Client.getConnection().doInServer("PreGameController", "getUserByName", objects);
+    }
+    public static void setLogin(ArrayList<Object> objects) throws Exception {
+        Gson gson = new Gson();
+        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         User.setLoggedUser(user);
-        try {
-            new MainMenu().start(ApplicationController.getStage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        ApplicationController.getStage().setWidth(900);
+        User opponent = gson.fromJson(gson.toJson(objects.get(1)), User.class);
+        user.setOpponentUser(opponent);
+        opponent.setOpponentUser(user);
+        User.getLoggedUser().readyForGame();
+        User.getLoggedUser().getOpponentUser().readyForGame();
+        Platform.runLater(() -> {
+            PreGameMenu preGameMenu = new PreGameMenu();
+            try {
+                preGameMenu.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
 //    public void makeRandomPassword(MouseEvent mouseEvent) {

@@ -1,6 +1,5 @@
 package Model;
 
-import Controller.GameController;
 import View.GameMenu;
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -11,21 +10,21 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SpecialAction {
-    public static int bitingFrost(int number){
-        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+    public static int bitingFrost(int number, User user){
+        for (Card card : user.getBoard().getWeather()) {
             if (card.getName().equals("BitingFrost")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
                 }
             }
         }
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+        for (Card card : user.getOpponentUser().getBoard().getWeather()) {
             if (card.getName().equals("BitingFrost")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
@@ -35,21 +34,21 @@ public class SpecialAction {
         return number;
     }
 
-    public static int impenetrableFog(int number){
-        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+    public static int impenetrableFog(int number, User user){
+        for (Card card : user.getBoard().getWeather()) {
             if (card.getName().equals("ImpenetrableFog") || card.getName().equals("SkelligeStorm")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
                 }
             }
         }
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+        for (Card card : user.getOpponentUser().getBoard().getWeather()) {
             if (card.getName().equals("ImpenetrableFog") || card.getName().equals("SkelligeStorm")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
@@ -59,21 +58,21 @@ public class SpecialAction {
         return number;
     }
 
-    public static int torrentialRain(int number){
-        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+    public static int torrentialRain(int number, User user){
+        for (Card card : user.getBoard().getWeather()) {
             if (card.getName().equals("TorrentialRain") || card.getName().equals("SkelligeStorm")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
                 }
             }
         }
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+        for (Card card : user.getOpponentUser().getBoard().getWeather()) {
             if (card.getName().equals("TorrentialRain") || card.getName().equals("SkelligeStorm")) {
-                if (User.getTurnUser().getBoard().leaderBoost[4] ||
-                        User.getTurnUser().getOpponentUser().getBoard().leaderBoost[4]) {
+                if (user.getBoard().leaderBoost[4] ||
+                        user.getOpponentUser().getBoard().leaderBoost[4]) {
                     return (1 + number) / 2;
                 } else {
                     return 1;
@@ -83,60 +82,62 @@ public class SpecialAction {
         return number;
     }
 
-    public static void decoy(Card decoy) {
-        for (Card card : User.getTurnUser().getBoard().getCloseCombat()) {
+    public static void decoy(Card decoy, User user) {
+        for (Card card : user.getBoard().getCloseCombat()) {
             card.setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().setHasPlayedOne(true);
-                User.getTurnUser().getBoard().getHand().remove(decoy);
+                user.getBoard().setHasPlayedOne(true);
+                user.getBoard().getHand().remove(decoy);
                 decoy.setOnMouseClicked(null);
-                GameController.setSizeSmaller(decoy);
-                decoyAction(decoy);
-                User.getTurnUser().getBoard().getHand().add(card);
-                User.getTurnUser().getBoard().getCloseCombat().remove(card);
-                User.getTurnUser().getBoard().getCloseCombat().add(decoy);
-                GameController.updateBorder();
+                GameMenu.getGameMenu().setSizeSmaller(decoy);
+                decoyAction(decoy, user);
+                user.getBoard().getHand().add(card);
+                user.getBoard().getCloseCombat().remove(card);
+                user.getBoard().getCloseCombat().add(decoy);
+                GameMenu.getGameMenu().updateBorder();
             });
         }
-        for (Card card : User.getTurnUser().getBoard().getSiege()) {
+        for (Card card : user.getBoard().getSiege()) {
             card.setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().setHasPlayedOne(true);
-                User.getTurnUser().getBoard().getHand().remove(decoy);
+                user.getBoard().setHasPlayedOne(true);
+                user.getBoard().getHand().remove(decoy);
                 decoy.setOnMouseClicked(null);
-                GameController.setSizeSmaller(decoy);
-                decoyAction(decoy);
-                User.getTurnUser().getBoard().getHand().add(card);
-                User.getTurnUser().getBoard().getSiege().remove(card);
-                User.getTurnUser().getBoard().getSiege().add(decoy);
-                GameController.updateBorder();
+                GameMenu.getGameMenu().setSizeSmaller(decoy);
+                decoyAction(decoy, user);
+                user.getBoard().getHand().add(card);
+                user.getBoard().getSiege().remove(card);
+                user.getBoard().getSiege().add(decoy);
+                GameMenu.getGameMenu().updateBorder();
             });
         }
-        for (Card card : User.getTurnUser().getBoard().getRanged()) {
+        for (Card card : user.getBoard().getRanged()) {
             card.setOnMouseClicked(mouseEvent -> {
-                User.getTurnUser().getBoard().setHasPlayedOne(true);
-                User.getTurnUser().getBoard().getHand().remove(decoy);
+                user.getBoard().setHasPlayedOne(true);
+                user.getBoard().getHand().remove(decoy);
                 decoy.setOnMouseClicked(null);
-                GameController.setSizeSmaller(decoy);
-                decoyAction(decoy);
-                User.getTurnUser().getBoard().getHand().add(card);
-                User.getTurnUser().getBoard().getRanged().remove(card);
-                User.getTurnUser().getBoard().getRanged().add(decoy);
-                GameController.updateBorder();
+                GameMenu.getGameMenu().setSizeSmaller(decoy);
+                decoyAction(decoy, user);
+                user.getBoard().getHand().add(card);
+                user.getBoard().getRanged().remove(card);
+                user.getBoard().getRanged().add(decoy);
+                GameMenu.getGameMenu().updateBorder();
             });
         }
 
 
     }
 
-    public static void decoyAction(Card decoy) {
+    public static void decoyAction(Card decoy, User user) {
         ArrayList<Card> allcards = new ArrayList<>();
-        allcards.addAll(User.getTurnUser().getBoard().getRanged());
-        allcards.addAll(User.getTurnUser().getBoard().getSiege());
-        allcards.addAll(User.getTurnUser().getBoard().getCloseCombat());
+        allcards.addAll(user.getBoard().getRanged());
+        allcards.addAll(user.getBoard().getSiege());
+        allcards.addAll(user.getBoard().getCloseCombat());
         for (Card card : allcards) {
             card.setOnMouseClicked(null);
         }
-        for (Card card : User.getTurnUser().getBoard().getHand()) {
-            card.setOnMouseClicked(null);
+        if (!User.getLoggedUser().getOpponentUser().isPassed()) {
+            for (Card card : user.getBoard().getHand()) {
+                card.setOnMouseClicked(null);
+            }
         }
     }
 
@@ -159,11 +160,11 @@ public class SpecialAction {
         return number;
     }
 
-    public static boolean clearWeather() {
-        for (Card card : User.getTurnUser().getBoard().getWeather()) {
+    public static boolean clearWeather(User user) {
+        for (Card card : user.getBoard().getWeather()) {
             if (card.getName().equals("ClearWeather")) return true;
         }
-        for (Card card : User.getTurnUser().getOpponentUser().getBoard().getWeather()) {
+        for (Card card : user.getOpponentUser().getBoard().getWeather()) {
             if (card.getName().equals("ClearWeather")) return true;
         }
         return false;

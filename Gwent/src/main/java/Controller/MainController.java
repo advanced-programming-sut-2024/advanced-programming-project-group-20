@@ -10,7 +10,7 @@ public class MainController {
         if (user == null) {
             return false;
         }
-        User.setTurnUser(User.getLoggedUser());
+        //User.setTurnUser(User.getLoggedUser());
         User.getLoggedUser().setOpponentUser(user);
         user.setOpponentUser(User.getLoggedUser());
         user.readyForGame();

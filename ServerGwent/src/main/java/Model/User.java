@@ -1,41 +1,57 @@
 package Model;
 
-import Model.Factions.Nilfgaard;
+
+import Controller.ApplicationController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User {
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
-    transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
     private String password;
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-    transient private Faction faction;
-    transient private Leader leader;
-    transient private User opponentUser;
-    transient private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
-    transient private ArrayList<Card> deck = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
     private int numberOfGames;
     private String email;
     private String answer;
+    private User opponentUser;
     private static ArrayList<User> allUsers = new ArrayList<>();
-    private static User loggedUser;
-    private static User turnUser;
     private int maxPoint;
-
+    private HashMap<Integer, ArrayList<String>> cards;
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
+    private boolean isReady;
     private int rank;
+    private boolean turn;
+    private String oppName;
+    private String factionName;
+    private String leaderName;
 
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
+
+    public static User getLoggedUser () {
+        return null;
+    }
+    public String getFactionName() {
+        return factionName;
+    }
+
+    public void setFactionName(String factionName) {
+        this.factionName = factionName;
+    }
 
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
@@ -43,8 +59,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = new Nilfgaard();
-        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
@@ -69,6 +83,48 @@ public class User {
         return null;
     }
 
+    public void mergeHashMap (User opponent) {
+        cards = new HashMap<>();
+        cards.put(0,opponent.cards.get(5));
+        cards.put(1,opponent.cards.get(4));
+        cards.put(2,opponent.cards.get(3));
+        cards.put(3,opponent.cards.get(2));
+        cards.put(4,opponent.cards.get(1));
+        cards.put(5,opponent.cards.get(0));
+        cards.put(6,opponent.cards.get(7));
+        cards.put(7,opponent.cards.get(6));
+        cards.put(8,opponent.cards.get(13));
+        cards.put(9,opponent.cards.get(12));
+        cards.put(10,opponent.cards.get(11));
+        cards.put(11,opponent.cards.get(10));
+        cards.put(12,opponent.cards.get(9));
+        cards.put(13,opponent.cards.get(8));
+        cards.put(14,opponent.cards.get(15));
+        cards.put(15,opponent.cards.get(14));
+        cards.put(16,opponent.cards.get(17));
+        cards.put(17,opponent.cards.get(16));
+        cards.put(18,opponent.cards.get(19));
+        cards.put(19,opponent.cards.get(18));
+        cards.put(20,opponent.cards.get(21));
+        cards.put(21,opponent.cards.get(20));
+    }
+
+    public HashMap<Integer, ArrayList<String>> getCards() {
+        return cards;
+    }
+
+    public void setCards(HashMap<Integer, ArrayList<String>> cards) {
+        this.cards = cards;
+    }
+
+    public String getOppName() {
+        return oppName;
+    }
+
+    public void setOppName(String oppName) {
+        this.oppName = oppName;
+    }
+
     public static User getUserByName(String username) {
         for (User user: allUsers) {
             if (username.equals(user.getUsername())){
@@ -84,13 +140,6 @@ public class User {
 
     public void setRank(int rank) {
         this.rank = rank;
-    }
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public String getUsername() {
@@ -131,38 +180,6 @@ public class User {
 
     public void setNumberOfWins(int numberOfWins) {
         this.numberOfWins = numberOfWins;
-    }
-
-    public Faction getFaction() {
-        return faction;
-    }
-
-    public void setFaction(Faction faction) {
-        this.faction = faction;
-    }
-
-    public Leader getLeader() {
-        return leader;
-    }
-
-    public void setLeader(Leader leader) {
-        this.leader = leader;
-    }
-
-    public User getOpponentUser() {
-        return opponentUser;
-    }
-
-    public void setOpponentUser(User opponentUser) {
-        this.opponentUser = opponentUser;
-    }
-
-    public ArrayList<Card> getDeck() {
-        return deck;
-    }
-
-    public void setDeck(ArrayList<Card> deck) {
-        this.deck = deck;
     }
 
     public ArrayList<GameHistory> getGameHistories() {
@@ -209,22 +226,6 @@ public class User {
         User.allUsers = allUsers;
     }
 
-    public static User getLoggedUser() {
-        return loggedUser;
-    }
-
-    public static void setLoggedUser(User loggedUser) {
-        User.loggedUser = loggedUser;
-    }
-
-    public static User getTurnUser() {
-        return turnUser;
-    }
-
-    public static void setTurnUser(User turnUser) {
-        User.turnUser = turnUser;
-    }
-
     public double getMaxPoint() {
         return maxPoint;
     }
@@ -267,5 +268,33 @@ public class User {
 
     public void setFirstTurn(boolean firstTurn) {
         this.firstTurn = firstTurn;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
+    }
+
+    public boolean isTurn() {
+        return turn;
+    }
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
+    }
+
+    public void mergeActiveGame(User user) {
+        if (activeGame == null) activeGame = user.getActiveGame();
+        activeGame.setFirstRoundPointMe(user.activeGame.getFirstRoundPointOpponent());
+        activeGame.setSecondRoundPointMe(user.activeGame.getSecondRoundPointOpponent());
+        activeGame.setThirdRoundPointMe(user.activeGame.getThirdRoundPointOpponent());
+        activeGame.setFirstRoundPointOpponent(user.activeGame.getFirstRoundPointMe());
+        activeGame.setSecondRoundPointOpponent(user.activeGame.getSecondRoundPointMe());
+        activeGame.setThirdRoundPointOpponent(user.activeGame.getThirdRoundPointMe());
+        if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
+        activeGame.countTotalPoints();
     }
 }

@@ -18,6 +18,10 @@ public abstract class Faction {
         return Collection;
     }
 
+    public void createAllCards() {
+
+    }
+
     public static Faction giveFactionByName(String nameOfFaction) {
         if (nameOfFaction.equals("Neutral")) {
             return null;

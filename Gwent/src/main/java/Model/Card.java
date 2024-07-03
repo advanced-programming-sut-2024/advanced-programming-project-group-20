@@ -58,13 +58,13 @@ public class Card extends Pane {
         int max = 0;
         ArrayList<Card> allCards = new ArrayList<>();
         if (spell) {
-            allCards.addAll(User.getTurnUser().getBoard().getCloseCombat());
-            allCards.addAll(User.getTurnUser().getBoard().getSiege());
-            allCards.addAll(User.getTurnUser().getBoard().getRanged());
+            allCards.addAll(User.getLoggedUser().getBoard().getCloseCombat());
+            allCards.addAll(User.getLoggedUser().getBoard().getSiege());
+            allCards.addAll(User.getLoggedUser().getBoard().getRanged());
         }
-        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getCloseCombat());
-        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getSiege());
-        allCards.addAll(User.getTurnUser().getOpponentUser().getBoard().getRanged());
+        allCards.addAll(User.getLoggedUser().getOpponentUser().getBoard().getCloseCombat());
+        allCards.addAll(User.getLoggedUser().getOpponentUser().getBoard().getSiege());
+        allCards.addAll(User.getLoggedUser().getOpponentUser().getBoard().getRanged());
         for (Card card : allCards) {
             if(card.getAbility() != null && card.getAbility().contains("hero")) continue;
             if (card.getRealPower() > max) max = card.getRealPower();
@@ -142,17 +142,27 @@ public class Card extends Pane {
                 return CardBuilder.neutral(cardName);
             }
         }
-        if (User.getTurnUser().getFaction().getName().equals("Skellige")) {
+        if (User.getLoggedUser().getFaction().getName().equals("Skellige")) {
             return CardBuilder.skellige(cardName, new Skellige());
-        } else if (User.getTurnUser().getFaction().getName().equals("NorthernRealms")) {
+        } else if (User.getLoggedUser().getFaction().getName().equals("NorthernRealms")) {
             return CardBuilder.northernRealms(cardName, new NorthernRealms());
-        } else if (User.getTurnUser().getFaction().getName().equals("Monsters")) {
+        } else if (User.getLoggedUser().getFaction().getName().equals("Monsters")) {
             return CardBuilder.monsters(cardName, new Monsters());
-        } else if (User.getTurnUser().getFaction().getName().equals("Nilfgaard")) {
+        } else if (User.getLoggedUser().getFaction().getName().equals("Nilfgaard")) {
             return CardBuilder.nilfgaard(cardName, new Nilfgaard());
         } else {
             return CardBuilder.scoiaTael(cardName, new ScoiaTael());
         }
+    }
+
+    public static Card giveCardByName2(String cardName) {
+        if (CardNames.neutral.contains(cardName)) return CardBuilder.neutral(cardName);
+        if (CardNames.skellige.contains(cardName)) return CardBuilder.skellige(cardName,new Skellige());
+        if (CardNames.scoiaTael.contains(cardName)) return CardBuilder.scoiaTael(cardName,new ScoiaTael());
+        if (CardNames.northern.contains(cardName)) return CardBuilder.northernRealms(cardName,new NorthernRealms());
+        if (CardNames.nilfgaard.contains(cardName)) return CardBuilder.nilfgaard(cardName,new Nilfgaard());
+        if (CardNames.monsters.contains(cardName)) return CardBuilder.monsters(cardName,new Monsters());
+        return null;
     }
     public int getRealPower() {
         Label label = (Label) this.getChildren().get(1);

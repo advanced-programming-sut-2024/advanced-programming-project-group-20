@@ -20,7 +20,12 @@
          <Font name="Agency FB Bold" size="30.0" />
       </font>
    </Button>
-   <Label fx:id="passedLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="310.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+   <Label fx:id="passedOpponent" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="310.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+      <font>
+         <Font name="Book Antiqua" size="20.0" />
+      </font>
+   </Label>
+   <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="610.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
       <font>
          <Font name="Book Antiqua" size="20.0" />
       </font>

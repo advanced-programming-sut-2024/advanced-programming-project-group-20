@@ -9,9 +9,9 @@ public class ScoiaTael extends Faction {
     public ScoiaTael() {
         Collection = new ArrayList<>();
         name = "ScoiaTael";
-        CreateAllCards();
     }
-    private void CreateAllCards() {
+
+    public void createAllCards() {
         Collection.add(CardBuilder.scoiaTael("ElvenSkirmisher", this));
         Collection.add(CardBuilder.scoiaTael("ElvenSkirmisher", this));
         Collection.add(CardBuilder.scoiaTael("ElvenSkirmisher", this));
