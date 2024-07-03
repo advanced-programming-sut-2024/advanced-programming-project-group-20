@@ -37,13 +37,13 @@ public class Connection extends Thread {
     @Override
     public void run() {
         //todo set real User
-        if (User.getUserByName("ali")==null){
-        currentUser = new User("ali",null,null,null,null,null);
-        User.getAllUsers().add(currentUser);}
-        else{
-            if (User.getUserByName("reza")==null)
-                currentUser = new User("reza",null,null,null,null,null);
-        }
+//        if (User.getUserByName("ali")==null){
+//        currentUser = new User("ali",null,null,null,null,null);
+//        User.getAllUsers().add(currentUser);}
+//        else{
+//            if (User.getUserByName("reza")==null)
+//                currentUser = new User("reza",null,null,null,null,null);
+//        }
         while (true) {
             try {
                 ReceivingPacket receivingPacket = new ReceivingPacket(in.readUTF());
@@ -67,7 +67,7 @@ public class Connection extends Thread {
         SendingPacket sendingPacket;
 receivingPacket.getParameters().add(this.currentUser);
         SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
-        if (result.equals(null))
+        if (result == null)
             return;
         if (result.getParameters().isEmpty()) return;
         DataOutputStream sendOut = out;

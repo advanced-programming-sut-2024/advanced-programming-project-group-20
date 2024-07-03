@@ -96,10 +96,12 @@ public class ApplicationController {
     public static void saveTheUsersInGson(ArrayList<Object> objects) {
         Gson gson = new Gson();
         ArrayList<User> usersToSave = new ArrayList<>();
+
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
             usersToSave.add(user);
         }
+
         ///delete last content
         try (Writer writer = new FileWriter("users.json")) {
             writer.write("");
