@@ -583,4 +583,16 @@ public class User {
     public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
     }
+
+    public void mergeActiveGame(User user) {
+        if (activeGame == null) activeGame = user.getActiveGame();
+        activeGame.setFirstRoundPointMe(user.activeGame.getFirstRoundPointOpponent());
+        activeGame.setSecondRoundPointMe(user.activeGame.getSecondRoundPointOpponent());
+        activeGame.setThirdRoundPointMe(user.activeGame.getThirdRoundPointOpponent());
+        activeGame.setFirstRoundPointOpponent(user.activeGame.getFirstRoundPointMe());
+        activeGame.setSecondRoundPointOpponent(user.activeGame.getSecondRoundPointMe());
+        activeGame.setThirdRoundPointOpponent(user.activeGame.getThirdRoundPointMe());
+        if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
+        activeGame.countTotalPoints();
+    }
 }

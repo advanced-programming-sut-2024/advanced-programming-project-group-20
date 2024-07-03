@@ -5,9 +5,7 @@ import WebConnection.Connection;
 import WebConnection.SendingPacket;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Objects;
+
 
 public class PreGameController {
     public static SendingPacket startGame(User user1, User user2) throws Exception {
@@ -20,6 +18,8 @@ public class PreGameController {
         objects[0] = user1;
         objects[1] = user2.getFactionName();
         objects[2] = user2.getLeaderName();
+        Thread.sleep(1000);
+        user1.setReady(false);
         if (user1.getCards().get(19) != null) System.out.println(user1.getCards().get(19));
         return new SendingPacket("PreGameMenu", "startGame", objects);
     }

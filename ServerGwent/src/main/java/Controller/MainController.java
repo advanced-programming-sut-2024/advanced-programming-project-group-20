@@ -37,7 +37,7 @@ public class MainController {
     public static SendingPacket playWithFriend (ArrayList<Object> objects) throws Exception {
         User user = User.getUserByName((String) objects.get(0));
         User friend = User.getUserByName((String) objects.get(1));
-        if (user.getFriends().contains(friend.getUsername())) {
+        if (friend != null && user.getFriends().contains(friend.getUsername())) {
             Connection connection = Connection.getConnectionByUserName(friend.getUsername());
             if (connection == null) {
                 return new SendingPacket("MainMenu","offline",new Object[1]);
