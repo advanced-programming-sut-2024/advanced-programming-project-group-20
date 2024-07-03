@@ -1,25 +1,17 @@
 package Model;
 
-import Model.Factions.Nilfgaard;
-
 import java.util.ArrayList;
 
 public class User {
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
-    transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
     private String password;
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-    transient private Faction faction;
-    transient private Leader leader;
     transient private User opponentUser;
-    transient private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
-    transient private ArrayList<Card> deck = new ArrayList<>();
+
     transient private ArrayList<User> friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
@@ -37,15 +29,11 @@ public class User {
     private boolean firstTurn = true;
     private int rank;
 
-
-
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = new Nilfgaard();
-//        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
@@ -85,13 +73,6 @@ public class User {
 
     public void setRank(int rank) {
         this.rank = rank;
-    }
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public String getUsername() {
@@ -134,36 +115,12 @@ public class User {
         this.numberOfWins = numberOfWins;
     }
 
-    public Faction getFaction() {
-        return faction;
-    }
-
-    public void setFaction(Faction faction) {
-        this.faction = faction;
-    }
-
-    public Leader getLeader() {
-        return leader;
-    }
-
-    public void setLeader(Leader leader) {
-        this.leader = leader;
-    }
-
     public User getOpponentUser() {
         return opponentUser;
     }
 
     public void setOpponentUser(User opponentUser) {
         this.opponentUser = opponentUser;
-    }
-
-    public ArrayList<Card> getDeck() {
-        return deck;
-    }
-
-    public void setDeck(ArrayList<Card> deck) {
-        this.deck = deck;
     }
 
     public ArrayList<GameHistory> getGameHistories() {

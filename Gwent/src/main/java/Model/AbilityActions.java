@@ -1,17 +1,15 @@
 package Model;
 
+import View.ApplicationController;
 import Controller.GameController;
 import Model.Factions.Skellige;
 import View.ApplicationController;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 public class AbilityActions {

@@ -1,5 +1,6 @@
 package Model;
 
+import View.ApplicationController;
 import Controller.GameController;
 import View.ApplicationController;
 import javafx.scene.Node;

@@ -18,7 +18,6 @@ public class ReceivingPacket {
         methodName = (String) packet.get("methodName");
         System.out.println("asl packet=  " +packet);
         parameters = (ArrayList<Object>) ((JSONArray)packet.get("parameters")).toList();
-        System.out.println(parameters.get(0));
     }
 
     public String getClassName() {

@@ -87,12 +87,14 @@ public class ApplicationController {
         System.out.println(objects.get(0));
         System.out.println(objects.get(1));
         Platform.runLater(() -> {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText((String)objects.get(1));
-        alert.setContentText((String)objects.get(0));
-        alert.show();        });
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText((String) objects.get(1));
+            alert.setContentText((String) objects.get(0));
+            alert.show();
+        });
 
     }
+
     public static void alert2(String a) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);

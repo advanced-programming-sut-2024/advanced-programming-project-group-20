@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 public class serverCommander extends Thread {
@@ -22,6 +23,7 @@ public class serverCommander extends Thread {
             Method method = menu.getDeclaredMethod((String) packet.get("methodName"),ArrayList.class);
           ArrayList<Object> parameters = (ArrayList<Object>) ((JSONArray)packet.get("parameters")).toList();
             System.out.println(parameters);
+            System.out.println(Modifier.isStatic(method.getModifiers()));
             method.invoke(null,parameters);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

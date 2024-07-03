@@ -1,26 +1,19 @@
 package View;
 
 import Controller.MainController;
-import Controller.RegisterController;
 
-import Model.Card;
 import Model.CardBuilder;
-import Model.Faction;
-import Model.CardBuilder;
-import Model.Factions.Monsters;
 import Model.Factions.ScoiaTael;
 import Model.Factions.Skellige;
 import Model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import java.util.concurrent.CountDownLatch;
 
 import java.net.URL;
 

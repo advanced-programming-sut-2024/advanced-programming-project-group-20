@@ -18,7 +18,7 @@
         <TextField fx:id="nickNameField" promptText="nickname" styleClass="text-field" />
         <TextField fx:id="emailField" prefHeight="33.0" prefWidth="147.0" promptText="email" styleClass="text-field" />
         <TextField fx:id="passwordField" prefHeight="33.0" prefWidth="172.0" promptText="password" styleClass="text-field" />
-        <TextField fx:id="repeatedPasswordField" prefHeight="33.0" prefWidth="172.0" promptText="repeat passoword" />
+        <TextField fx:id="repeatedPasswordField" prefHeight="33.0" prefWidth="172.0" promptText="repeat password" />
 
     </VBox>
     
@@ -28,7 +28,7 @@
       </font></Label>
     <Label layoutX="390.0" layoutY="195.0" style="-fx-background-color: yellow; -fx-background-radius: 10px;" text=" Welcome! " />
    <Button layoutX="170.0" layoutY="193.0" mnemonicParsing="false" onMouseClicked="#gotoMainMenu" prefHeight="30.0" prefWidth="147.0" stylesheets="@Register.css" text="go to main menu!" />
-<!--   <Button layoutX="192.0" layoutY="383.0" mnemonicParsing="false" onMouseClicked="#makeRandomPassword" stylesheets="@Register.css" text="Random password" />-->
+   <Button layoutX="192.0" layoutY="383.0" mnemonicParsing="false" onMouseClicked="#makeRandomPassword" stylesheets="@Register.css" text="Random password" />
 
 
 </AnchorPane>

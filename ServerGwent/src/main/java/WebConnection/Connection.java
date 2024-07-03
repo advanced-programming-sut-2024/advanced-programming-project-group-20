@@ -57,6 +57,7 @@ public class Connection extends Thread {
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 System.out.println("Reflection Problem!");
+              e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -66,12 +67,15 @@ public class Connection extends Thread {
         SendingPacket sendingPacket;
 receivingPacket.getParameters().add(this.currentUser);
         SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (result.equals(null))
+            return;
+        if (result.getParameters().isEmpty()) return;
         DataOutputStream sendOut = out;
         if (result.getParameters().get(0) instanceof Connection) {
              sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
             result.getParameters().set(0,null);
-
         }
+
             Field[] fields = SendingPacket.class.getDeclaredFields();
             for (Field field: fields)
                 field.setAccessible(true);
