@@ -20,10 +20,8 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import webConnection.Client;
 
-import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.function.ToDoubleBiFunction;
 
 public class RegisterMenu extends Application {
     public static Pane root;
@@ -137,7 +135,6 @@ public class RegisterMenu extends Application {
         String password = (String) objects.get(1);
         String email = (String) objects.get(2);
         String nickName = (String) objects.get(3);
-//        String repeatPassword = (String) objects.get(4);
 
         ApplicationController.setDisable(RegisterMenu.root);
 //        puting white rectangle
@@ -198,6 +195,7 @@ public class RegisterMenu extends Application {
         button1.setPrefHeight(50);
         button1.setPrefWidth(200);
         button1.setOnAction(e -> {
+
             if ((textField.getText().isEmpty() && textField1.getText().isEmpty() && !textField2.getText().isEmpty())) {
                 addANewUser(username, password, email, nickName, label2, textField2);
 
@@ -233,25 +231,25 @@ public class RegisterMenu extends Application {
 
     }
 
-    public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
-            , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
-        User user = new User(usernameField.getText(), passwordField.getText(),
-                nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-        ApplicationController.saveTheUsersInGson(User.getAllUsers());
-        User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
-        LoginMenu loginMenu = new LoginMenu();
-        try {
-            loginMenu.start(ApplicationController.getStage());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
+//            , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
+//        User user = new User(usernameField.getText(), passwordField.getText(),
+//                nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
+////        ApplicationController.saveTheUsersInGson(User.getAllUsers());
+//        User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
+//        LoginMenu loginMenu = new LoginMenu();
+//        try {
+//            loginMenu.start(ApplicationController.getStage());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     public static void addANewUser(String username, String password, String email
             , String nickName, Label secureQuestion, TextField secureAnswer) {
         User user = new User(username, password,
                 nickName, email, secureQuestion.getText(), secureAnswer.getText());
-        ApplicationController.saveTheUsersInGson(User.getAllUsers());
+//        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         User.setLoggedUser(User.giveUserByUsername(username));
         LoginMenu loginMenu = new LoginMenu();
         try {

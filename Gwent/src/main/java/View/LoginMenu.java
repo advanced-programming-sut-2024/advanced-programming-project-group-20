@@ -173,11 +173,13 @@ public class LoginMenu extends Application {
                     secureQuestionField.setVisible(false);
                     usernameField.setText("");
                     passwordField.setText("");
+                    passwordField.setPromptText("password");
                     ArrayList<Object> objects = new ArrayList<>();
-//                    for (User){
-//
-//                    }
                     objects.addAll(User.getAllUsers());
+                    System.out.println("in");
+                    for (User user: User.getAllUsers()){
+                        System.out.println("User: " + user.getUsername());
+                    }
                     Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", objects.toArray());
                 }
             } else {

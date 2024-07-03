@@ -13,8 +13,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 
 
@@ -96,21 +95,27 @@ public class ApplicationController {
 
     public static void saveTheUsersInGson(ArrayList<Object> objects) {
         Gson gson = new Gson();
-
+        ArrayList<User> usersToSave = new ArrayList<>();
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
-            User.getAllUsers().add(user);
+            usersToSave.add(user);
+        }
+        System.out.println(User.getAllUsers().size());
+        ///delete last content
+        try (Writer writer = new FileWriter("users.json")) {
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson1.toJson(User.getAllUsers());
+        String json = gson1.toJson(usersToSave);
         try (PrintWriter pw = new PrintWriter("users.json")) {
             pw.write(json);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-
 
 
     public static Scene getScene() {
