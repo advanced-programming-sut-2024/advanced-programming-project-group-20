@@ -55,4 +55,6 @@ public class PreGameController {
         objects1[1] = user2;
         return new SendingPacket("RegisterMenu", "setLogin", objects1);
     }
+
+
 }

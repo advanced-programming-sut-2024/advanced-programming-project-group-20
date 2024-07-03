@@ -58,13 +58,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = new Nilfgaard();
-        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
         allUsers.add(this);
         numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
+    }
+    public User(String username) {
+        this.username = username;
     }
 
     public HashMap<Integer, ArrayList<String>> getCards() {

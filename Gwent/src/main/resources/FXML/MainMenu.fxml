@@ -20,7 +20,6 @@
 
 
       <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="378.0" layoutY="266.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
-        <Button layoutX="109.0" layoutY="88.0" mnemonicParsing="false" onMouseClicked="#directToGameMenu" prefHeight="30.0" prefWidth="221.0" text="Mohandes Go to Game Directly:)" />
 
 
     </children>

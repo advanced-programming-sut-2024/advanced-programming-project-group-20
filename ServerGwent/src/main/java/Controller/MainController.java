@@ -1,31 +1,70 @@
 package Controller;
 
 import Model.User;
+import WebConnection.Connection;
+import WebConnection.SendingPacket;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class MainController {
 
 
-    public static boolean canGoPregameMenu(String text) {
-        User user = User.getUserByName(text);
-        if (user == null) {
-            return false;
+    public static SendingPacket searchForOpponent(ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        for (User user1 : User.getAllUsers()) {
+            if (user1.isSearch()) {
+                Connection connection = Connection.getConnectionByUserName(user1.getUsername());
+                user1.setSearch(false);
+                user1.setOppName(user.getUsername());
+                user.setOppName(user1.getUsername());
+                Object[] objects1 = new Object[1];
+                objects1[0] = user.getUsername();
+                connection.sendOrder(new SendingPacket("MainMenu","goToPreGame",objects1));
+                objects1[0] = user1.getUsername();
+                return new SendingPacket("MainMenu","goToPreGame",objects1);
+            }
         }
-        User.getLoggedUser().setOppName(user.getOppName());
-        user.setOppName(User.getLoggedUser().getOppName());
-        return true;
+        user.setSearch(true);
+        return null;
     }
-
-    public void interMenu(String menuName) {
-
-    }
-
-
-    public static void exitMenu() {
-
-    }
-
-    public static String showCurrent() {
+    public static SendingPacket cancelSearch(ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        user.setSearch(false);
         return null;
     }
 
+    public static SendingPacket playWithFriend (ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        User friend = User.getUserByName((String) objects.get(1));
+        if (user.getFriends().contains(friend.getUsername())) {
+            Connection connection = Connection.getConnectionByUserName(friend.getUsername());
+            if (connection == null) {
+                return new SendingPacket("MainMenu","offline",null);
+            } else if (friend.getOppName() != null) {
+                return new SendingPacket("MainMenu","inGame",null);
+            }
+            Object[] objects1 = new Object[1];
+            objects1[0] = user.getUsername();
+            connection.sendOrder(new SendingPacket("MainMenu","gameRequest",objects1));
+        } else {
+            return new SendingPacket("MainMenu","wrongFriend",null);
+        }
+        return new SendingPacket("MainMenu","waitFriend",null);
+    }
+
+    public static SendingPacket acceptFriend (ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        Connection connection = Connection.getConnectionByUserName(user.getUsername());
+        Object[] objects1 = new Object[1];
+        objects1[0] = (String) objects.get(1);
+        connection.sendOrder(new SendingPacket("MainMenu","goToPreGame",objects1));
+        return null;
+    }
+    public static SendingPacket rejectFriend (ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        Connection connection = Connection.getConnectionByUserName(user.getUsername());
+        connection.sendOrder(new SendingPacket("MainMenu","rejectRequest",null));
+        return null;
+    }
 }

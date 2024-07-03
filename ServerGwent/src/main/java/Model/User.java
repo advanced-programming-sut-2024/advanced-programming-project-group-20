@@ -36,6 +36,7 @@ public class User {
     private String factionName;
     private String leaderName;
     private ArrayList<String> friendRequests =new ArrayList<>();
+    private boolean search;
 
     public static User getLoggedUser() {
         return loggedUser;
@@ -329,5 +330,14 @@ public class User {
     public void setFriendRequests(ArrayList<String> friendRequests) {
         this.friendRequests = friendRequests;
     }
+
+    public boolean isSearch() {
+        return search;
+    }
+
+    public void setSearch(boolean search) {
+        this.search = search;
+    }
 }
+
 

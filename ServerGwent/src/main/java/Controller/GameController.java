@@ -50,8 +50,6 @@ public class GameController {
 
     }
 
-
-
     public static SendingPacket nextTurn(ArrayList<Object> objects) throws InterruptedException {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
