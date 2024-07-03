@@ -16,7 +16,7 @@ public class User {
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-    private Faction faction;
+    transient private Faction faction;
     transient private Leader leader;
     transient private User opponentUser;
     transient private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
@@ -31,7 +31,9 @@ public class User {
     private String answer;
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
+    private static User turnUser;
     private int maxPoint;
+
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
@@ -40,6 +42,8 @@ public class User {
     private boolean isReady;
     private HashMap<Integer, ArrayList<String>> cards;
     private String oppName;
+     private ArrayList<String> friends = new ArrayList<>();
+    private String lastSeen = "longtime ago";
 
     public String getOppName() {
         return oppName;
@@ -561,5 +565,21 @@ public class User {
 
     public void setTurn(boolean turn) {
         this.turn = turn;
+    }
+
+    public ArrayList<String> getFriends() {
+        return friends;
+    }
+
+    public String getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public void setFriends(ArrayList<String> friends) {
+        this.friends = friends;
     }
 }

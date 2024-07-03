@@ -2,6 +2,7 @@ package View;
 
 import Controller.ApplicationController;
 import Model.*;
+import Model.chat.Message;
 import com.google.gson.Gson;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -16,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -49,6 +51,11 @@ public class GameMenu extends Application {
     public HBox opponentSiegeNext;
     public TextField cheatText;
     public Label cheatLabel;
+    public Button chatButton;
+    public ScrollPane chatScroll;
+    public Button sendButton;
+    public TextField sendField;
+    public AnchorPane chatPane;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -67,16 +74,17 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
-    public ImageView highScoreIcon = new ImageView();
-    public ArrayList<HBox> hBoxes = new ArrayList<>();
-    private static GameMenu gameMenu;
 
-    public static GameMenu getGameMenu() {
-        return gameMenu;
-    }
+    public ArrayList<HBox> hBoxes = new ArrayList<>();
+    private GameHistory gameHistory;
+    public static Chat chat;
+
+
 
     @Override
     public void start(Stage stage) throws Exception {
+        User.getTurnUser().setBoard(new Board());
+        User.getTurnUser().getOpponentUser().setBoard(new Board());
         ApplicationController.setStage(stage);
         ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
         URL url = PreGameMenu.class.getResource("/FXML/GameMenu.fxml");
@@ -106,12 +114,53 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        //chat
+        //todo real name
+        chat = new Chat("ali");
+       chat.setvBox(new VBox());
+        chat.getvBox().setPrefWidth(chatScroll.getPrefWidth()-30);
+        chat.getvBox().getChildren().add(new Label("salam"));
+        chat.getvBox().setSpacing(10);
+        chatScroll.setContent(chat.getvBox());
+        chatPane.setVisible(false);
+        chatButton.setOnMouseClicked(mouseEvent -> {
+            if (!chatPane.isVisible()) {
+                chatPane.setVisible(true);
+                chatButton.setLayoutX(chatButton.getLayoutX() - 235);
+            }
+            else {
+                chatPane.setVisible(false);
+                chatButton.setLayoutX(chatButton.getLayoutX() + 235);
+            }
+        });
+        sendButton.setOnMouseClicked(mouseEvent -> {
+            Message message =new Message(sendField.getText(), chat.getName(),Chat.getTime());
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(message);
+            //todo real username
+            objects.add("ali");
+            chat.getMessages().clear();
+            Client.getConnection().doInServer("ChatController","getMessages",message,"ali");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+                System.out.println(chat.getMessages().size());
+            chat.getvBox().getChildren().clear();
+            for (Message message1 :chat.getMessages()){
+            chat.getvBox().getChildren().add(message1.toVBox());
+            }
+            sendField.setText("");
+        });
+        //chat
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(cheatText);
         pane.getChildren().remove(cheatLabel);
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
         pane.getChildren().remove(turnLabel);
+        passedLabel.setId("no");
         turnLabel.setId("no");
         setHboxes();
         GameMenu.gameMenu = this;
@@ -236,7 +285,7 @@ public class GameMenu extends Application {
             });
         }
     }
-    
+
     public void passTurn() throws IOException {
         if (User.getLoggedUser().getBoard().isHasPlayedOne())
             return;
@@ -1032,7 +1081,7 @@ public class GameMenu extends Application {
         user.getDeck().remove(card);
         user.getBoard().getHand().add(card);
     }
-    
+
     private void putInBurntCards(User user) {
         if (user.getBoard().getSiege() != null)
             user.getBoard().getBurnedCard().addAll(user.getBoard().getSiege());

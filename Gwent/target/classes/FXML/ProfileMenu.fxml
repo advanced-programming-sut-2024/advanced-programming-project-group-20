@@ -43,20 +43,33 @@
                         <Label fx:id="loseLabel" prefHeight="94.0" prefWidth="100.0" text="fail:" />
                     </children>
                 </VBox>
-                <Button layoutX="578.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#saveChanges" prefHeight="26.0" prefWidth="131.0" text="save changes" />
+                <Button layoutX="578.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#saveChangesInServer" prefHeight="26.0" prefWidth="131.0" text="save changes" />
             </children>
         </Pane>
         <Button layoutX="43.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#BackToMainMenu" prefHeight="26.0" prefWidth="116.0" text="Back" />
         <ScrollPane fx:id="scrollOfHistory" layoutX="16.0" layoutY="66.0" prefHeight="556.0" prefWidth="1252.0" visible="false">
         </ScrollPane>
-        <HBox layoutX="477.0" layoutY="641.0" prefHeight="37.0" prefWidth="340.0">
+        <HBox layoutX="451.0" layoutY="641.0" prefHeight="38.0" prefWidth="404.0">
             <Button fx:id="button1" onAction="#button1Clicked" prefHeight="35.0" prefWidth="119.0" text="points rank" />
             <Button fx:id="button2" onAction="#button2Clicked" prefHeight="34.0" prefWidth="115.0" text="History" />
             <Button fx:id="button3" onAction="#button3Clicked" prefHeight="34.0" prefWidth="106.0" scaleX="1.2" scaleY="1.2" text="informatios" />
+         <Button fx:id="buttonFriend" layoutX="10.0" layoutY="10.0" onAction="#friendButtonClick" prefHeight="35.0" prefWidth="119.0" text="Friends" />
         </HBox>
         <ScrollPane fx:id="scrollOfPointsTable" layoutX="394.0" layoutY="60.0" prefHeight="556.0" prefWidth="522.0" visible="false">
 
         </ScrollPane>
+        <ScrollPane fx:id="scrollOfFriends" layoutX="394.0" layoutY="60.0" prefHeight="556.0" prefWidth="522.0" visible="false">
+
+        </ScrollPane>
+      <VBox id="request" fx:id="friendRequest" layoutX="964.0" layoutY="97.0" prefHeight="331.0" prefWidth="260.0" visible="false">
+         <children>
+            <HBox fx:id="sendRequestHbox" alignment="TOP_RIGHT" prefHeight="38.0" prefWidth="230.0">
+               <children>
+                  <TextField prefHeight="38.0" prefWidth="194.0" promptText="Friend request" />
+                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="67.0" text="send" />
+               </children>
+            </HBox>
+         </children></VBox>
 
     </children>
 </AnchorPane>

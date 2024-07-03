@@ -18,12 +18,15 @@ public class Connection extends Thread {
     private Socket socket;
     private Receiver receiver;
     private DataOutput out;
+    //todo set real name
+    private String  username;
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
         this.out = new DataOutputStream(socket.getOutputStream());
         this.receiver = new Receiver(socket);
         receiver.start();
+        username = "ali";
     }
 
     public Socket getSocket() {
@@ -98,7 +101,11 @@ public class Connection extends Thread {
         }
     }
 
-//    public String receiveJsonData(String className, String methodName, Object... parameters){
+    public String getUsername() {
+        return username;
+    }
+
+    //    public String receiveJsonData(String className, String methodName, Object... parameters){
 //        Packet packet = new Packet(OperationType.GET_DATA, className, methodName, parameters);
 //        sendData(packet);
 //        String input;

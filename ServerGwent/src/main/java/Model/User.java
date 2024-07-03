@@ -8,12 +8,14 @@ import java.util.HashMap;
 
 public class User {
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+    transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
     private String password;
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
+    private ArrayList<String > friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
@@ -22,6 +24,8 @@ public class User {
     private String answer;
     private User opponentUser;
     private static ArrayList<User> allUsers = new ArrayList<>();
+    private static User loggedUser;
+    private static User turnUser;
     private int maxPoint;
     private HashMap<Integer, ArrayList<String>> cards;
     private boolean isPassed = false;
@@ -53,12 +57,15 @@ public class User {
         this.factionName = factionName;
     }
 
+    private ArrayList<String> friendRequests =new ArrayList<>();
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
         this.username = username;
         this.password = password;
         this.nickName = nickName;
+        this.faction = new Nilfgaard();
+        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
@@ -141,6 +148,13 @@ public class User {
     public void setRank(int rank) {
         this.rank = rank;
     }
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
 
     public String getUsername() {
         return username;
@@ -180,6 +194,14 @@ public class User {
 
     public void setNumberOfWins(int numberOfWins) {
         this.numberOfWins = numberOfWins;
+    }
+
+    public User getOpponentUser() {
+        return opponentUser;
+    }
+
+    public void setOpponentUser(User opponentUser) {
+        this.opponentUser = opponentUser;
     }
 
     public ArrayList<GameHistory> getGameHistories() {
@@ -224,6 +246,22 @@ public class User {
 
     public static void setAllUsers(ArrayList<User> allUsers) {
         User.allUsers = allUsers;
+    }
+
+    public static User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public static void setLoggedUser(User loggedUser) {
+        User.loggedUser = loggedUser;
+    }
+
+    public static User getTurnUser() {
+        return turnUser;
+    }
+
+    public static void setTurnUser(User turnUser) {
+        User.turnUser = turnUser;
     }
 
     public double getMaxPoint() {
@@ -298,3 +336,18 @@ public class User {
         activeGame.countTotalPoints();
     }
 }
+
+    public ArrayList<String > getFriends() {
+        return friends;
+    }
+
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
+    }
+}
+

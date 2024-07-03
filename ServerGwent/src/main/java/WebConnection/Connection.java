@@ -21,6 +21,7 @@ public class Connection extends Thread {
     private DataOutputStream out;
     private boolean isInScoreboard = false;
     private boolean isInMainMenu = false;
+
     private User currentUser;
     private static ArrayList<Connection> connections = new ArrayList<>();
 
@@ -38,15 +39,17 @@ public class Connection extends Thread {
             try {
                 ReceivingPacket receivingPacket = new ReceivingPacket(in.readUTF());
                 Class<?> controllerClass = Class.forName("Controller." + receivingPacket.getClassName());
-                System.out.println(receivingPacket.getMethodName());
+                System.out.println("methodName" + receivingPacket.getMethodName());
                 Method controllerMethod = controllerClass.getDeclaredMethod(receivingPacket.getMethodName(), ArrayList.class);
                 sendRespond(receivingPacket, controllerMethod);
             } catch (IOException e) {
                 System.out.println("Connection \"ip=" + socket.getInetAddress().getHostAddress() + " port=" + socket.getPort() + "\" lost!");
+                connections.remove(this);
                 break;
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 System.out.println("Reflection Problem!");
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -54,21 +57,32 @@ public class Connection extends Thread {
 
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
+        receivingPacket.getParameters().add(this.currentUser);
+        SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (result == null)
+            return;
+        if (result.getParameters().isEmpty()) return;
+        DataOutputStream sendOut = out;
+        if (result.getMethodName().equals("loginToMainMenu")) {
+            this.currentUser = User.getLoggedUser();
+            User.setLoggedUser(null);
+        }
+        if (result.getParameters().get(0) instanceof Connection) {
+            sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
+            result.getParameters().set(0, null);
+        }
 
-        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
-        if (result == null) return;
         Field[] fields = SendingPacket.class.getDeclaredFields();
-        for (Field field: fields)
+        for (Field field : fields)
             field.setAccessible(true);
-        new ObjectOutputStream(out).writeObject(new Gson().toJson(result));
-        for (Field field: fields)
+        new ObjectOutputStream(sendOut).writeObject(new Gson().toJson(result));
+        for (Field field : fields)
             field.setAccessible(false);
-        System.out.println("1");
     }
 
     public void sendOrder(SendingPacket sendingPacket) throws IOException {
         Field[] fields = SendingPacket.class.getDeclaredFields();
-          for (Field field: fields)
+        for (Field field: fields)
             field.setAccessible(true);
         new ObjectOutputStream(out).writeObject(new Gson().toJson(sendingPacket));
         for (Field field: fields)
@@ -112,13 +126,14 @@ public class Connection extends Thread {
         isInMainMenu = inMainMenu;
     }
 
-    public static Connection getConnectionByUser(User user) {
+    public static Connection getConnectionByUserName(String username) {
         for (Connection connection : connections) {
-            if (connection.getCurrentUser().equals(user)) return connection;
+            if (connection.currentUser.getUsername().equals(username))
+                return connection;
         }
         return null;
-    }
 
+    }
     public static ArrayList<Connection> getConnections() {
         return connections;
     }
