@@ -101,69 +101,82 @@ public class MainMenu extends Application {
     }
 
     public static void offline(ArrayList<Object> objects) {
-        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-        alert1.setTitle("Error");
-        alert1.setHeaderText("OFFLINE");
-        alert1.setContentText("Your friend is offline.");
-        alert1.show();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
-        timeline.setCycleCount(1);
-        timeline.play();
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("OFFLINE");
+            alert1.setContentText("Your friend is offline.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
+
     }
     public static void inGame(ArrayList<Object> objects) {
-        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-        alert1.setTitle("Error");
-        alert1.setHeaderText("Playing");
-        alert1.setContentText("Your friend is already in game.");
-        alert1.show();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
-        timeline.setCycleCount(1);
-        timeline.play();
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("Playing");
+            alert1.setContentText("Your friend is already in game.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
     }
     public static void wrongFriend(ArrayList<Object> objects) {
-        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-        alert1.setTitle("Error");
-        alert1.setHeaderText("wrongFriend");
-        alert1.setContentText("You don't have a friend with this name.");
-        alert1.show();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
-        timeline.setCycleCount(1);
-        timeline.play();
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("Wrong Friend");
+            alert1.setContentText("You don't have a friend with this name.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
     }
     public static void waitFriend(ArrayList<Object> objects) {
-        alert.setTitle("Waiting");
-        alert.setHeaderText("Wait For Friend");
-        alert.setContentText("You Should wait for your friend response.");
-        alert.getButtonTypes().setAll(ButtonType.OK);
-        alert.show();
+        Platform.runLater(() -> {
+            alert.setTitle("Waiting");
+            alert.setHeaderText("Wait For Friend");
+            alert.setContentText("You Should wait for your friend response.");
+            alert.getButtonTypes().setAll(ButtonType.OK);
+            alert.show();
+        });
     }
     public static void gameRequest(ArrayList<Object> objects) {
-        Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-        alert1.setTitle("Game Request");
-        alert1.setHeaderText("You Have a Game Request");
-        alert1.setContentText((String) objects.get(0) + " wants play with you");
-        ButtonType accept = new ButtonType("Accept");
-        ButtonType reject = new ButtonType("Reject");
-        alert1.getButtonTypes().setAll(accept, reject);
-        alert1.showAndWait().ifPresent(response -> {
-            if (response == accept) {
-                goToPreGame(objects);
-                objects.add(User.getLoggedUser().getUsername());
-                Client.getConnection().doInServer("MainController", "acceptFriend",objects);
-            } else if (response == reject) {
-                Client.getConnection().doInServer("MainController", "rejectFriend",objects);
-            }
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+            alert1.setTitle("Game Request");
+            alert1.setHeaderText("You Have a Game Request");
+            alert1.setContentText((String) objects.get(0) + " wants play with you");
+            ButtonType accept = new ButtonType("Accept");
+            ButtonType reject = new ButtonType("Reject");
+            alert1.getButtonTypes().setAll(accept, reject);
+            alert1.showAndWait().ifPresent(response -> {
+                if (response == accept) {
+                    goToPreGame(objects);
+                    objects.add(User.getLoggedUser().getUsername());
+                    Client.getConnection().doInServer("MainController", "acceptFriend", objects);
+                } else if (response == reject) {
+                    Client.getConnection().doInServer("MainController", "rejectFriend", objects);
+                }
+            });
         });
     }
     public static void rejectRequest(ArrayList<Object> objects) {
-        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-        alert1.setTitle("Error");
-        alert1.setHeaderText("Reject Request");
-        alert1.setContentText("Your friend rejected the request.");
-        alert1.show();
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
-        timeline.setCycleCount(1);
-        timeline.play();
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("Reject Request");
+            alert1.setContentText("Your friend rejected the request.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
     }
 
 }

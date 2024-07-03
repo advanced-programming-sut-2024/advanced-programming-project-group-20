@@ -40,17 +40,17 @@ public class MainController {
         if (user.getFriends().contains(friend.getUsername())) {
             Connection connection = Connection.getConnectionByUserName(friend.getUsername());
             if (connection == null) {
-                return new SendingPacket("MainMenu","offline",null);
+                return new SendingPacket("MainMenu","offline",new Object[1]);
             } else if (friend.getOppName() != null) {
-                return new SendingPacket("MainMenu","inGame",null);
+                return new SendingPacket("MainMenu","inGame",new Object[1]);
             }
             Object[] objects1 = new Object[1];
             objects1[0] = user.getUsername();
             connection.sendOrder(new SendingPacket("MainMenu","gameRequest",objects1));
         } else {
-            return new SendingPacket("MainMenu","wrongFriend",null);
+            return new SendingPacket("MainMenu","wrongFriend",new Object[1]);
         }
-        return new SendingPacket("MainMenu","waitFriend",null);
+        return new SendingPacket("MainMenu","waitFriend",new Object[1]);
     }
 
     public static SendingPacket acceptFriend (ArrayList<Object> objects) throws Exception {
@@ -64,7 +64,7 @@ public class MainController {
     public static SendingPacket rejectFriend (ArrayList<Object> objects) throws Exception {
         User user = User.getUserByName((String) objects.get(0));
         Connection connection = Connection.getConnectionByUserName(user.getUsername());
-        connection.sendOrder(new SendingPacket("MainMenu","rejectRequest",null));
+        connection.sendOrder(new SendingPacket("MainMenu","rejectRequest",new Object[1]));
         return null;
     }
 }
