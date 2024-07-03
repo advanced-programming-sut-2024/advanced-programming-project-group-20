@@ -40,7 +40,7 @@ public class Connection extends Thread {
             try {
                 ReceivingPacket receivingPacket = new ReceivingPacket(in.readUTF());
                 Class<?> controllerClass = Class.forName("Controller." + receivingPacket.getClassName());
-                System.out.println("methodName"+receivingPacket.getMethodName());
+                System.out.println("methodName" + receivingPacket.getMethodName());
                 Method controllerMethod = controllerClass.getDeclaredMethod(receivingPacket.getMethodName(), ArrayList.class);
                 sendRespond(receivingPacket, controllerMethod);
             } catch (IOException e) {
@@ -50,7 +50,7 @@ public class Connection extends Thread {
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 System.out.println("Reflection Problem!");
-              e.printStackTrace();
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -58,38 +58,38 @@ public class Connection extends Thread {
 
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
-receivingPacket.getParameters().add(this.currentUser);
-        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
-        if (result==null)
+        receivingPacket.getParameters().add(this.currentUser);
+        SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (result == null)
             return;
         if (result.getParameters().isEmpty()) return;
         DataOutputStream sendOut = out;
-        if (result.getMethodName().equals("loginToMainMenu")){
+        if (result.getMethodName().equals("loginToMainMenu")) {
             this.currentUser = User.getLoggedUser();
             User.setLoggedUser(null);
         }
         if (result.getParameters().get(0) instanceof Connection) {
-             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
-            result.getParameters().set(0,null);
+            sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
+            result.getParameters().set(0, null);
         }
 
-            Field[] fields = SendingPacket.class.getDeclaredFields();
-            for (Field field: fields)
-                field.setAccessible(true);
-            new ObjectOutputStream(sendOut).writeObject(new Gson().toJson(result));
-        for (Field field: fields)
+        Field[] fields = SendingPacket.class.getDeclaredFields();
+        for (Field field : fields)
+            field.setAccessible(true);
+        new ObjectOutputStream(sendOut).writeObject(new Gson().toJson(result));
+        for (Field field : fields)
             field.setAccessible(false);
     }
 
     private void sendRespondToAnother(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
 
-        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
+        SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         Field[] fields = SendingPacket.class.getDeclaredFields();
-        for (Field field: fields)
+        for (Field field : fields)
             field.setAccessible(true);
         new ObjectOutputStream(out).writeObject(new Gson().toJson(result));
-        for (Field field: fields)
+        for (Field field : fields)
             field.setAccessible(false);
     }
 
@@ -130,8 +130,9 @@ receivingPacket.getParameters().add(this.currentUser);
     public void setInMainMenu(boolean inMainMenu) {
         isInMainMenu = inMainMenu;
     }
-    public static Connection getConnectionByUserName(String username){
-        for (Connection connection : connections ){
+
+    public static Connection getConnectionByUserName(String username) {
+        for (Connection connection : connections) {
             if (connection.currentUser.getUsername().equals(username))
                 return connection;
         }

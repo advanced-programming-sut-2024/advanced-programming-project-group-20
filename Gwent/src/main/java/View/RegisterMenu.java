@@ -58,7 +58,9 @@ public class RegisterMenu extends Application {
         stage.centerOnScreen();
         stage.setScene(scene);
         ApplicationController.setIcon();
-        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+        if (User.getAllUsers().isEmpty()) {
+            Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+        }
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }
@@ -251,7 +253,6 @@ public class RegisterMenu extends Application {
             , String nickName, Label secureQuestion, TextField secureAnswer) {
         User user = new User(username, password,
                 nickName, email, secureQuestion.getText(), secureAnswer.getText());
-//        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         User.setLoggedUser(User.giveUserByUsername(username));
         LoginMenu loginMenu = new LoginMenu();
         try {
@@ -273,7 +274,6 @@ public class RegisterMenu extends Application {
                     for (Node node : root.getChildren()) {
                         if (node instanceof VBox) {
                             for (Node node1 : ((VBox) node).getChildren()) {
-//                                System.out.println(((TextField) node1).getPromptText());
                                 if (((TextField) node1).getPromptText().matches("(password|repeat password)")) {
                                     ((TextField) node1).setText((String) objects.get(0));
                                 }

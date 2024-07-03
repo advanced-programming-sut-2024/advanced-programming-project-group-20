@@ -92,7 +92,6 @@ public class LoginMenu extends Application {
     }
 
     public static void loginToMainMenu(ArrayList<Object> objects) {
-        System.out.println("omadi");
         User.setLoggedUser(User.giveUserByUsername((String) objects.getFirst()));
         MainMenu mainMenu = new MainMenu();
             Platform.runLater(() -> {
@@ -176,10 +175,7 @@ public class LoginMenu extends Application {
                     passwordField.setPromptText("password");
                     ArrayList<Object> objects = new ArrayList<>();
                     objects.addAll(User.getAllUsers());
-                    System.out.println("in");
-                    for (User user: User.getAllUsers()){
-                        System.out.println("User: " + user.getUsername());
-                    }
+
                     Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", objects.toArray());
                 }
             } else {

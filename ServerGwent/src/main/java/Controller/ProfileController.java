@@ -115,7 +115,6 @@ public class ProfileController {
             changeEmail(emailField);
             changeNickName(nickNameField);
             saveTheUsersInGson(User.getAllUsers());
-//            System.out.println("emsafan");
             return new SendingPacket("ProfileMenu", "changeInformationInClientModel", objects.toArray());
         }
     }

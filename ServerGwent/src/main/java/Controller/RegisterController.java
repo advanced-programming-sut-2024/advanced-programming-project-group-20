@@ -72,12 +72,8 @@ public class RegisterController {
         User user = new User((String) objects.get(0), (String) objects.get(1), (String) objects.get(3)
                 , (String) objects.get(2), (String) objects.get(4), (String) objects.get(5));
 
-for (User user1 : User.getAllUsers()){
-    System.out.println("jan man : " + user1.getUsername()
-    );
-}
-        ArrayList<Object> objects1 = new ArrayList<>();
-        objects1.addAll(User.getAllUsers());
+        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
+
         ApplicationController.saveTheUsersInGson(objects1);
     }
 
@@ -97,19 +93,7 @@ for (User user1 : User.getAllUsers()){
         for (int i = 4; i < 8; i++) {
             randomPassword.append(validChars.charAt(random.nextInt(validChars.length())));
         }
-        //showing confirmation alert
 
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//        alert.setTitle("Confirmation Dialog");
-//        alert.setHeaderText("your password: " + randomPassword);
-//        alert.setContentText("do you want to set this for your password");
-//
-//        alert.showAndWait().ifPresent(response -> {
-//            if (response == ButtonType.OK) {
-//                objects.set(0, randomPassword);
-//                objects.set(1, randomPassword);
-//            }
-//        });
         ArrayList<Object> objects1 = new ArrayList<>();
         objects1.add(randomPassword.toString());
         return new SendingPacket("RegisterMenu", "showConfirmAlertOfRandomPassword",objects1.toArray());
@@ -139,7 +123,6 @@ for (User user1 : User.getAllUsers()){
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user: arr){
             objects1.add(user);
-//            System.out.println(user.getUsername());
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
     }
