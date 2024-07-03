@@ -12,14 +12,14 @@ public class SendingPacket {
     public String methodName;
     public ArrayList<Object> parameters = new ArrayList<>();
 
-    public SendingPacket(OperationType operationType, String className, String methodName, Object[] parameters) {
-        this.operationType = operationType;
-        this.className = className;
-        this.methodName = methodName;
-        this.parameters.addAll(Arrays.asList(parameters));
-    }
+//    public SendingPacket(OperationType operationType, String className, String methodName, Object... parameters) {
+//        this.operationType = operationType;
+//        this.className = className;
+//        this.methodName = methodName;
+//        this.parameters.addAll(Arrays.asList(parameters));
+//    }
 
-    public SendingPacket( String className, String methodName, Object[] parameters) {
+    public SendingPacket( String className, String methodName, Object ... parameters) {
         this.className = className;
         this.methodName = methodName;
         this.parameters.addAll(Arrays.asList(parameters));

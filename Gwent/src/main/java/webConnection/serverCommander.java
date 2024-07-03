@@ -18,6 +18,7 @@ public class serverCommander extends Thread {
     @Override
     public void run() {
         try {
+            //todo correct class name
             Class<?> menu = Class.forName("View." + packet.get("className"));
             Method method = menu.getDeclaredMethod((String) packet.get("methodName"),ArrayList.class);
           ArrayList<Object> parameters = (ArrayList<Object>) ((JSONArray)packet.get("parameters")).toList();

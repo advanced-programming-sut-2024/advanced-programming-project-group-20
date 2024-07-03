@@ -5,6 +5,7 @@ import Model.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,9 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
@@ -22,12 +21,19 @@ import javafx.stage.Stage;
 import webConnection.Client;
 
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Objects;
 
 public class ProfileMenu extends Application {
     public static Pane root;
+    @FXML
+    public Button buttonFriend;
+    public VBox friendRequest;
+    public ScrollPane scrollOfFriends;
+    public HBox sendRequestHbox;
     @FXML
     private Button button1;
     @FXML
@@ -71,6 +77,40 @@ public class ProfileMenu extends Application {
         contentsOfProfileMenu();
         setHistoryContents();
         setTablePointsContent();
+        setFriendsTable();
+    }
+
+    private void setFriendsTable() {
+        TilePane collectionContent = new TilePane(2, 3);
+        collectionContent.setPrefWidth(200);
+        collectionContent.setMinHeight(300);
+        TableView<User> tableView = new TableView<>();
+        tableView.setStyle("-fx-background-color: transparent");
+        tableView.setPrefWidth(500);
+        tableView.setPrefHeight(600);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<User, String> rank = new TableColumn<>("Name");
+        rank.setCellValueFactory(new PropertyValueFactory<>("username"));
+        tableView.getColumns().add(rank);
+
+        TableColumn<User, Date> name = new TableColumn<>("Last seen");
+        name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
+        tableView.getColumns().add(name);
+//        friendRequest.getChildren().add(new HBox(new Label("Friend request from ali"),new Button("ok"), new Button("no")));
+
+        // todo handel friends
+//        for (User user : Objects.requireNonNull(User.getUserByName(Client.getConnection().getUsername()).getFriends()))
+//            tableView.getItems().add(user);
+//        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getUsername());
+//        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getFriends().size());
+
+
+        collectionContent.getChildren().add(tableView);
+      scrollOfFriends.setContent(collectionContent);
+      sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
+          Client.getConnection().doInServer("ProfileController","sendRequest",((TextField)sendRequestHbox.getChildren().get(0)).getText());
+      });
+
     }
 
     private void setRankOfUsers() {
@@ -261,12 +301,17 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.0);
         button3.setScaleX(1.0);
         button3.setScaleY(1.0);
+        buttonFriend.setScaleX(1);
+        buttonFriend.setScaleY(1);
         scrollOfPointsTable.setVisible(true);
         scrollOfHistory.setVisible(false);
+        friendRequest.setVisible(false);
+        scrollOfFriends.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
         }
     }
+
 
     public void button2Clicked(ActionEvent actionEvent) {
         button1.setScaleX(1.0);
@@ -275,7 +320,11 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.2);
         button3.setScaleX(1.0);
         button3.setScaleY(1.0);
+        buttonFriend.setScaleX(1);
+        buttonFriend.setScaleY(1);
         scrollOfPointsTable.setVisible(false);
+        scrollOfFriends.setVisible(false);
+        friendRequest.setVisible(false);
         scrollOfHistory.setVisible(true);
         for (Node node : informationPane.getChildren())
             node.setVisible(false);
@@ -288,10 +337,64 @@ public class ProfileMenu extends Application {
         button2.setScaleY(1.0);
         button3.setScaleX(1.2);
         button3.setScaleY(1.2);
+        buttonFriend.setScaleX(1);
+        buttonFriend.setScaleY(1);
         scrollOfPointsTable.setVisible(false);
         scrollOfHistory.setVisible(false);
+        friendRequest.setVisible(false);
+        scrollOfFriends.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(true);
         }
+    }
+
+    public void friendButtonClick(ActionEvent actionEvent) {
+        button1.setScaleX(1);
+        button1.setScaleY(1);
+        button2.setScaleX(1.0);
+        button2.setScaleY(1.0);
+        button3.setScaleX(1.0);
+        button3.setScaleY(1.0);
+        buttonFriend.setScaleX(1.2);
+        buttonFriend.setScaleY(1.2);
+        scrollOfPointsTable.setVisible(false);
+        friendRequest.setVisible(true);
+        scrollOfHistory.setVisible(false);
+        scrollOfFriends.setVisible(true);
+        for (Node node : informationPane.getChildren()) {
+            node.setVisible(false);
+        }
+    }
+    public static void comeFriend(ArrayList<Object> objects){
+        User.getUserByName(Client.getConnection().getUsername()).getFriends().add(User.getUserByName((String) objects.get(1)));
+        System.out.println(objects.get(1));
+    }
+    public static void setRequest(ArrayList<Object> objects){
+        String friendName = (String) objects.get(1);
+        Platform.runLater(() -> {
+            Button noButton;
+            Button yesButton;
+            HBox hBox;
+
+for (Node node : root.getChildren())  {
+    // todo no hardcode
+    if (node.getId()!=null&&node.getId().equals("request")){
+        ((VBox)node).getChildren().add(hBox =new HBox(new Label("Friend request from "+friendName),
+                yesButton =new Button("ok"),noButton= new Button("no")));
+        hBox.setId(friendName);
+        noButton.setOnMouseClicked(event-> ((VBox)node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
+        yesButton.setOnMouseClicked(mouseEvent -> {
+            //todo in client too
+            ((VBox)node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
+            System.out.println("salam???");
+            User.getUserByName(Client.getConnection().getUsername()).getFriends().add(User.getUserByName(friendName));
+            System.out.println("User in client"+Client.getConnection().getUsername());
+            Client.getConnection().doInServer("ProfileController","beFriend",friendName,Client.getConnection().getUsername());
+
+        });
+    }
+}
+        });
+
     }
 }

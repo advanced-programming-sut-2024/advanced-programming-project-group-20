@@ -3,6 +3,7 @@ package Model;
 import View.ApplicationController;
 import Controller.GameController;
 import Model.Factions.Skellige;
+import View.ApplicationController;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;

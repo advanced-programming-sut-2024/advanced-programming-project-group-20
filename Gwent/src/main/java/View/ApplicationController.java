@@ -6,11 +6,11 @@ import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;

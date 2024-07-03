@@ -2,6 +2,7 @@ package View;
 
 import Controller.GameController;
 import Model.*;
+import Model.chat.Message;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -12,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.ImageView;
@@ -19,9 +21,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import webConnection.Client;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,6 +41,11 @@ public class GameMenu extends Application {
     public HBox opponentSiegeNext;
     public TextField cheatText;
     public Label cheatLabel;
+    public Button chatButton;
+    public ScrollPane chatScroll;
+    public Button sendButton;
+    public TextField sendField;
+    public AnchorPane chatPane;
     @FXML
     private ImageView activeLeader;
     public Label passedLabel;
@@ -57,6 +66,8 @@ public class GameMenu extends Application {
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     private GameHistory gameHistory;
+    public static Chat chat;
+
 
 
     @Override
@@ -91,6 +102,46 @@ public class GameMenu extends Application {
 
     @FXML
     public void initialize() {
+        //chat
+        //todo real name
+        chat = new Chat("ali");
+       chat.setvBox(new VBox());
+        chat.getvBox().setPrefWidth(chatScroll.getPrefWidth()-30);
+        chat.getvBox().getChildren().add(new Label("salam"));
+        chat.getvBox().setSpacing(10);
+        chatScroll.setContent(chat.getvBox());
+        chatPane.setVisible(false);
+        chatButton.setOnMouseClicked(mouseEvent -> {
+            if (!chatPane.isVisible()) {
+                chatPane.setVisible(true);
+                chatButton.setLayoutX(chatButton.getLayoutX() - 235);
+            }
+            else {
+                chatPane.setVisible(false);
+                chatButton.setLayoutX(chatButton.getLayoutX() + 235);
+            }
+        });
+        sendButton.setOnMouseClicked(mouseEvent -> {
+            Message message =new Message(sendField.getText(), chat.getName(),Chat.getTime());
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(message);
+            //todo real username
+            objects.add("ali");
+            chat.getMessages().clear();
+            Client.getConnection().doInServer("ChatController","getMessages",message,"ali");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+                System.out.println(chat.getMessages().size());
+            chat.getvBox().getChildren().clear();
+            for (Message message1 :chat.getMessages()){
+            chat.getvBox().getChildren().add(message1.toVBox());
+            }
+            sendField.setText("");
+        });
+        //chat
         pane.getChildren().remove(cheatText);
         pane.getChildren().remove(cheatLabel);
         pane.getChildren().remove(passedLabel);

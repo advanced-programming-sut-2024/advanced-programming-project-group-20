@@ -1,0 +1,46 @@
+[
+  {
+    "gameHistories": [],
+    "username": "ali",
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "rank": 0
+  },
+  {
+    "gameHistories": [],
+    "username": "ali",
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "rank": 0
+  },
+  {
+    "gameHistories": [],
+    "username": "alireza",
+    "password": "V9m_Y#I9",
+    "nickName": "ali",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "ali",
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "aa@aa.com",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "rank": 0
+  }
+]

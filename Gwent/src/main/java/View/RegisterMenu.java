@@ -1,5 +1,7 @@
 package View;
 
+import Controller.RegisterController;
+import Model.GameHistory;
 import Model.User;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;

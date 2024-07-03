@@ -11,6 +11,8 @@ public class User {
     private String secureQuestion;
     private String secureAnswer;
     transient private User opponentUser;
+
+    transient private ArrayList<User> friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
@@ -224,4 +226,10 @@ public class User {
     public void setFirstTurn(boolean firstTurn) {
         this.firstTurn = firstTurn;
     }
+
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
+
 }
+
