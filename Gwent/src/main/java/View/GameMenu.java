@@ -1,6 +1,6 @@
 package View;
 
-import Controller.ApplicationController;
+import View.ApplicationController;
 import Model.*;
 import Model.chat.Message;
 import com.google.gson.Gson;
@@ -74,17 +74,20 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
+    public ImageView highScoreIcon = new ImageView();
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
-    private GameHistory gameHistory;
     public static Chat chat;
+    private static GameMenu gameMenu;
 
+    public static GameMenu getGameMenu() {
+        return gameMenu;
+    }
 
 
     @Override
     public void start(Stage stage) throws Exception {
-        User.getTurnUser().setBoard(new Board());
-        User.getTurnUser().getOpponentUser().setBoard(new Board());
+
         ApplicationController.setStage(stage);
         ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
         URL url = PreGameMenu.class.getResource("/FXML/GameMenu.fxml");
@@ -160,7 +163,6 @@ public class GameMenu extends Application {
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
         pane.getChildren().remove(turnLabel);
-        passedLabel.setId("no");
         turnLabel.setId("no");
         setHboxes();
         GameMenu.gameMenu = this;

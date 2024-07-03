@@ -3,7 +3,7 @@ package Model;
 import View.GameMenu;
 import javafx.application.Application;
 import javafx.scene.Node;
-import Controller.ApplicationController;
+import View.ApplicationController;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;

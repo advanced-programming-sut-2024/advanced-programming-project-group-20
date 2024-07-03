@@ -1,6 +1,6 @@
 package Model;
 
-import Controller.ApplicationController;
+import View.ApplicationController;
 import Model.Factions.Skellige;
 import View.GameMenu;
 import javafx.geometry.Pos;

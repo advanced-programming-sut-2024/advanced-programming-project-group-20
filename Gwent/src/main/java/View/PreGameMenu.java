@@ -1,6 +1,6 @@
 package View;
 
-import Controller.ApplicationController;
+import View.ApplicationController;
 import Model.*;
 import Model.Factions.*;
 import com.google.gson.Gson;

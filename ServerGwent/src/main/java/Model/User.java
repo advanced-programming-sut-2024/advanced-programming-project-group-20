@@ -8,7 +8,6 @@ import java.util.HashMap;
 
 public class User {
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
-    transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
     private String password;
@@ -25,7 +24,6 @@ public class User {
     private User opponentUser;
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
-    private static User turnUser;
     private int maxPoint;
     private HashMap<Integer, ArrayList<String>> cards;
     private boolean isPassed = false;
@@ -37,6 +35,15 @@ public class User {
     private String oppName;
     private String factionName;
     private String leaderName;
+    private ArrayList<String> friendRequests =new ArrayList<>();
+
+    public static User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public static void setLoggedUser(User loggedUser) {
+        User.loggedUser = loggedUser;
+    }
 
     public String getLeaderName() {
         return leaderName;
@@ -46,9 +53,7 @@ public class User {
         this.leaderName = leaderName;
     }
 
-    public static User getLoggedUser () {
-        return null;
-    }
+
     public String getFactionName() {
         return factionName;
     }
@@ -57,15 +62,13 @@ public class User {
         this.factionName = factionName;
     }
 
-    private ArrayList<String> friendRequests =new ArrayList<>();
+
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = new Nilfgaard();
-        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
@@ -147,13 +150,6 @@ public class User {
 
     public void setRank(int rank) {
         this.rank = rank;
-    }
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public String getUsername() {
@@ -248,21 +244,6 @@ public class User {
         User.allUsers = allUsers;
     }
 
-    public static User getLoggedUser() {
-        return loggedUser;
-    }
-
-    public static void setLoggedUser(User loggedUser) {
-        User.loggedUser = loggedUser;
-    }
-
-    public static User getTurnUser() {
-        return turnUser;
-    }
-
-    public static void setTurnUser(User turnUser) {
-        User.turnUser = turnUser;
-    }
 
     public double getMaxPoint() {
         return maxPoint;
@@ -335,7 +316,6 @@ public class User {
         if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
         activeGame.countTotalPoints();
     }
-}
 
     public ArrayList<String > getFriends() {
         return friends;

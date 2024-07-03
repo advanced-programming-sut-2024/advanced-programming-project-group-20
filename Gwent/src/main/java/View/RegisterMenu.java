@@ -1,6 +1,6 @@
 package View;
 
-import Controller.ApplicationController;
+import View.ApplicationController;
 //import Controller.RegisterController;
 import Controller.RegisterController;
 import Model.Factions.Nilfgaard;
@@ -76,7 +76,6 @@ public class RegisterMenu extends Application {
             User user = gson.fromJson(gson.toJson(object), User.class);
             User.getAllUsers().add(user);
         }
-        return arr;
     }
 
     public static void printRespond(String respond) {

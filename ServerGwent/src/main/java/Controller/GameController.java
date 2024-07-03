@@ -79,7 +79,7 @@ public class GameController {
         user.setTurn(false);
         user2.setTurn(true);
         user.setPassed(true);
-        Connection connection = Connection.getConnectionByUser(user);
+        Connection connection = Connection.getConnectionByUserName(user.getUsername());
         Object[] objects1 = new Object[1];
         objects1[0] = user;
         while (user.isPassed()) {

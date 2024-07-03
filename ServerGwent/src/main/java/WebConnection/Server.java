@@ -10,8 +10,6 @@ import java.net.Socket;
 
 public class Server {
     public Server(int port) {
-        new User("hamid","1","1","1","1","1");
-        new User("ali","1","1","1","1","1");
         System.out.println("Starting server...");
         try {
             ServerSocket serverSocket = new ServerSocket(port);
