@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.User;
+import View.ApplicationController;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 

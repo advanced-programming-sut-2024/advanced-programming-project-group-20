@@ -46,6 +46,7 @@ public class Connection extends Thread {
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
                 System.out.println("Reflection Problem!");
+              e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -54,14 +55,15 @@ public class Connection extends Thread {
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
 
-        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters().get(0));
+        SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (result == null) return;
+
             Field[] fields = SendingPacket.class.getDeclaredFields();
             for (Field field: fields)
                 field.setAccessible(true);
             new ObjectOutputStream(out).writeObject(new Gson().toJson(result));
         for (Field field: fields)
             field.setAccessible(false);
-        out.writeUTF("");
     }
 
 //    public static void sendNotification(String menuName, String methodName, Connection connection) {

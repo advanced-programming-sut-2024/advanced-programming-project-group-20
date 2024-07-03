@@ -94,16 +94,23 @@ public class ApplicationController {
         }
     }
 
-    public static void saveTheUsersInGson(ArrayList<User> users) {
+    public static void saveTheUsersInGson(ArrayList<Object> objects) {
+        Gson gson = new Gson();
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(users);
+        for (Object object : objects) {
+            User user = gson.fromJson(gson.toJson(object), User.class);
+            User.getAllUsers().add(user);
+        }
+
+        Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson1.toJson(User.getAllUsers());
         try (PrintWriter pw = new PrintWriter("users.json")) {
             pw.write(json);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
+
 
 
     public static Scene getScene() {

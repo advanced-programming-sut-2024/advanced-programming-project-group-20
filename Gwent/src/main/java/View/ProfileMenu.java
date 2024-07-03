@@ -1,10 +1,9 @@
 package View;
 
-import Controller.ApplicationController;
-import Controller.ProfileController;
 import Model.GameHistory;
 import Model.User;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +19,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import webConnection.Client;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -180,7 +181,7 @@ public class ProfileMenu extends Application {
 
         double topTotalScore = 0;
         for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-            if (gameHistory.getTotalPointsMe() > topTotalScore){
+            if (gameHistory.getTotalPointsMe() > topTotalScore) {
                 topTotalScore = gameHistory.getTotalPointsMe();
             }
         }
@@ -217,8 +218,14 @@ public class ProfileMenu extends Application {
     }
 
 
-    public void saveChanges(MouseEvent mouseEvent) {
-        ProfileController.saveChanges(username, password, email, nickname);
+    public void saveChangesInServer(MouseEvent mouseEvent) {
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add(username.getText());
+        objects.add(password.getText());
+        objects.add(email.getText());
+        objects.add(nickname.getText());
+//        objects.add(User.getLoggedUser());
+        Client.getConnection().doInServer("ProfileController", "changeInformation", objects.toArray());
     }
 
     public void BackToMainMenu(MouseEvent mouseEvent) {
@@ -227,6 +234,23 @@ public class ProfileMenu extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void changeInformationInClientModel(ArrayList<Object> objects) {
+        System.out.println("bia");
+        User.getLoggedUser().setUsername((String) objects.get(0));
+        User.getLoggedUser().setPassword((String) objects.get(1));
+        User.getLoggedUser().setEmail((String) objects.get(2));
+        User.getLoggedUser().setNickName((String) objects.get(3));
+        confirmAlert();
+    }
+
+    private static void confirmAlert() {
+        Platform.runLater(() ->  {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("your information changed successfully");
+            alert.show();
+        });
     }
 
     public void button1Clicked(ActionEvent actionEvent) {

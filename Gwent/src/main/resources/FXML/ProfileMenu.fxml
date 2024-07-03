@@ -43,7 +43,7 @@
                         <Label fx:id="loseLabel" prefHeight="94.0" prefWidth="100.0" text="fail:" />
                     </children>
                 </VBox>
-                <Button layoutX="578.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#saveChanges" prefHeight="26.0" prefWidth="131.0" text="save changes" />
+                <Button layoutX="578.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#saveChangesInServer" prefHeight="26.0" prefWidth="131.0" text="save changes" />
             </children>
         </Pane>
         <Button layoutX="43.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#BackToMainMenu" prefHeight="26.0" prefWidth="116.0" text="Back" />

@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.User;
+import View.ApplicationController;
 import View.LoginMenu;
 import View.RegisterMenu;
 import javafx.scene.control.*;

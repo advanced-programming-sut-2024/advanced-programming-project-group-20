@@ -1,6 +1,5 @@
 package View;
 
-import Controller.ApplicationController;
 import Controller.GameController;
 import Model.*;
 import javafx.animation.KeyFrame;
@@ -27,8 +26,6 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
-import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     public Button nextTurn;

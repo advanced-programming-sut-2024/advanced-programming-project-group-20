@@ -1,18 +1,15 @@
-package Controller;
+package View;
 
 import Model.User;
-import View.GameMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import View.RegisterMenu;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
@@ -90,12 +87,14 @@ public class ApplicationController {
         System.out.println(objects.get(0));
         System.out.println(objects.get(1));
         Platform.runLater(() -> {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText((String)objects.get(1));
-        alert.setContentText((String)objects.get(0));
-        alert.show();        });
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText((String) objects.get(1));
+            alert.setContentText((String) objects.get(0));
+            alert.show();
+        });
 
     }
+
     public static void alert2(String a) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
