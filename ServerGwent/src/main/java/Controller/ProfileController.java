@@ -63,10 +63,10 @@ public class ProfileController {
     }
 
     public static SendingPacket changeInformation(ArrayList<Object> objects) {
-String usernameField = (String) objects.get(0);
-String passwordField = (String) objects.get(1);
-String emailField = (String) objects.get(2);
-String nickNameField = (String) objects.get(3);
+        String usernameField = (String) objects.get(0);
+        String passwordField = (String) objects.get(1);
+        String emailField = (String) objects.get(2);
+        String nickNameField = (String) objects.get(3);
 
         String respond = "";
 
@@ -120,25 +120,39 @@ String nickNameField = (String) objects.get(3);
         }
     }
 
-    public static SendingPacket sendRequest(ArrayList<Object> objects){
+    public static SendingPacket sendRequest(ArrayList<Object> objects) {
         String friend = (String) objects.get(0);
         Connection connection = Connection.getConnectionByUserName(friend);
         User user = (User) objects.get(1);
         System.out.println(objects.get(1).toString());
-        if (connection==null)
-            return new SendingPacket("ApplicationController","alert2","this user doesnt exist","erorre!!");
+        if (User.getUserByName(friend) == null)
+            return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
         else
-            return new SendingPacket("ProfileMenu", "setRequest", connection,user.getUsername());
+            user.getFriendRequests().add(friend);
+        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
+    public static SendingPacket updateRequests(ArrayList<Object> objects){
+        System.out.println(objects.get(1).toString());
+        System.out.println(objects.get(1).toString());
+        User user = (User)objects.get(1);
+        ArrayList<String> strings = new ArrayList<>();
+        if (user.getFriendRequests()!=null&&!user.getFriendRequests().isEmpty()){
+            strings.addAll(user.getFriendRequests());
+        }
+        user.getFriendRequests().clear();
+        return  new SendingPacket("ProfileMenu", "updateRequestInMenu",strings.toArray());
+    }
+
     private static void confirmAlert() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("your information changed successfully");
         alert.show();
     }
-    public static SendingPacket beFriend(ArrayList<Object> objects){
+
+    public static SendingPacket beFriend(ArrayList<Object> objects) {
         // the second is connection owner
-        User.getUserByName((String) objects.get(0)).getFriends().add(User.getUserByName((String) objects.get(1)));
-        User.getUserByName((String) objects.get(1)).getFriends().add(User.getUserByName((String) objects.get(0)));
-        return new SendingPacket("ProfileMenu","comeFriend",objects.get(0), objects.get(1));
+        User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
+        User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
+        return new SendingPacket("ProfileMenu", "comeFriend", objects.get(0), objects.get(1));
     }
 }

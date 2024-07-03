@@ -19,13 +19,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import webConnection.Client;
+import webConnection.Connection;
 
 import java.net.URL;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 public class ProfileMenu extends Application {
     public static Pane root;
@@ -81,6 +79,12 @@ public class ProfileMenu extends Application {
     }
 
     private void setFriendsTable() {
+        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         TilePane collectionContent = new TilePane(2, 3);
         collectionContent.setPrefWidth(200);
         collectionContent.setMinHeight(300);
@@ -96,20 +100,23 @@ public class ProfileMenu extends Application {
         TableColumn<User, Date> name = new TableColumn<>("Last seen");
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
-//        friendRequest.getChildren().add(new HBox(new Label("Friend request from ali"),new Button("ok"), new Button("no")));
+
 
         // todo handel friends
-//        for (User user : Objects.requireNonNull(User.getUserByName(Client.getConnection().getUsername()).getFriends()))
-//            tableView.getItems().add(user);
-//        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getUsername());
-//        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getFriends().size());
+        for (User user :User.getAllUsers()){
+            System.out.println(user.getUsername());
+        }
+        for (String s : User.getUserByName(Client.getConnection().getUsername()).getFriends())
+            tableView.getItems().add(User.getUserByName(s));
+        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getUsername());
+        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getFriends().size());
 
 
         collectionContent.getChildren().add(tableView);
-      scrollOfFriends.setContent(collectionContent);
-      sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
-          Client.getConnection().doInServer("ProfileController","sendRequest",((TextField)sendRequestHbox.getChildren().get(0)).getText());
-      });
+        scrollOfFriends.setContent(collectionContent);
+        sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
+            Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
+        });
 
     }
 
@@ -286,7 +293,7 @@ public class ProfileMenu extends Application {
     }
 
     private static void confirmAlert() {
-        Platform.runLater(() ->  {
+        Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setHeaderText("your information changed successfully");
             alert.show();
@@ -365,36 +372,52 @@ public class ProfileMenu extends Application {
             node.setVisible(false);
         }
     }
-    public static void comeFriend(ArrayList<Object> objects){
-        User.getUserByName(Client.getConnection().getUsername()).getFriends().add(User.getUserByName((String) objects.get(1)));
+
+    public static void comeFriend(ArrayList<Object> objects) {
+        User.getUserByName(Client.getConnection().getUsername()).getFriends().add((String) objects.get(1));
         System.out.println(objects.get(1));
     }
-    public static void setRequest(ArrayList<Object> objects){
+
+    public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
         Platform.runLater(() -> {
             Button noButton;
             Button yesButton;
             HBox hBox;
 
-for (Node node : root.getChildren())  {
-    // todo no hardcode
-    if (node.getId()!=null&&node.getId().equals("request")){
-        ((VBox)node).getChildren().add(hBox =new HBox(new Label("Friend request from "+friendName),
-                yesButton =new Button("ok"),noButton= new Button("no")));
-        hBox.setId(friendName);
-        noButton.setOnMouseClicked(event-> ((VBox)node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
-        yesButton.setOnMouseClicked(mouseEvent -> {
-            //todo in client too
-            ((VBox)node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-            System.out.println("salam???");
-            User.getUserByName(Client.getConnection().getUsername()).getFriends().add(User.getUserByName(friendName));
-            System.out.println("User in client"+Client.getConnection().getUsername());
-            Client.getConnection().doInServer("ProfileController","beFriend",friendName,Client.getConnection().getUsername());
+            for (Node node : root.getChildren()) {
+                // todo no hardcode
+                if (node.getId() != null && node.getId().equals("request")) {
+                    ((VBox) node).getChildren().add(hBox = new HBox(new Label("Friend request from " + friendName),
+                            yesButton = new Button("ok"), noButton = new Button("no")));
+                    hBox.setId(friendName);
+                    noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
+                    yesButton.setOnMouseClicked(mouseEvent -> {
+                        //todo in client too
+                        ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
+                        System.out.println("salam???");
+                        if (User.getUserByName(Client.getConnection().getUsername()).getFriends() == null)
+                            User.getUserByName(Client.getConnection().getUsername()).setFriends(new ArrayList<>());
+                        User.getUserByName(Client.getConnection().getUsername()).getFriends().add(friendName);
+                        System.out.println("User in client" + Client.getConnection().getUsername());
+                        Client.getConnection().doInServer("ProfileController", "beFriend", friendName, Client.getConnection().getUsername());
 
+                    });
+                }
+            }
         });
+
     }
-}
-        });
+
+    public static void updateRequestInMenu(ArrayList<Object> objects) {
+        System.out.println("sefre?" + objects.size());
+        for (Object object : objects) {
+            System.out.println(object);
+            ArrayList<Object> objectArrayList = new ArrayList<>();
+            objectArrayList.add(new Object());
+            objectArrayList.add(object);
+            setRequest(objectArrayList);
+        }
 
     }
 }

@@ -36,7 +36,7 @@ public class User {
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
     private int rank;
-    transient private ArrayList<User> friends = new ArrayList<>();
+     private ArrayList<String> friends = new ArrayList<>();
     private String lastSeen = "longtime ago";
 
 
@@ -281,7 +281,7 @@ public class User {
         this.firstTurn = firstTurn;
     }
 
-    public ArrayList<User> getFriends() {
+    public ArrayList<String> getFriends() {
         return friends;
     }
 
@@ -291,5 +291,9 @@ public class User {
 
     public void setLastSeen(String lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    public void setFriends(ArrayList<String> friends) {
+        this.friends = friends;
     }
 }

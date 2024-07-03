@@ -2,6 +2,7 @@ package Controller;
 
 import Model.User;
 
+import WebConnection.Connection;
 import WebConnection.SendingPacket;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LoginController {
     public static SendingPacket login(ArrayList<Object> objects) {
@@ -43,10 +45,12 @@ public class LoginController {
             String methodeName = "alert2";
             return new SendingPacket(className, methodeName, respondObjects.toArray());
         } else {
+
             User.setLoggedUser(User.getUserByName(username));
             ArrayList<Object> objects1 = new ArrayList<>();
             objects1.add(username);
             return new SendingPacket("LoginMenu", "loginToMainMenu", objects1.toArray());
+
         }
     }
 

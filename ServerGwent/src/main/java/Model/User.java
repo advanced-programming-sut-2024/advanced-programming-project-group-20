@@ -12,7 +12,7 @@ public class User {
     private String secureAnswer;
     transient private User opponentUser;
 
-    transient private ArrayList<User> friends = new ArrayList<>();
+     private ArrayList<String > friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
@@ -28,6 +28,7 @@ public class User {
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
     private int rank;
+    private ArrayList<String> friendRequests =new ArrayList<>();
 
     public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
         this.activeGame = null;
@@ -227,9 +228,17 @@ public class User {
         this.firstTurn = firstTurn;
     }
 
-    public ArrayList<User> getFriends() {
+    public ArrayList<String > getFriends() {
         return friends;
     }
 
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
+    }
 }
 

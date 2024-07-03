@@ -36,14 +36,6 @@ public class Connection extends Thread {
 
     @Override
     public void run() {
-        //todo set real User
-        if (User.getUserByName("ali")==null){
-        currentUser = new User("ali",null,null,null,null,null);
-        User.getAllUsers().add(currentUser);}
-        else{
-            if (User.getUserByName("reza")==null)
-                currentUser = new User("reza",null,null,null,null,null);
-        }
         while (true) {
             try {
                 ReceivingPacket receivingPacket = new ReceivingPacket(in.readUTF());
@@ -53,6 +45,7 @@ public class Connection extends Thread {
                 sendRespond(receivingPacket, controllerMethod);
             } catch (IOException e) {
                 System.out.println("Connection \"ip=" + socket.getInetAddress().getHostAddress() + " port=" + socket.getPort() + "\" lost!");
+                connections.remove(this);
                 break;
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
                      IllegalAccessException e) {
@@ -67,10 +60,14 @@ public class Connection extends Thread {
         SendingPacket sendingPacket;
 receivingPacket.getParameters().add(this.currentUser);
         SendingPacket result =(SendingPacket)controllerMethod.invoke(null, receivingPacket.getParameters());
-        if (result.equals(null))
+        if (result==null)
             return;
         if (result.getParameters().isEmpty()) return;
         DataOutputStream sendOut = out;
+        if (result.getMethodName().equals("loginToMainMenu")){
+            this.currentUser = User.getLoggedUser();
+            User.setLoggedUser(null);
+        }
         if (result.getParameters().get(0) instanceof Connection) {
              sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
             result.getParameters().set(0,null);
