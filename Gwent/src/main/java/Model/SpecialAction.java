@@ -4,7 +4,6 @@ import Controller.GameController;
 import View.GameMenu;
 import javafx.application.Application;
 import javafx.scene.Node;
-import Controller.ApplicationController;
 import javafx.scene.control.Label;
 
 import java.util.ArrayList;

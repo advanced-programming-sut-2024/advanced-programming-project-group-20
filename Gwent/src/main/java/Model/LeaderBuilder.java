@@ -1,7 +1,7 @@
 package Model;
 
-import Controller.ApplicationController;
 import Controller.GameController;
+import View.ApplicationController;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;

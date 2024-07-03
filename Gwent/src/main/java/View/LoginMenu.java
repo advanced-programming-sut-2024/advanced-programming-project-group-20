@@ -1,6 +1,5 @@
 package View;
 
-import Controller.ApplicationController;
 import Controller.LoginController;
 import Controller.RegisterController;
 import javafx.application.Application;

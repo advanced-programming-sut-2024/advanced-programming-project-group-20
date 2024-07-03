@@ -1,8 +1,8 @@
 package Model;
 
-import Controller.ApplicationController;
 import Controller.GameController;
 import Model.Factions.Skellige;
+import View.ApplicationController;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;

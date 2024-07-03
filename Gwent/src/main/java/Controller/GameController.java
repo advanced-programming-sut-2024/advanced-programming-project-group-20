@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.*;
+import View.ApplicationController;
 import View.MainMenu;
 import View.PreGameMenu;
 import javafx.animation.FadeTransition;

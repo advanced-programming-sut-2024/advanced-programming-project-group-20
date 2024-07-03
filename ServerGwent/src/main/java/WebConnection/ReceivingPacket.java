@@ -16,6 +16,7 @@ public class ReceivingPacket {
         operationType = OperationType.valueOf((String) packet.get("operationType"));
         className = (String) packet.get("className");
         methodName = (String) packet.get("methodName");
+        System.out.println("asl packet=  " +packet);
         parameters = (ArrayList<Object>) ((JSONArray)packet.get("parameters")).toList();
         System.out.println(parameters.get(0));
     }

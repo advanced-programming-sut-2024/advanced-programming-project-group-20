@@ -2,6 +2,7 @@ package Controller;
 
 import Model.*;
 import Model.Factions.*;
+import View.ApplicationController;
 import View.GameMenu;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

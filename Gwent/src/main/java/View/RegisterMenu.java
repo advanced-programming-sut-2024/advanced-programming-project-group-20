@@ -1,6 +1,5 @@
 package View;
 
-import Controller.ApplicationController;
 //import Controller.RegisterController;
 import Controller.RegisterController;
 import Model.GameHistory;

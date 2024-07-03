@@ -1,6 +1,5 @@
 package View;
 
-import Controller.ApplicationController;
 import Controller.MainController;
 import Controller.RegisterController;
 

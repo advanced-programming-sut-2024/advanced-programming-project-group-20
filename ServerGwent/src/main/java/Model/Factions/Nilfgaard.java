@@ -9,7 +9,7 @@ public class Nilfgaard extends Faction {
     public Nilfgaard() {
         Collection = new ArrayList<>();
         name = "Nilfgaard";
-        CreateAllCards();
+//        CreateAllCards();
     }
 
     private void CreateAllCards() {

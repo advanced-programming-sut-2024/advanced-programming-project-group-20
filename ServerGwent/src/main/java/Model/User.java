@@ -20,6 +20,7 @@ public class User {
     transient private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
     transient private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
     transient private ArrayList<Card> deck = new ArrayList<>();
+    transient private ArrayList<User> friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;
@@ -44,7 +45,7 @@ public class User {
         this.password = password;
         this.nickName = nickName;
         this.faction = new Nilfgaard();
-        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
+//        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
@@ -268,4 +269,10 @@ public class User {
     public void setFirstTurn(boolean firstTurn) {
         this.firstTurn = firstTurn;
     }
+
+    public ArrayList<User> getFriends() {
+        return friends;
+    }
+
 }
+
