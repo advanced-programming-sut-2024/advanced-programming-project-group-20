@@ -72,10 +72,6 @@ public class RegisterController {
         User user = new User((String) objects.get(0), (String) objects.get(1), (String) objects.get(3)
                 , (String) objects.get(2), (String) objects.get(4), (String) objects.get(5));
 
-for (User user1 : User.getAllUsers()){
-    System.out.println("jan man : " + user1.getUsername()
-    );
-}
         ArrayList<Object> objects1 = new ArrayList<>();
         objects1.addAll(User.getAllUsers());
         ApplicationController.saveTheUsersInGson(objects1);
@@ -139,7 +135,6 @@ for (User user1 : User.getAllUsers()){
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user: arr){
             objects1.add(user);
-//            System.out.println(user.getUsername());
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
     }

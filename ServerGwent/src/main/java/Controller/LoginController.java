@@ -24,9 +24,7 @@ public class LoginController {
             respond = ("Enter a password");
 
         } else if (User.giveUserByUsername(username) == null) {
-//            for (User user: User.getAllUsers()){
-//                System.out.println(user.getUsername() + "     ll");
-//            }
+
             respond = ("No such user exist!");
 
         } else if (User.giveUserByUsername(username) != null

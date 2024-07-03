@@ -100,7 +100,6 @@ public class ApplicationController {
             User user = gson.fromJson(gson.toJson(object), User.class);
             usersToSave.add(user);
         }
-        System.out.println(User.getAllUsers().size());
         ///delete last content
         try (Writer writer = new FileWriter("users.json")) {
             writer.write("");

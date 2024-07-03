@@ -271,7 +271,6 @@ public class RegisterMenu extends Application {
                     for (Node node : root.getChildren()) {
                         if (node instanceof VBox) {
                             for (Node node1 : ((VBox) node).getChildren()) {
-//                                System.out.println(((TextField) node1).getPromptText());
                                 if (((TextField) node1).getPromptText().matches("(password|repeat password)")) {
                                     ((TextField) node1).setText((String) objects.get(0));
                                 }
