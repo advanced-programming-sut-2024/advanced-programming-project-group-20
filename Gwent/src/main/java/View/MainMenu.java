@@ -1,6 +1,9 @@
 package View;
 
+import Model.Faction;
+import Model.Leader;
 import Model.User;
+import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
@@ -39,7 +42,6 @@ public class MainMenu extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -279,12 +281,72 @@ public class MainMenu extends Application {
         });
     }
 
+    public static void showCurrentGames(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ArrayList<String> names = (ArrayList<String>) objects.get(0);
+            VBox newRoot = new VBox(10);
+            newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setPadding(new Insets(20));
+            Scene newScene = new Scene(newRoot, 300, 200);
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.setTitle("TV");
+            newStage.show();
+            Button submitButton = new Button("OK");
+            submitButton.setOnAction(event -> {
+                newStage.close();
+            });
+            for (String name : names) {
+                Label nameLabel = new Label(name);
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setOnMouseClicked(mouseEvent -> {
+                    String[] parts = name.split(" ");
+                    boolean privateGame;
+                    if (parts[2].equals("private")) privateGame = true;
+                    else privateGame = false;
+                    Client.getConnection().doInServer("MainController", "seeGame", parts[0],parts[1], privateGame);
+                    newStage.close();
+                });
+                newRoot.getChildren().add(nameLabel);
+            }
+
+        });
+    }
+
+    public static void showGame(ArrayList<Object> objects) throws Exception {
+        Gson gson = new Gson();
+        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        User user2 = gson.fromJson(gson.toJson(objects.get(1)), User.class);
+        user.readyForGame();
+        user2.readyForGame();
+        user.setFaction(Faction.giveFactionByName(user.getFactionName()));
+        user.setLeader(Leader.giveLeaderByNameAndFaction(user.getLeaderName(), user.getFaction()));
+        user2.setFaction(Faction.giveFactionByName(user2.getFactionName()));
+        user.setLeader(Leader.giveLeaderByNameAndFaction(user2.getLeaderName(), user2.getFaction()));
+        user.setOpponentUser(user2);
+        user2.setOpponentUser(user);
+        Platform.runLater(() -> {
+            Spectator spectator = new Spectator();
+            Spectator.setGameUser(user);
+            try {
+                spectator.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+
     public void requestHistories(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getGameRequests",User.getLoggedUser().getUsername());
     }
 
     public void randomGames(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getRandomGames",User.getLoggedUser().getUsername());
+    }
+
+    public void TV(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("MainController","getCurrentGames",User.getLoggedUser().getUsername());
     }
     public void enlargeButton(MouseEvent event) {
         // Expand button on mouse enter
