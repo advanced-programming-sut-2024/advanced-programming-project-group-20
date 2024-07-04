@@ -143,6 +143,7 @@ public class GameController {
         Object[] objects1 = new Object[2];
         objects1[0] = user;
         objects1[1] = user.getActiveGame();
+//        ApplicationController.saveTheUsersInGson();
         return new SendingPacket("GameMenu", "endShower",objects1);
     }
 
