@@ -14,7 +14,7 @@ public class User {
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-    private ArrayList<String > friends = new ArrayList<>();
+    private ArrayList<String> friends = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
     private int numberOfWins;

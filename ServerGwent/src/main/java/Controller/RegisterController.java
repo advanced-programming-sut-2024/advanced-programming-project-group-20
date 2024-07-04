@@ -125,15 +125,12 @@ public class RegisterController {
         } catch (FileNotFoundException e) {
 //            saveToFile(arr, file); //if file is not present, make it for first time
         }
-        // todo afshari check it
-        User.getAllUsers().clear();
         for (User user : arr) {
-            if (user != null)
-                User.getAllUsers().add(user);
+            if (User.getUserByName(user.getUsername()) == null) User.getAllUsers().add(user);
         }
 
         ArrayList<Object> objects1 = new ArrayList<>();
-        for (User user : arr) {
+        for (User user : User.getAllUsers()) {
             objects1.add(user);
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());

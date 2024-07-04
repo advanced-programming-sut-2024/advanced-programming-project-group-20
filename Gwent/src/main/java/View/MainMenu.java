@@ -304,7 +304,8 @@ public class MainMenu extends Application {
                     boolean privateGame;
                     if (parts[2].equals("private")) privateGame = true;
                     else privateGame = false;
-                    Client.getConnection().doInServer("MainController", "seeGame", parts[0],parts[1], privateGame);
+                    Client.getConnection().doInServer("MainController", "seeGame",
+                            User.getLoggedUser().getUsername(), parts[0],parts[1], privateGame);
                     newStage.close();
                 });
                 newRoot.getChildren().add(nameLabel);
@@ -322,7 +323,7 @@ public class MainMenu extends Application {
         user.setFaction(Faction.giveFactionByName(user.getFactionName()));
         user.setLeader(Leader.giveLeaderByNameAndFaction(user.getLeaderName(), user.getFaction()));
         user2.setFaction(Faction.giveFactionByName(user2.getFactionName()));
-        user.setLeader(Leader.giveLeaderByNameAndFaction(user2.getLeaderName(), user2.getFaction()));
+        user2.setLeader(Leader.giveLeaderByNameAndFaction(user2.getLeaderName(), user2.getFaction()));
         user.setOpponentUser(user2);
         user2.setOpponentUser(user);
         Platform.runLater(() -> {
@@ -333,6 +334,19 @@ public class MainMenu extends Application {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        });
+    }
+
+    public static void privateGame(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("Private Game");
+            alert1.setContentText("You don't have access to this private game.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
         });
     }
 

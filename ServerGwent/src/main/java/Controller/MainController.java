@@ -106,5 +106,44 @@ public class MainController {
         return new SendingPacket("MainMenu", "showGameRequests", objects1);
     }
 
+    public static SendingPacket getCurrentGames (ArrayList<Object> objects) throws Exception {
+        ArrayList<String> currentGames = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>(User.getAllUsers());
+        for (User user : User.getAllUsers()) {
+            if (user.getOppName() == null) {
+                users.remove(user);
+            } else if (users.contains(User.getUserByName(user.getOppName())) && users.contains(user)) {
+                users.remove(user);
+            }
+        }
+        for (User user : users) {
+            String privateGame;
+            if (user.isPrivateGame()) privateGame = " private";
+            else privateGame = " public";
+            currentGames.add(user.getUsername()+ " " + user.getOppName() + privateGame);
+        }
+        Object[] objects1 = new Object[1];
+        objects1[0] = currentGames;
+        return new SendingPacket("MainMenu", "showCurrentGames", objects1);
+    }
 
+    public static SendingPacket seeGame(ArrayList<Object> objects) throws Exception {
+        User user = User.getUserByName((String) objects.get(0));
+        User user1 = User.getUserByName((String) objects.get(1));
+        User user2 = User.getUserByName((String) objects.get(2));
+        Boolean bool = (Boolean) objects.get(3);
+        Object[] objects1 = new Object[2];
+        objects1[0] = user1;
+        objects1[1] = user2;
+        if (bool) {
+            if (!user1.getFriends().contains(user.getUsername()) || !user2.getFriends().contains(user.getUsername())) {
+                return new SendingPacket("MainMenu", "privateGame", objects1);
+            } else {
+                return new SendingPacket("MainMenu", "showGame", objects1);
+            }
+        } else {
+            System.out.println("ajabbb");
+            return new SendingPacket("MainMenu", "showGame", objects1);
+        }
+    }
 }

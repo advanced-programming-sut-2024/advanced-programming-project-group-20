@@ -139,6 +139,15 @@ public class GameController {
         }
         return null;
     }
+
+    public static SendingPacket getUpdateGame(ArrayList<Object> objects) {
+        Gson gson = new Gson();
+        User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        User user = User.getUserByName(temp.getUsername());
+        Object[] objects1 = new Object[1];
+        objects1[0] = user;
+        return new SendingPacket("Spectator" , "updateGame", objects1);
+    }
 }
 
 
