@@ -21,7 +21,6 @@ public class User {
     private int numberOfGames;
     private String email;
     private String answer;
-    private User opponentUser;
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
     private int maxPoint;
@@ -36,6 +35,17 @@ public class User {
     private String factionName;
     private String leaderName;
     private ArrayList<String> friendRequests =new ArrayList<>();
+    private boolean search;
+    private ArrayList<String> gameRequests = new ArrayList<>();
+    private boolean privateGame = true;
+
+    public boolean isPrivateGame() {
+        return privateGame;
+    }
+
+    public void setPrivateGame(boolean privateGame) {
+        this.privateGame = privateGame;
+    }
 
     public static User getLoggedUser() {
         return loggedUser;
@@ -192,13 +202,6 @@ public class User {
         this.numberOfWins = numberOfWins;
     }
 
-    public User getOpponentUser() {
-        return opponentUser;
-    }
-
-    public void setOpponentUser(User opponentUser) {
-        this.opponentUser = opponentUser;
-    }
 
     public ArrayList<GameHistory> getGameHistories() {
         return gameHistories;
@@ -329,5 +332,18 @@ public class User {
     public void setFriendRequests(ArrayList<String> friendRequests) {
         this.friendRequests = friendRequests;
     }
+
+    public boolean isSearch() {
+        return search;
+    }
+
+    public void setSearch(boolean search) {
+        this.search = search;
+    }
+
+    public ArrayList<String> getGameRequests() {
+        return gameRequests;
+    }
 }
+
 

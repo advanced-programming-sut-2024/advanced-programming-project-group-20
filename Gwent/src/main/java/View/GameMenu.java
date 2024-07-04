@@ -880,6 +880,7 @@ public class GameMenu extends Application {
         int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
         int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
         calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
+        User.getLoggedUser().getOpponentUser().mergeActiveGame(User.getLoggedUser());
         if (totalPoints1 > totalPoints2) {
             if (User.getLoggedUser().getOpponentUser().isFullHealth()) {
                 User.getLoggedUser().getOpponentUser().setFullHealth(false);
