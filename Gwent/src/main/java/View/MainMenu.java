@@ -1,21 +1,20 @@
 package View;
 
-import Model.CardBuilder;
-import Model.Factions.ScoiaTael;
-import Model.Factions.Skellige;
 import Model.User;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 public class MainMenu extends Application {
     public TextField opponentName;
     private static Alert alert;
+    public Button gameMode;
 
 
     public static void main(String[] args) {
@@ -46,6 +46,17 @@ public class MainMenu extends Application {
         stage.show();
     }
 
+    @FXML
+    public void initialize() {
+        if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
+        else gameMode.setText("Public");
+
+        gameMode.setOnMouseClicked(mouseEvent -> {
+            User.getLoggedUser().setPrivateGame(!User.getLoggedUser().isPrivateGame());
+            if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
+            else gameMode.setText("Public");
+        });
+    }
     public void goToProfileMenu(MouseEvent mouseEvent) {
         ProfileMenu profileMenu = new ProfileMenu();
         try {
@@ -66,7 +77,8 @@ public class MainMenu extends Application {
 
     public void goToPregameMenu(MouseEvent mouseEvent) throws Exception {
         if (opponentName.getText().isEmpty() || opponentName.getText().equals("")) {
-            Client.getConnection().doInServer("MainController", "searchForOpponent", User.getLoggedUser().getUsername());
+            Client.getConnection().doInServer("MainController", "searchForOpponent",
+                    User.getLoggedUser().getUsername(),User.getLoggedUser().isPrivateGame());
             alert.setTitle("Search Opponent");
             alert.setHeaderText(null);
             alert.setContentText("Search Opponent...");
@@ -79,7 +91,8 @@ public class MainMenu extends Application {
                 }
             });
         } else {
-            Client.getConnection().doInServer("MainController", "playWithFriend", User.getLoggedUser().getUsername(), opponentName.getText());
+            Client.getConnection().doInServer("MainController", "playWithFriend",
+                    User.getLoggedUser().getUsername(), opponentName.getText(),User.getLoggedUser().isPrivateGame());
         }
     }
     public static void goToPreGame(ArrayList<Object> objects) {
@@ -154,14 +167,14 @@ public class MainMenu extends Application {
             alert1.setContentText((String) objects.get(0) + " wants play with you");
             ButtonType accept = new ButtonType("Accept");
             ButtonType reject = new ButtonType("Reject");
+            objects.add(User.getLoggedUser().getUsername());
             alert1.getButtonTypes().setAll(accept, reject);
             alert1.showAndWait().ifPresent(response -> {
                 if (response == accept) {
-                    goToPreGame(objects);
                     objects.add(User.getLoggedUser().getUsername());
-                    Client.getConnection().doInServer("MainController", "acceptFriend", objects);
+                    Client.getConnection().doInServer("MainController", "acceptFriend", objects.toArray());
                 } else if (response == reject) {
-                    Client.getConnection().doInServer("MainController", "rejectFriend", objects);
+                    Client.getConnection().doInServer("MainController", "rejectFriend", objects.toArray());
                 }
             });
         });
@@ -179,4 +192,67 @@ public class MainMenu extends Application {
         });
     }
 
+    public static void showGameRequests(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ArrayList<String> names = (ArrayList<String>) objects.get(0);
+            VBox newRoot = new VBox(10);
+            newRoot.setPadding(new Insets(20));
+            newRoot.setAlignment(Pos.TOP_CENTER);
+            for (String name : names) {
+                Label nameLabel = new Label(name);
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #00ff59");
+                newRoot.getChildren().add(nameLabel);
+            }
+            Scene newScene = new Scene(newRoot, 300, 200);
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.setTitle("Game Requests");
+            newStage.show();
+            Button submitButton = new Button("OK");
+            submitButton.setOnAction(event -> {
+                newStage.close();
+            });
+        });
+    }
+
+    public static void showRandomGames(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ArrayList<String> names = (ArrayList<String>) objects.get(0);
+            VBox newRoot = new VBox(10);
+            newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setPadding(new Insets(20));
+            Scene newScene = new Scene(newRoot, 300, 200);
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.setTitle("Random Games");
+            newStage.show();
+            Button submitButton = new Button("OK");
+            submitButton.setOnAction(event -> {
+                newStage.close();
+            });
+            for (String name : names) {
+                Label nameLabel = new Label(name);
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setOnMouseClicked(mouseEvent -> {
+                    String[] parts = name.split(" ");
+                    boolean privateGame;
+                    if (parts[1].equals("private")) privateGame = true;
+                    else privateGame = false;
+                    Client.getConnection().doInServer("MainController", "startRandomGame",
+                            User.getLoggedUser().getUsername(), parts[0], privateGame);
+                    newStage.close();
+                });
+                newRoot.getChildren().add(nameLabel);
+            }
+
+        });
+    }
+
+    public void requestHistories(MouseEvent actionEvent) {
+        Client.getConnection().doInServer("MainController","getGameRequests",User.getLoggedUser().getUsername());
+    }
+
+    public void randomGames(MouseEvent actionEvent) {
+        Client.getConnection().doInServer("MainController","getRandomGames",User.getLoggedUser().getUsername());
+    }
 }

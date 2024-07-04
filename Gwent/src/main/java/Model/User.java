@@ -33,7 +33,7 @@ public class User {
     private static User loggedUser;
     private static User turnUser;
     private int maxPoint;
-
+    private ArrayList<String> gameRequests = new ArrayList<>();
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
@@ -42,8 +42,17 @@ public class User {
     private boolean isReady;
     private HashMap<Integer, ArrayList<String>> cards;
     private String oppName;
-     private ArrayList<String> friends = new ArrayList<>();
+    private ArrayList<String> friends = new ArrayList<>();
     private String lastSeen = "longtime ago";
+    private boolean privateGame = true;
+
+    public boolean isPrivateGame() {
+        return privateGame;
+    }
+
+    public void setPrivateGame(boolean privateGame) {
+        this.privateGame = privateGame;
+    }
 
     public String getOppName() {
         return oppName;
