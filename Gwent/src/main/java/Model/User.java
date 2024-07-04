@@ -34,7 +34,7 @@ public class User {
     private static User loggedUser;
     private static User turnUser;
     private int maxPoint;
-
+    private ArrayList<String> gameRequests = new ArrayList<>();
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
@@ -43,11 +43,25 @@ public class User {
     private int rank;
     private HashMap<Integer, ArrayList<String>> cards;
     private String oppName;
+<<<<<<< HEAD
     private String lastSeen = "longtime ago";
     private String factionName;
     private String leaderName;
 
     private ArrayList<String> friendRequests =new ArrayList<>();
+=======
+    private ArrayList<String> friends = new ArrayList<>();
+    private String lastSeen = "longtime ago";
+    private boolean privateGame = true;
+
+    public boolean isPrivateGame() {
+        return privateGame;
+    }
+
+    public void setPrivateGame(boolean privateGame) {
+        this.privateGame = privateGame;
+    }
+>>>>>>> 5da97f5ede4ae03662c122957bfc5a36d1cbc732
 
     public String getOppName() {
         return oppName;
@@ -62,13 +76,14 @@ public class User {
         this.username = username;
         this.password = password;
         this.nickName = nickName;
-        this.faction = new Nilfgaard();
-        this.leader = LeaderBuilder.nilfgaard("EmperorOfNilfgaard",this.faction);
         this.email = email;
         this.secureQuestion = secureQuestion;
         this.secureAnswer = secureAnswer;
         allUsers.add(this);
         numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
+    }
+    public User(String username) {
+        this.username = username;
     }
 
     public HashMap<Integer, ArrayList<String>> getCards() {
@@ -585,5 +600,17 @@ public class User {
 
     public void setFriends(ArrayList<String> friends) {
         this.friends = friends;
+    }
+
+    public void mergeActiveGame(User user) {
+        if (activeGame == null) activeGame = user.getActiveGame();
+        activeGame.setFirstRoundPointMe(user.activeGame.getFirstRoundPointOpponent());
+        activeGame.setSecondRoundPointMe(user.activeGame.getSecondRoundPointOpponent());
+        activeGame.setThirdRoundPointMe(user.activeGame.getThirdRoundPointOpponent());
+        activeGame.setFirstRoundPointOpponent(user.activeGame.getFirstRoundPointMe());
+        activeGame.setSecondRoundPointOpponent(user.activeGame.getSecondRoundPointMe());
+        activeGame.setThirdRoundPointOpponent(user.activeGame.getThirdRoundPointMe());
+        if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
+        activeGame.countTotalPoints();
     }
 }

@@ -1,6 +1,5 @@
 package View;
 
-import View.ApplicationController;
 import Model.*;
 import Model.chat.Message;
 import com.google.gson.Gson;
@@ -120,8 +119,8 @@ public class GameMenu extends Application {
         //chat
         //todo real name
         chat = new Chat("ali");
-       chat.setvBox(new VBox());
-        chat.getvBox().setPrefWidth(chatScroll.getPrefWidth()-30);
+        chat.setvBox(new VBox());
+        chat.getvBox().setPrefWidth(chatScroll.getPrefWidth() - 30);
         chat.getvBox().getChildren().add(new Label("salam"));
         chat.getvBox().setSpacing(10);
         chatScroll.setContent(chat.getvBox());
@@ -130,29 +129,28 @@ public class GameMenu extends Application {
             if (!chatPane.isVisible()) {
                 chatPane.setVisible(true);
                 chatButton.setLayoutX(chatButton.getLayoutX() - 235);
-            }
-            else {
+            } else {
                 chatPane.setVisible(false);
                 chatButton.setLayoutX(chatButton.getLayoutX() + 235);
             }
         });
         sendButton.setOnMouseClicked(mouseEvent -> {
-            Message message =new Message(sendField.getText(), chat.getName(),Chat.getTime());
+            Message message = new Message(sendField.getText(), chat.getName(), Chat.getTime());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(message);
             //todo real username
             objects.add("ali");
             chat.getMessages().clear();
-            Client.getConnection().doInServer("ChatController","getMessages",message,"ali");
+            Client.getConnection().doInServer("ChatController", "getMessages", message, "ali");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-                System.out.println(chat.getMessages().size());
+            System.out.println(chat.getMessages().size());
             chat.getvBox().getChildren().clear();
-            for (Message message1 :chat.getMessages()){
-            chat.getvBox().getChildren().add(message1.toVBox());
+            for (Message message1 : chat.getMessages()) {
+                chat.getvBox().getChildren().add(message1.toVBox());
             }
             sendField.setText("");
         });
@@ -267,7 +265,7 @@ public class GameMenu extends Application {
                             Object[] objects = new Object[1];
                             objects[0] = User.getLoggedUser();
                             User.getLoggedUser().hashMapMaker();
-                            Client.getConnection().doInServer("GameController","update",objects);
+                            Client.getConnection().doInServer("GameController", "update", objects);
                             return;
                         }
                         User.getLoggedUser().getBoard().setHasPlayedOne(true);
@@ -311,7 +309,7 @@ public class GameMenu extends Application {
         User.getLoggedUser().hashMapMaker();
         Object[] objects = new Object[1];
         objects[0] = User.getLoggedUser();
-        Client.getConnection().doInServer("GameController","pass",objects);
+        Client.getConnection().doInServer("GameController", "pass", objects);
     }
 
     public void setImagesOfBoard() {
@@ -327,7 +325,7 @@ public class GameMenu extends Application {
         ApplicationController.getRoot().getChildren().removeIf(node -> (node instanceof Label) && ((!Objects.equals(node.getId(), "no")) || (!Objects.equals(node.getId(), "no"))));
         setImageOfDeckBack(User.getLoggedUser(), 686);
         setImageOfDeckBack(User.getLoggedUser().getOpponentUser(), 60);
-        setImageCartNumber( 420, 50, getTotalHboxPower(hBoxes.get(5)));
+        setImageCartNumber(420, 50, getTotalHboxPower(hBoxes.get(5)));
         setImageCartNumber(420, 157, getTotalHboxPower(hBoxes.get(4)));
         setImageCartNumber(420, 272, getTotalHboxPower(hBoxes.get(3)));
         setImageCartNumber(420, 391, getTotalHboxPower(hBoxes.get(2)));
@@ -341,7 +339,8 @@ public class GameMenu extends Application {
         if (!ApplicationController.getRoot().getChildren().contains(passed) &&
                 User.getLoggedUser().isPassed()) ApplicationController.getRoot().getChildren().add(passed);
         if (!ApplicationController.getRoot().getChildren().contains(passedOpponent) &&
-                User.getLoggedUser().getOpponentUser().isPassed()) ApplicationController.getRoot().getChildren().add(passedOpponent);
+                User.getLoggedUser().getOpponentUser().isPassed())
+            ApplicationController.getRoot().getChildren().add(passedOpponent);
         deckCardNumber(User.getLoggedUser().getOpponentUser(), 295);
         deckCardNumber(User.getLoggedUser(), 615);
         setLeaderImage(User.getLoggedUser(), 687);
@@ -687,7 +686,7 @@ public class GameMenu extends Application {
             Object[] objects = new Object[1];
             User.getLoggedUser().hashMapMaker();
             objects[0] = User.getLoggedUser();
-            Client.getConnection().doInServer("GameController","nextTurn",objects);
+            Client.getConnection().doInServer("GameController", "nextTurn", objects);
         }));
         waitForChange.setCycleCount(1);
         waitForChange.play();
@@ -701,8 +700,8 @@ public class GameMenu extends Application {
         if (winner == null) User.getLoggedUser().getActiveGame().setWinner(null);
         else User.getLoggedUser().getActiveGame().setWinner(winner.getUsername());
         User.getLoggedUser().getActiveGame().countTotalPoints();
-        Client.getConnection().doInServer("GameController","endGame",
-                User.getLoggedUser(),User.getLoggedUser().getActiveGame());
+        Client.getConnection().doInServer("GameController", "endGame",
+                User.getLoggedUser(), User.getLoggedUser().getActiveGame());
     }
 
     public static void endShower(ArrayList<Object> objects) {
@@ -775,7 +774,8 @@ public class GameMenu extends Application {
         vBox.getChildren().add(button);
         User.getLoggedUser().setOpponentUser(null);
         ApplicationController.getRoot().getChildren().add(vBox);
-
+        //todo check doesn't have exception;
+        Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", User.getLoggedUser());
     }
 
     private Button getButton() {
@@ -880,6 +880,7 @@ public class GameMenu extends Application {
         int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
         int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
         calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
+        User.getLoggedUser().getOpponentUser().mergeActiveGame(User.getLoggedUser());
         if (totalPoints1 > totalPoints2) {
             if (User.getLoggedUser().getOpponentUser().isFullHealth()) {
                 User.getLoggedUser().getOpponentUser().setFullHealth(false);
@@ -999,8 +1000,8 @@ public class GameMenu extends Application {
         User.getLoggedUser().getOpponentUser().getBoard().leaderBoost = new boolean[]{false, false, false, false, false};
         User.getLoggedUser().hashMapMaker();
         setImagesOfBoard();
-        Client.getConnection().doInServer("GameController","goToNextRound",
-                User.getLoggedUser(),User.getLoggedUser().getActiveGame());
+        Client.getConnection().doInServer("GameController", "goToNextRound",
+                User.getLoggedUser(), User.getLoggedUser().getActiveGame());
     }
 
     private void skelligeAction(User user) {
@@ -1195,7 +1196,7 @@ public class GameMenu extends Application {
             } else {
                 int number = card.getPower();
                 if (!SpecialAction.clearWeather(user))
-                    number = SpecialAction.torrentialRain(number,user);
+                    number = SpecialAction.torrentialRain(number, user);
                 if (User.getLoggedUser().getBoard().leaderBoost[0]) {
                     number *= 2;
                 } else {
@@ -1290,7 +1291,7 @@ public class GameMenu extends Application {
         }
     }
 
-    public static void getTurn (ArrayList<Object> objects) {
+    public static void getTurn(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         User.getLoggedUser().setCards(temp.getCards());
@@ -1313,7 +1314,7 @@ public class GameMenu extends Application {
         });
     }
 
-    public static void startRound (ArrayList<Object> objects) {
+    public static void startRound(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);

@@ -422,7 +422,7 @@ public class PreGameMenu extends Application {
         scoiaTael.setFitHeight(720);
         scoiaTael.setFitWidth(256);
         scoiaTael.setOnMouseClicked(mouseEvent1 -> {
-            Faction faction = new Monsters();
+            Faction faction = new ScoiaTael();
             faction.createAllCards();
             User.getLoggedUser().setFaction(faction);
             User.getLoggedUser().setLeader(LeaderBuilder.scoiaTael("PurebloodElf", User.getLoggedUser().getFaction()));
