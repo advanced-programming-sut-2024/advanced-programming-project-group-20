@@ -8,7 +8,7 @@ import java.util.Formattable;
 import java.util.HashMap;
 
 public class User {
-    private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
@@ -16,6 +16,7 @@ public class User {
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
+     private ArrayList<String> friends = new ArrayList<>();
     transient private Faction faction;
     transient private Leader leader;
     transient private User opponentUser;
@@ -37,13 +38,16 @@ public class User {
     private boolean isPassed = false;
     private boolean isFullHealth = true;
     private boolean firstTurn = true;
+    private boolean isReady;
     private boolean turn;
     private int rank;
-    private boolean isReady;
     private HashMap<Integer, ArrayList<String>> cards;
     private String oppName;
-     private ArrayList<String> friends = new ArrayList<>();
     private String lastSeen = "longtime ago";
+    private String factionName;
+    private String leaderName;
+
+    private ArrayList<String> friendRequests =new ArrayList<>();
 
     public String getOppName() {
         return oppName;

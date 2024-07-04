@@ -16,6 +16,7 @@ import java.io.FileReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Random;
+
 public class RegisterController {
 
     public static SendingPacket register(ArrayList<Object> objects) {
@@ -25,6 +26,7 @@ public class RegisterController {
         String nickNameField = (String) (objects.get(3));
         String repeatedPasswordField = (String) (objects.get(4));
         String respond = "";
+        parseFile(new ArrayList<>());
         if (usernameField.isEmpty()) {
             respond = ("username section is empty!");
 
@@ -61,19 +63,24 @@ public class RegisterController {
             respondObjects.add("error!!");
             String className = "ApplicationController";
             String methodeName = "alert2";
-            return new SendingPacket(className,methodeName,respondObjects.toArray());
+            return new SendingPacket(className, methodeName, respondObjects.toArray());
         }
 //        showSecurityQuestions(usernameField, passwordField, nickNameField, emailField);
-        return new SendingPacket("RegisterMenu","showSecurityQuestions",objects.toArray());
+        return new SendingPacket("RegisterMenu", "showSecurityQuestions", objects.toArray());
     }
 
-    public static void addUserToServerModel(ArrayList<Object> objects){
-
-        User user = new User((String) objects.get(0), (String) objects.get(1), (String) objects.get(3)
-                , (String) objects.get(2), (String) objects.get(4), (String) objects.get(5));
-
+    public static void addUserToServerModel(ArrayList<Object> objects) {
+        Gson gson = new Gson();
+        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        if (user != null)
+            User.getAllUsers().add(user);
         ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
 
+        ApplicationController.saveTheUsersInGson(objects1);
+    }
+
+    public static void saveServerUsersToJson(ArrayList<Object> objects) {
+        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
         ApplicationController.saveTheUsersInGson(objects1);
     }
 
@@ -96,7 +103,7 @@ public class RegisterController {
 
         ArrayList<Object> objects1 = new ArrayList<>();
         objects1.add(randomPassword.toString());
-        return new SendingPacket("RegisterMenu", "showConfirmAlertOfRandomPassword",objects1.toArray());
+        return new SendingPacket("RegisterMenu", "showConfirmAlertOfRandomPassword", objects1.toArray());
     }
 
     public static SendingPacket parseFile(ArrayList<Object> objects) {
@@ -118,10 +125,15 @@ public class RegisterController {
         } catch (FileNotFoundException e) {
 //            saveToFile(arr, file); //if file is not present, make it for first time
         }
-        User.getAllUsers().addAll(arr);
+        // todo afshari check it
+        User.getAllUsers().clear();
+        for (User user : arr) {
+            if (user != null)
+                User.getAllUsers().add(user);
+        }
 
         ArrayList<Object> objects1 = new ArrayList<>();
-        for (User user: arr){
+        for (User user : arr) {
             objects1.add(user);
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());

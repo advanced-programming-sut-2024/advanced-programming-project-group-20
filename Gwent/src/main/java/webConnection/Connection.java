@@ -26,7 +26,6 @@ public class Connection extends Thread {
         this.out = new DataOutputStream(socket.getOutputStream());
         this.receiver = new Receiver(socket);
         receiver.start();
-        username = "ali";
     }
 
     public Socket getSocket() {

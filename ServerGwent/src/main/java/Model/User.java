@@ -35,6 +35,7 @@ public class User {
     private String oppName;
     private String factionName;
     private String leaderName;
+    private String lastSeen = "longtime ago";
     private ArrayList<String> friendRequests =new ArrayList<>();
 
     public static User getLoggedUser() {
@@ -137,10 +138,12 @@ public class User {
 
     public static User getUserByName(String username) {
         for (User user: allUsers) {
+            System.out.println("user ha:" +user.getUsername());
             if (username.equals(user.getUsername())){
                 return user;
             }
         }
+        System.out.println("null shod");
         return null;
     }
 

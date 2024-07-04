@@ -71,9 +71,13 @@ public class RegisterMenu extends Application {
 
     public static void loadAllUsersFromServer(ArrayList<Object> objects) {
         Gson gson = new Gson();
-
+//todo check
+        User.getAllUsers().clear();
         for (Object object : objects) {
+            if (object==null)
+                continue;
             User user = gson.fromJson(gson.toJson(object), User.class);
+            System.out.println("load from server userss"+ user.getUsername());
             User.getAllUsers().add(user);
         }
     }
@@ -232,8 +236,8 @@ public class RegisterMenu extends Application {
             } else if (!textField.getText().isEmpty() && textField1.getText().isEmpty() && textField2.getText().isEmpty()) {
                 addANewUser(username, password, email, nickName, label, textField);
 
-                Client.getConnection().doInServer("RegisterController", "addUserToServerModel"
-                        , username, password, email, nickName, label.getText(), textField.getText());
+                Client.getConnection().doInServer("RegisterController", "addUserToServerModel",
+                       User.getUserByName(username));
 
             } else {
                 ApplicationController.alert("error", "answer exactly one of questions!!");
@@ -252,19 +256,7 @@ public class RegisterMenu extends Application {
 
     }
 
-//    public static void addANewUser(TextField usernameField, TextField passwordField, TextField emailField
-//            , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
-//        User user = new User(usernameField.getText(), passwordField.getText(),
-//                nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-////        ApplicationController.saveTheUsersInGson(User.getAllUsers());
-//        User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
-//        LoginMenu loginMenu = new LoginMenu();
-//        try {
-//            loginMenu.start(ApplicationController.getStage());
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 
     public static void addANewUser(String username, String password, String email
             , String nickName, Label secureQuestion, TextField secureAnswer) {

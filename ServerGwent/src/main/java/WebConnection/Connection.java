@@ -57,19 +57,24 @@ public class Connection extends Thread {
 
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
+        System.out.println("inja");
         receivingPacket.getParameters().add(this.currentUser);
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         if (result == null)
             return;
+        System.out.println("inja1");
         if (result.getParameters().isEmpty()) return;
+        System.out.println("inja2");
         DataOutputStream sendOut = out;
         if (result.getMethodName().equals("loginToMainMenu")) {
-            this.currentUser = User.getLoggedUser();
-            User.setLoggedUser(null);
+            System.out.println("userName taraf:" +result.getParameters().get(0));
+            this.currentUser =User.getUserByName((String) result.getParameters().get(0));
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
             result.getParameters().set(0, null);
+            System.out.println("inja4");
+
         }
 
         Field[] fields = SendingPacket.class.getDeclaredFields();
@@ -128,7 +133,7 @@ public class Connection extends Thread {
 
     public static Connection getConnectionByUserName(String username) {
         for (Connection connection : connections) {
-            if (connection.currentUser.getUsername().equals(username))
+            if (connection.currentUser!=null&&connection.currentUser.getUsername().equals(username))
                 return connection;
         }
         return null;

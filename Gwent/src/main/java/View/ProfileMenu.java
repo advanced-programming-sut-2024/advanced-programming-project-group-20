@@ -32,6 +32,7 @@ public class ProfileMenu extends Application {
     public VBox friendRequest;
     public ScrollPane scrollOfFriends;
     public HBox sendRequestHbox;
+    public AnchorPane pane;
     @FXML
     private Button button1;
     @FXML
@@ -71,6 +72,13 @@ public class ProfileMenu extends Application {
 
     @FXML
     public void initialize() {
+
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+        root = pane;
         setRankOfUsers();
         contentsOfProfileMenu();
         setHistoryContents();
@@ -80,11 +88,7 @@ public class ProfileMenu extends Application {
 
     private void setFriendsTable() {
         Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
         TilePane collectionContent = new TilePane(2, 3);
         collectionContent.setPrefWidth(200);
         collectionContent.setMinHeight(300);
@@ -103,13 +107,13 @@ public class ProfileMenu extends Application {
 
 
         // todo handel friends
-        for (User user :User.getAllUsers()){
+        for (User user : User.getAllUsers()) {
             System.out.println(user.getUsername());
         }
-        for (String s : User.getUserByName(Client.getConnection().getUsername()).getFriends())
+        System.out.println("his name" + User.getLoggedUser().getUsername());
+        for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
-        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getUsername());
-        System.out.println("his name"+User.getUserByName(Client.getConnection().getUsername()).getFriends().size());
+        System.out.println("his name" + User.getLoggedUser().getFriends().size());
 
 
         collectionContent.getChildren().add(tableView);
@@ -373,10 +377,7 @@ public class ProfileMenu extends Application {
         }
     }
 
-    public static void comeFriend(ArrayList<Object> objects) {
-        User.getUserByName(Client.getConnection().getUsername()).getFriends().add((String) objects.get(1));
-        System.out.println(objects.get(1));
-    }
+
 
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
@@ -393,14 +394,14 @@ public class ProfileMenu extends Application {
                     hBox.setId(friendName);
                     noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
                     yesButton.setOnMouseClicked(mouseEvent -> {
-                        //todo in client too
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-                        System.out.println("salam???");
-                        if (User.getUserByName(Client.getConnection().getUsername()).getFriends() == null)
-                            User.getUserByName(Client.getConnection().getUsername()).setFriends(new ArrayList<>());
-                        User.getUserByName(Client.getConnection().getUsername()).getFriends().add(friendName);
-                        System.out.println("User in client" + Client.getConnection().getUsername());
-                        Client.getConnection().doInServer("ProfileController", "beFriend", friendName, Client.getConnection().getUsername());
+                        if (User.getLoggedUser().getFriends() == null)
+                            User.getLoggedUser().setFriends(new ArrayList<>());
+                        if (!User.getLoggedUser().getFriends().contains(friendName))
+                            User.getLoggedUser().getFriends().add(friendName);
+                        System.out.println("dost add shode " + friendName);
+                        System.out.println("User in client" + User.getLoggedUser().getUsername());
+                        Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());
 
                     });
                 }

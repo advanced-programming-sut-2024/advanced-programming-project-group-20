@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static Controller.RegisterController.saveServerUsersToJson;
+
 public class ProfileController {
 
     public static void changeUserName(String username) {
@@ -123,23 +125,27 @@ public class ProfileController {
         String friend = (String) objects.get(0);
         Connection connection = Connection.getConnectionByUserName(friend);
         User user = (User) objects.get(1);
-        System.out.println(objects.get(1).toString());
+        System.out.println("into send request" + ((User) objects.get(1)).getUsername());
         if (User.getUserByName(friend) == null)
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
         else
-            user.getFriendRequests().add(friend);
+            User.getUserByName(friend).getFriendRequests().add(user.getUsername());
+        if (connection==null)
+            return null;
         return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
-    public static SendingPacket updateRequests(ArrayList<Object> objects){
-        System.out.println(objects.get(1).toString());
-        System.out.println(objects.get(1).toString());
-        User user = (User)objects.get(1);
+
+    public static SendingPacket updateRequests(ArrayList<Object> objects) {
+        System.out.println("into update request" + ((User) objects.get(1)).getUsername());
+        User user = (User) objects.get(1);
         ArrayList<String> strings = new ArrayList<>();
-        if (user.getFriendRequests()!=null&&!user.getFriendRequests().isEmpty()){
+        if (user.getFriendRequests() != null && !user.getFriendRequests().isEmpty()) {
+            System.out.println("requ khali nist");
             strings.addAll(user.getFriendRequests());
         }
         user.getFriendRequests().clear();
-        return  new SendingPacket("ProfileMenu", "updateRequestInMenu",strings.toArray());
+        saveServerUsersToJson(objects);
+        return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
     }
 
     private static void confirmAlert() {
@@ -150,8 +156,10 @@ public class ProfileController {
 
     public static SendingPacket beFriend(ArrayList<Object> objects) {
         // the second is connection owner
-        User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
-        User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
-        return new SendingPacket("ProfileMenu", "comeFriend", objects.get(0), objects.get(1));
+        if (!User.getUserByName((String) objects.get(0)).getFriends().contains((String) objects.get(1)))
+            User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
+        if (!User.getUserByName((String) objects.get(1)).getFriends().contains((String) objects.get(0)))
+            User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
+        return null;
     }
 }
