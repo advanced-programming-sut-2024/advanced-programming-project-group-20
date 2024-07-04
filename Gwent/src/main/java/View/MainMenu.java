@@ -2,6 +2,7 @@ package View;
 
 import Model.User;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,28 +27,38 @@ public class MainMenu extends Application {
     public TextField opponentName;
     private static Alert alert;
     public Button gameMode;
+    public Button goProfile;
+    public Button gameMenu;
+    public Button requestHistory;
+    public Button randomGame;
+    public Button register;
+    private ScaleTransition scaleTransition;
+
 
 
     public static void main(String[] args) {
         launch(args);
     }
+    
 
     @Override
     public void start(Stage stage) throws Exception {
         alert = new Alert(Alert.AlertType.NONE);
         stage.setHeight(720);
-        stage.setWidth(900);
+        stage.setWidth(1200);
         URL url = RegisterMenu.class.getResource("/FXML/MainMenu.fxml");
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/main.jpg"
+        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Ciri_CGI_1920x1080_EN.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
     }
 
     @FXML
     public void initialize() {
+//        setScaleTransition();
+
         if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
         else gameMode.setText("Public");
 
@@ -57,6 +68,26 @@ public class MainMenu extends Application {
             else gameMode.setText("Public");
         });
     }
+
+    private void setScaleTransition() {
+        scaleTransition = new ScaleTransition(Duration.millis(200), gameMenu);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), goProfile);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), gameMode);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), randomGame);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), requestHistory);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+
+    }
+
     public void goToProfileMenu(MouseEvent mouseEvent) {
         ProfileMenu profileMenu = new ProfileMenu();
         try {
@@ -255,4 +286,106 @@ public class MainMenu extends Application {
     public void randomGames(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getRandomGames",User.getLoggedUser().getUsername());
     }
+    public void enlargeButton(MouseEvent event) {
+        // Expand button on mouse enter
+        Button button = (Button) event.getSource();
+        button.setScaleX(1.1);
+        button.setScaleY(1.1);
+
+    }
+
+    public void shrinkButton(MouseEvent event) {
+        // Shrink button on mouse exit
+        Button button = (Button) event.getSource();
+        button.setScaleX(1.0);
+        button.setScaleY(1.0);
+    }
+//    public void enlargeButtonGame() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), gameMenu);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonGame() {
+//        if (scaleTransition != null) {
+//            scaleTransition.stop(); // Stop any ongoing animation before starting a new one
+//        }
+//
+//        scaleTransition = new ScaleTransition(Duration.millis(200), gameMenu);
+//        scaleTransition.setToX(1); // Scale factor for x-axis
+//        scaleTransition.setToY(1); // Scale factor for y-axis
+//        scaleTransition.setRate(-1); // Set the rate to -1 to play the animation in reverse
+//        scaleTransition.play(); // Play the animation in reverse from the end
+//    }
+//    public void enlargeButtonRandom() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), randomGame);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonRandom() {
+//            scaleTransition = new ScaleTransition(Duration.millis(200), randomGame);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.setRate(-1);
+//        scaleTransition.playFromStart(); // Reverse the animation when mouse exits
+//    }
+//    public void enlargeButtonMode() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), gameMode);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonMode() {
+//            scaleTransition = new ScaleTransition(Duration.millis(200), gameMode);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.setRate(-1);
+//        scaleTransition.playFromStart(); // Reverse the animation when mouse exits
+//    }
+//    public void enlargeButtonProfile() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), goProfile);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonProfile() {
+//            scaleTransition = new ScaleTransition(Duration.millis(200), goProfile);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.setRate(-1);
+//        scaleTransition.playFromStart(); // Reverse the animation when mouse exits
+//    }
+//    public void enlargeButtonHistory() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), requestHistory);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonHistory() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), requestHistory);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.setRate(-1);
+//        scaleTransition.playFromStart(); // Reverse the animation when mouse exits
+//    }
+//    public void enlargeButtonRegister() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), register);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.playFromStart(); // Play the animation when mouse enters
+//    }
+//
+//    public void shrinkButtonRegister() {
+//        scaleTransition = new ScaleTransition(Duration.millis(200), register);
+//        scaleTransition.setToX(1.2); // Scale factor for x-axis
+//        scaleTransition.setToY(1.2); // Scale factor for y-axis
+//        scaleTransition.setRate(-1);
+//        scaleTransition.playFromStart(); // Reverse the animation when mouse exits
+//    }
 }

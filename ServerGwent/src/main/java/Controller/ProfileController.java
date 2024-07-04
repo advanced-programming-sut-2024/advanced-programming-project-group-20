@@ -143,6 +143,7 @@ public class ProfileController {
             System.out.println("requ khali nist");
             strings.addAll(user.getFriendRequests());
         }
+
         user.getFriendRequests().clear();
         saveServerUsersToJson(objects);
         return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());

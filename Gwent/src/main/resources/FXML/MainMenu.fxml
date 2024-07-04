@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720.0" prefWidth="900.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainMenu">
+<AnchorPane prefHeight="650.0" prefWidth="1200.0" stylesheets="@Register.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.MainMenu">
     <children>
-        <Label layoutX="263.0" layoutY="149.0" prefHeight="375.0" prefWidth="390.0" style="-fx-background-color: rgba(18,18,19,0.85)" />
+        <Label layoutX="14.0" layoutY="163.0" prefHeight="375.0" prefWidth="395.0" style="-fx-background-color: rgba(18,18,19,0.85)" textFill="WHITE" />
 
-        <Button id="ProfileTransmit" layoutX="366.0" layoutY="319.0" onMouseClicked="#goToProfileMenu" prefHeight="36.0" prefWidth="198.0" styleClass="button" text="Profile menu" />
-        <Button id="GameTransmit" layoutX="363.0" layoutY="209.0" onMouseClicked="#goToPregameMenu" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />
-        <Button layoutX="163.0" layoutY="209.0" onMouseClicked="#requestHistories" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />
-        <Button layoutX="563.0" layoutY="209.0" onMouseClicked="#randomGames" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />
-        <Button fx:id="gameMode" layoutX="563.0" layoutY="259.0" onMouseClicked="#randomGames" prefHeight="47.0" prefWidth="198.0" styleClass="button" />
+        <Button id="ProfileTransmit" fx:id="goProfile" layoutX="111.0" layoutY="426.0" onMouseClicked="#goToProfileMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="36.0" prefWidth="198.0" styleClass="button" text="Profile menu" />
+
+        <Button id="GameTransmit" fx:id="gameMenu" layoutX="28.0" layoutY="175.0" onMouseClicked="#goToPregameMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />
+        <Button fx:id="requestHistory" layoutX="111.0" layoutY="292.0" onMouseClicked="#requestHistories" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />
+        <Button fx:id="randomGame" layoutX="111.0" layoutY="229.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />
+        <Button fx:id="gameMode" layoutX="111.0" layoutY="358.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text=" " />
         <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" style="-fx-text-fill: #11ff00" text="Main menu">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button layoutX="404.0" layoutY="376.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
+        <Button fx:id="register" layoutX="152.0" layoutY="486.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
 
 
-      <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="378.0" layoutY="266.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
+      <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="229.0" layoutY="181.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
+      <ImageView fitHeight="116.0" fitWidth="148.0" layoutX="1045.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../someImages/TV.PNG" />
+         </image></ImageView>
+      <Label layoutX="1106.0" layoutY="102.0" prefHeight="26.0" prefWidth="49.0" text="TV" textFill="#18ac27" />
+      <Button layoutX="1045.0" layoutY="148.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="148.0" text="gameHistories" />
 
 
     </children>

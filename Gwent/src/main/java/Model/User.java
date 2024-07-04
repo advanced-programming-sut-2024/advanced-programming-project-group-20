@@ -43,15 +43,11 @@ public class User {
     private int rank;
     private HashMap<Integer, ArrayList<String>> cards;
     private String oppName;
-<<<<<<< HEAD
     private String lastSeen = "longtime ago";
     private String factionName;
     private String leaderName;
 
     private ArrayList<String> friendRequests =new ArrayList<>();
-=======
-    private ArrayList<String> friends = new ArrayList<>();
-    private String lastSeen = "longtime ago";
     private boolean privateGame = true;
 
     public boolean isPrivateGame() {
@@ -61,7 +57,6 @@ public class User {
     public void setPrivateGame(boolean privateGame) {
         this.privateGame = privateGame;
     }
->>>>>>> 5da97f5ede4ae03662c122957bfc5a36d1cbc732
 
     public String getOppName() {
         return oppName;
