@@ -34,7 +34,7 @@ public class ApplicationController {
     // if you want to have all users of Server you should call this method in your client
     public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects) {
         return new SendingPacket("ApplicationController"
-                , "receiveUsersOfServerSent", User.getAllUsers());
+                , "receiveUsersOfServerSent", User.getAllUsers().toArray());
     }
 
     public static void saveTheUsersInGson(ArrayList<Object> objects) {
@@ -45,6 +45,14 @@ public class ApplicationController {
             User user = gson.fromJson(gson.toJson(object), User.class);
             usersToSave.add(user);
         }
+
+
+        ///delete last content (we don't need that)
+//        try (Writer writer = new FileWriter("users.json")) {
+//            writer.write("");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
         String json = gson1.toJson(usersToSave);

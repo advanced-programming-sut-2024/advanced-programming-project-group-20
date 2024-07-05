@@ -96,6 +96,7 @@ public class ApplicationController {
 
 //server call this method to set all users of client like its own
     public static void receiveUsersOfServerSent(ArrayList<Object> objects) {
+        User.getAllUsers().clear();
         Gson gson = new Gson();
         int i = 0;
         for (Object object : objects) {

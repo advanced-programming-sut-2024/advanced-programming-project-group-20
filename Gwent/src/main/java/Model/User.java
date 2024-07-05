@@ -4,11 +4,12 @@ import Model.Factions.Nilfgaard;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Formattable;
 import java.util.HashMap;
 
 public class User {
-     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
+    transient private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient public Board board = new Board();
     transient private GameHistory activeGame;
     private String username;
@@ -20,9 +21,6 @@ public class User {
     transient private Faction faction;
     transient private Leader leader;
     transient private User opponentUser;
-    transient private ArrayList<ArrayList<Card>> decks = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByName = new ArrayList<>();
-    transient private ArrayList<ArrayList<Card>> decksByAddress = new ArrayList<>();
     transient private ArrayList<Card> deck = new ArrayList<>();
     private int numberOfDraws;
     private int numberOfLose;
@@ -32,7 +30,6 @@ public class User {
     private String answer;
     private static ArrayList<User> allUsers = new ArrayList<>();
     private static User loggedUser;
-    private static User turnUser;
     private int maxPoint;
     private ArrayList<String> gameRequests = new ArrayList<>();
     private boolean isPassed = false;
@@ -605,7 +602,14 @@ public class User {
     }
 
     public void mergeActiveGame(User user) {
-        if (activeGame == null) activeGame = user.getActiveGame();
+        if (activeGame == null) {
+            activeGame = new GameHistory(user,new Date());
+            activeGame.setDate(user.activeGame.getDate());
+        }
+        activeGame.setOppFactionName(user.activeGame.getFactionName());
+        activeGame.setOppLeaderName(user.activeGame.getLeaderName());
+        activeGame.setFactionName(user.activeGame.getOppFactionName());
+        activeGame.setLeaderName(user.activeGame.getOppLeaderName());
         activeGame.setFirstRoundPointMe(user.activeGame.getFirstRoundPointOpponent());
         activeGame.setSecondRoundPointMe(user.activeGame.getSecondRoundPointOpponent());
         activeGame.setThirdRoundPointMe(user.activeGame.getThirdRoundPointOpponent());
@@ -614,5 +618,16 @@ public class User {
         activeGame.setThirdRoundPointOpponent(user.activeGame.getThirdRoundPointMe());
         if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
         activeGame.countTotalPoints();
+    }
+    public void setGameHistories(ArrayList<GameHistory> gameHistories) {
+        this.gameHistories = gameHistories;
+    }
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
     }
 }

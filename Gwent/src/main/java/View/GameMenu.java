@@ -55,6 +55,7 @@ public class GameMenu extends Application {
     public Button sendButton;
     public TextField sendField;
     public AnchorPane chatPane;
+    public Label yourTurnLabel;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -73,7 +74,6 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
-    public ImageView highScoreIcon = new ImageView();
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     public static Chat chat;
@@ -161,7 +161,9 @@ public class GameMenu extends Application {
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
         pane.getChildren().remove(turnLabel);
+        pane.getChildren().remove(yourTurnLabel);
         turnLabel.setId("no");
+        yourTurnLabel.setId("no");
         setHboxes();
         GameMenu.gameMenu = this;
         for (Card card : User.getLoggedUser().getDeck()) {
@@ -275,7 +277,7 @@ public class GameMenu extends Application {
                         nextTurn.setOnMouseClicked(event2 -> {
                             if (User.getLoggedUser().getBoard().isHasPlayedOne()) {
                                 if (!User.getLoggedUser().getOpponentUser().isPassed()) {
-                                    changeTurn(highScoreImage, turnLabel);
+                                    changeTurn(turnLabel);
                                     ApplicationController.setDisable(ApplicationController.getRoot());
                                 }
                             }
@@ -454,17 +456,17 @@ public class GameMenu extends Application {
     }
 
     private void setHighScoreIcon() {
-        if (!ApplicationController.getRoot().getChildren().contains(highScoreIcon))
-            ApplicationController.getRoot().getChildren().add(highScoreIcon);
-        highScoreIcon.setLayoutX(319);
+        if (!ApplicationController.getRoot().getChildren().contains(highScoreImage))
+            ApplicationController.getRoot().getChildren().add(highScoreImage);
+        highScoreImage.setLayoutX(319);
         if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) > getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3)))
-            highScoreIcon.setLayoutY(582);
+            highScoreImage.setLayoutY(582);
         else
-            highScoreIcon.setLayoutY(245);
-        highScoreIcon.setFitWidth(87);
-        highScoreIcon.setFitHeight(63);
+            highScoreImage.setLayoutY(245);
+        highScoreImage.setFitWidth(87);
+        highScoreImage.setFitHeight(63);
         if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) == getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3))) {
-            ApplicationController.getRoot().getChildren().remove(highScoreIcon);
+            ApplicationController.getRoot().getChildren().remove(highScoreImage);
         }
     }
 
@@ -476,7 +478,7 @@ public class GameMenu extends Application {
         imageView.setFitWidth(130);
         imageView.setFitHeight(130);
 
-        ImageView imageViewShield = new ImageView(new Image(GameMenu.class.getResourceAsStream("/someImages/deck_shield_" + User.getLoggedUser().getFaction().getName() + ".png")));
+        ImageView imageViewShield = new ImageView(new Image(GameMenu.class.getResourceAsStream("/someImages/deck_shield_" + user.getFaction().getName() + ".png")));
         ApplicationController.getRoot().getChildren().add(imageViewShield);
         imageViewShield.setX(90);
         imageViewShield.setY(height + 15);
@@ -674,7 +676,7 @@ public class GameMenu extends Application {
         return total;
     }
 
-    public void changeTurn(ImageView highScoreIcon, Label turnLabel) {
+    public void changeTurn(Label turnLabel) {
         if (!ApplicationController.getRoot().getChildren().contains(turnLabel))
             ApplicationController.getRoot().getChildren().add(turnLabel);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), turnLabel);
@@ -735,7 +737,18 @@ public class GameMenu extends Application {
         ImageView imageView = new ImageView(new Image(String.valueOf(GameMenu.class.getResource("/backgrounds/Gwent_1.jpg"))));
         imageView.setFitWidth(1540);
         imageView.setFitHeight(890);
+        ImageView state;
+        if (winner == null) {
+            state = new ImageView(new Image(String.valueOf(GameMenu.class.getResource("/someImages/Draw.png"))));
+        } else if (winner.equals(User.getLoggedUser().getUsername())) {
+            state = new ImageView(new Image(String.valueOf(GameMenu.class.getResource("/someImages/Win.png"))));
+        } else {
+            state = new ImageView(new Image(String.valueOf(GameMenu.class.getResource("/someImages/Lose.png"))));
+        }
+        state.setFitWidth(1540);
+        state.setFitHeight(890);
         ApplicationController.getRoot().getChildren().add(imageView);
+        ApplicationController.getRoot().getChildren().add(state);
         VBox vBox = new VBox(20);
         vBox.setPrefSize(800, 800);
         vBox.setLayoutX(400);
@@ -902,31 +915,31 @@ public class GameMenu extends Application {
                 return;
             }
         } else {
-            if (User.getLoggedUser().getFaction().getName().equals("Nilfgaard")) {
-                if (!User.getLoggedUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
-                    if (User.getLoggedUser().getOpponentUser().isFullHealth())
-                        User.getLoggedUser().getOpponentUser().setFullHealth(false);
-                    else {
-                        ending(User.getLoggedUser());
-                        return;
-                    }
+            if (User.getLoggedUser().getFaction().getName().equals("Nilfgaard") &&
+                    !User.getLoggedUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
+                if (User.getLoggedUser().getOpponentUser().isFullHealth())
+                    User.getLoggedUser().getOpponentUser().setFullHealth(false);
+                else {
+                    ending(User.getLoggedUser());
+                    return;
                 }
-            } else if (User.getLoggedUser().getOpponentUser().getFaction().getName().equals("Nilfgaard")) {
-                if (!User.getLoggedUser().getFaction().getName().equals("Nilfgaard")) {
-                    if (User.getLoggedUser().getOpponentUser().isFullHealth())
-                        User.getLoggedUser().getOpponentUser().setFullHealth(false);
-                    else {
-                        ending(User.getLoggedUser().getOpponentUser());
-                        return;
-                    }
+            } else if (User.getLoggedUser().getOpponentUser().getFaction().getName().equals("Nilfgaard") &&
+                    !User.getLoggedUser().getFaction().getName().equals("Nilfgaard")) {
+                if (User.getLoggedUser().isFullHealth())
+                    User.getLoggedUser().setFullHealth(false);
+                else {
+                    ending(User.getLoggedUser().getOpponentUser());
+                    return;
                 }
+
             } else {
                 if (!User.getLoggedUser().isFullHealth() && !User.getLoggedUser().getOpponentUser().isFullHealth()) {
-                    endGame(null);
+                    ending(null);
                     return;
                 } else if (User.getLoggedUser().isFullHealth() && User.getLoggedUser().getOpponentUser().isFullHealth()) {
                     User.getLoggedUser().getOpponentUser().setFullHealth(false);
                     User.getLoggedUser().setFullHealth(false);
+                    System.out.println("here");
                 } else if (User.getLoggedUser().isFullHealth()) {
                     ending(User.getLoggedUser());
                     return;
@@ -937,8 +950,11 @@ public class GameMenu extends Application {
             }
         }
         if (User.getLoggedUser().getActiveGame().getThirdRoundPointMe() > 0) {
-            endGame(null);
+            ending(null);
+            return;
         }
+        System.out.println(User.getLoggedUser().isFullHealth());
+        System.out.println(User.getLoggedUser().getOpponentUser().isFullHealth());
         if (User.getLoggedUser().getFaction().getName().equals("Monsters")) {
             monster1 = monstersAction(hBoxes.subList(0, 3));
         }
@@ -1162,6 +1178,7 @@ public class GameMenu extends Application {
 
     public void updateCardEvent() {
         ApplicationController.getRoot().getChildren().remove(turnLabel);
+        ApplicationController.getRoot().getChildren().remove(yourTurnLabel);
         ArrayList<Card> hand = User.getLoggedUser().getBoard().getHand();
         if (deckHbox == null) deckHbox = new HBox();
         deckHbox.getChildren().clear();
@@ -1294,13 +1311,32 @@ public class GameMenu extends Application {
     public static void getTurn(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
+        User.getLoggedUser().setActiveGame(gameHistory);
         User.getLoggedUser().setCards(temp.getCards());
         User.getLoggedUser().boardMaker();
         ApplicationController.setEnable(ApplicationController.getRoot());
         Platform.runLater(() -> {
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
+            gameMenu.yourTurn();
         });
+    }
+
+    private void yourTurn() {
+        if (!ApplicationController.getRoot().getChildren().contains(yourTurnLabel)) {
+            ApplicationController.getRoot().getChildren().add(yourTurnLabel);
+        }
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.2), actionEvent -> {
+            ApplicationController.getRoot().getChildren().remove(yourTurnLabel);
+        }));
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), yourTurnLabel);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.play();
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
     public static void waitForNextRound(ArrayList<Object> objects) {

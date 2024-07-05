@@ -1,7 +1,11 @@
 package View;
 
+import Model.Faction;
 import Model.GameHistory;
+import Model.Leader;
 import Model.User;
+import com.google.gson.Gson;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -24,6 +28,7 @@ import webConnection.Connection;
 import java.net.URL;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProfileMenu extends Application {
     public static Pane root;
@@ -65,6 +70,7 @@ public class ProfileMenu extends Application {
     private TextField email;
     @FXML
     private TextField nickname;
+    private static ProfileMenu profileMenu;
 
     public static void main(String[] args) {
         launch(args);
@@ -72,25 +78,37 @@ public class ProfileMenu extends Application {
 
     @FXML
     public void initialize() {
-
-//        try {
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         root = pane;
+        setFriendsTable();
         setRankOfUsers();
         contentsOfProfileMenu();
-        setHistoryContents();
         setTablePointsContent();
-        setFriendsTable();
+        setHistoryContents();
+        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        profileMenu = this;
     }
-
+    public static void setGameHistories(ArrayList<Object> objects) {
+        Gson gson = new Gson();
+        User.getLoggedUser().setGameHistories(new ArrayList<>());
+        GameHistory gameHistory;
+        for (Object object : objects) {
+            gameHistory = gson.fromJson(gson.toJson(object), GameHistory.class);
+            User.getLoggedUser().getGameHistories().add(gameHistory);
+        }
+        Platform.runLater(() -> {
+            profileMenu.setHistoryContents();
+        });
+    }
     private void setFriendsTable() {
         //Todo problem of null user is here!
-        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+        Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
         //
-        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+//        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         TilePane collectionContent = new TilePane(2, 3);
         collectionContent.setPrefWidth(200);
         collectionContent.setMinHeight(300);
@@ -106,24 +124,30 @@ public class ProfileMenu extends Application {
         TableColumn<User, Date> name = new TableColumn<>("Last seen");
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
-
-
+        Gson gson = new Gson();
+        for (User user  : User.getAllUsers())
+            System.out.println(gson.toJson(user));
         // todo handel friends
-        for (User user : User.getAllUsers()) {
-            System.out.println(user.getUsername());
-        }
+        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
         System.out.println("his name" + User.getLoggedUser().getFriends().size());
-
+        ArrayList<Object> objects    = new ArrayList<>();
+        for (String requesterName :User.getLoggedUser().getFriendRequests()){
+            System.out.println("requ hast");
+            objects.add(new Object());
+            objects.add(requesterName);
+            setRequest(objects);
+        }
 
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
             Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
         });
-
+//todo in bashe ya na?
+//        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
     }
 
     private void setRankOfUsers() {
@@ -164,7 +188,16 @@ public class ProfileMenu extends Application {
     }
 
     private void setHistoryContents() {
-
+        if (User.getLoggedUser().getGameHistories() == null) {
+            User.getLoggedUser().setGameHistories(new ArrayList<>());
+        }
+        double topTotalScore = 0;
+        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+            if (gameHistory.getTotalPointsMe() > topTotalScore) {
+                topTotalScore = gameHistory.getTotalPointsMe();
+            }
+        }
+        topScoreLabel.setText(topScoreLabel.getText() + topTotalScore);
         TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(1230);
         collectionContent.setMinHeight(600);
@@ -222,6 +255,30 @@ public class ProfileMenu extends Application {
         for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
             tableView.getItems().add(gameHistory);
         }
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                GameHistory gameHistory = tableView.getSelectionModel().getSelectedItem();
+                if (gameHistory != null) {
+                    GameHistoryShower gameHistoryShower = new GameHistoryShower();
+                    GameHistoryShower.setGameUser(User.getLoggedUser());
+                    GameHistoryShower.setGameHistory(gameHistory);
+                    User.getLoggedUser().setOpponentUser(User.getUserByName(gameHistory.getOpponentName()));
+                    User.getLoggedUser().readyForGame();
+                    User.getLoggedUser().getOpponentUser().readyForGame();
+                    User.getLoggedUser().setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
+                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(),User.getLoggedUser().getFaction()));
+                    User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
+                    User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
+                            User.getLoggedUser().getOpponentUser().getFaction()));
+                    User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+                    try {
+                        gameHistoryShower.start(ApplicationController.getStage());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfHistory.setContent(collectionContent);
     }
@@ -231,14 +288,6 @@ public class ProfileMenu extends Application {
         password.setText(User.getLoggedUser().getPassword());
         email.setText(User.getLoggedUser().getEmail());
         nickname.setText(User.getLoggedUser().getNickName());
-
-        double topTotalScore = 0;
-        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-            if (gameHistory.getTotalPointsMe() > topTotalScore) {
-                topTotalScore = gameHistory.getTotalPointsMe();
-            }
-        }
-        topScoreLabel.setText(topScoreLabel.getText() + topTotalScore);
         totalGamesLabel.setText(totalGamesLabel.getText() + User.getLoggedUser().getNumberOfGames());
         rankLabel.setText(rankLabel.getText() + User.getLoggedUser().getRank());
         winLabel.setText(winLabel.getText() + User.getLoggedUser().getNumberOfWins());
@@ -364,6 +413,7 @@ public class ProfileMenu extends Application {
     }
 
     public void friendButtonClick(ActionEvent actionEvent) {
+        setFriendsTable();
         button1.setScaleX(1);
         button1.setScaleY(1);
         button2.setScaleX(1.0);
@@ -382,8 +432,13 @@ public class ProfileMenu extends Application {
     }
 
 
+
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
+        if (root==null){
+            System.out.println("root nulle");
+            return;
+        }
         Platform.runLater(() -> {
             Button noButton;
             Button yesButton;
@@ -398,10 +453,10 @@ public class ProfileMenu extends Application {
                     noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
                     yesButton.setOnMouseClicked(mouseEvent -> {
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-                        if (User.getLoggedUser().getFriends() == null)
-                            User.getLoggedUser().setFriends(new ArrayList<>());
-                        if (!User.getLoggedUser().getFriends().contains(friendName))
-                            User.getLoggedUser().getFriends().add(friendName);
+//                        if (User.getLoggedUser().getFriends() == null)
+//                            User.getLoggedUser().setFriends(new ArrayList<>());
+//                        if (!User.getLoggedUser().getFriends().contains(friendName))
+//                            User.getLoggedUser().getFriends().add(friendName);
                         System.out.println("dost add shode " + friendName);
                         System.out.println("User in client" + User.getLoggedUser().getUsername());
                         Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());

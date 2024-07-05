@@ -58,9 +58,14 @@ public class Connection extends Thread {
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
         System.out.println("inja");
+//<<<<<<< HEAD
         receivingPacket.getParameters().add(this.currentUser);
 //        System.out.println("current :" + this.currentUser.getUsername()
 //        );
+//=======
+        if (this.currentUser != null)
+            receivingPacket.getParameters().add(this.currentUser);
+//>>>>>>> edba26d87a669765f3c506604cfe58f10ac1853c
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         if (result == null)
             return;
@@ -69,8 +74,8 @@ public class Connection extends Thread {
         System.out.println("inja2");
         DataOutputStream sendOut = out;
         if (result.getMethodName().equals("loginToMainMenu")) {
-            System.out.println("userName taraf:" +result.getParameters().get(0));
-            this.currentUser =User.getUserByName((String) result.getParameters().get(0));
+            System.out.println("userName taraf:" + result.getParameters().get(0));
+            this.currentUser = User.getUserByName((String) result.getParameters().get(0));
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
@@ -89,10 +94,10 @@ public class Connection extends Thread {
 
     public void sendOrder(SendingPacket sendingPacket) throws IOException {
         Field[] fields = SendingPacket.class.getDeclaredFields();
-        for (Field field: fields)
+        for (Field field : fields)
             field.setAccessible(true);
         new ObjectOutputStream(out).writeObject(new Gson().toJson(sendingPacket));
-        for (Field field: fields)
+        for (Field field : fields)
             field.setAccessible(false);
     }
 
@@ -135,12 +140,13 @@ public class Connection extends Thread {
 
     public static Connection getConnectionByUserName(String username) {
         for (Connection connection : connections) {
-            if (connection.currentUser!=null&&connection.currentUser.getUsername().equals(username))
+            if (connection.currentUser != null && connection.currentUser.getUsername().equals(username))
                 return connection;
         }
         return null;
 
     }
+
     public static ArrayList<Connection> getConnections() {
         return connections;
     }

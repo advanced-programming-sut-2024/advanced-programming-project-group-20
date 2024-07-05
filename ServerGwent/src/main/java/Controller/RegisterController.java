@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 
 import WebConnection.SendingPacket;
@@ -105,6 +106,7 @@ public class RegisterController {
 
     ///this method just is called first of program and don't use it for giving users from it
     public static SendingPacket parseFile(ArrayList<Object> objects) {
+        User.getAllUsers().clear();
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader("users.json"), JsonArray.class);
@@ -131,6 +133,7 @@ public class RegisterController {
 
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user : User.getAllUsers()) {
+            if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
             objects1.add(user);
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());

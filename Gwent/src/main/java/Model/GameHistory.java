@@ -17,7 +17,51 @@ public class GameHistory {
     private int totalPointsMe;
     private int totalPointsOpponent;
     private String date;
-    private ArrayList<HashMap<Integer, String>> moves;
+    private String factionName;
+    private String leaderName;
+    private String oppFactionName;
+    private String oppLeaderName;
+    private ArrayList<HashMap<Integer, ArrayList<String>>> moves;
+
+    public ArrayList<HashMap<Integer, ArrayList<String>>> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(ArrayList<HashMap<Integer, ArrayList<String>>> moves) {
+        this.moves = moves;
+    }
+
+    public String getOppLeaderName() {
+        return oppLeaderName;
+    }
+
+    public void setOppLeaderName(String oppLeaderName) {
+        this.oppLeaderName = oppLeaderName;
+    }
+
+    public String getOppFactionName() {
+        return oppFactionName;
+    }
+
+    public void setOppFactionName(String oppFactionName) {
+        this.oppFactionName = oppFactionName;
+    }
+
+    public String getFactionName() {
+        return factionName;
+    }
+
+    public void setFactionName(String factionName) {
+        this.factionName = factionName;
+    }
+
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
 
     public GameHistory(User opponent, Date date) {
         this.opponentName = opponent.getUsername();

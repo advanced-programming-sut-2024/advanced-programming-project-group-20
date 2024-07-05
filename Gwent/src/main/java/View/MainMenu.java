@@ -377,4 +377,8 @@ public class MainMenu extends Application {
         button.setScaleY(1.0);
     }
 
+    public void showGameHistories(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("MainMenu","getGameHistories",User.getLoggedUser().getUsername());
+    }
+
 }

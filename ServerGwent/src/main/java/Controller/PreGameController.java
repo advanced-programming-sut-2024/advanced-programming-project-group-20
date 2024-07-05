@@ -18,19 +18,22 @@ public class PreGameController {
         objects[0] = user1;
         objects[1] = user2.getFactionName();
         objects[2] = user2.getLeaderName();
+        user1.getActiveGame().setOppLeaderName(user2.getLeaderName());
+        user1.getActiveGame().setOppFactionName(user2.getFactionName());
         Thread.sleep(1000);
         user1.setReady(false);
-        if (user1.getCards().get(19) != null) System.out.println(user1.getCards().get(19));
         return new SendingPacket("PreGameMenu", "startGame", objects);
     }
 
     public static SendingPacket ready(ArrayList<Object> objects) throws Exception {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
         User user = User.getUserByName(temp.getUsername());
         user.setCards(temp.getCards());
-        user.setFactionName((String) objects.get(1));
-        user.setLeaderName((String) objects.get(2));
+        user.setFactionName(gameHistory.getFactionName());
+        user.setLeaderName(gameHistory.getLeaderName());
+        user.setActiveGame(gameHistory);
         User user2 = User.getUserByName(user.getOppName());
         user.setReady(true);
         if (user2.isReady()) {

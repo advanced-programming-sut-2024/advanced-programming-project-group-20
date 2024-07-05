@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
@@ -79,7 +80,16 @@ public class ProfileController {
         }
     }
 
-    public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
+    public static SendingPacket getGameHistories(ArrayList<Object> objects) {
+        User user = User.getUserByName((String) objects.get(0));
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (GameHistory gameHistory : user.getGameHistories()) {
+            objects1.add(gameHistory);
+        }
+        return new SendingPacket("ProfileMenu","setGameHistories", objects1.toArray());
+    }
+
+        public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
         String lastUsername = (String) objects.get(0);
         String usernameField = (String) objects.get(1);
         String passwordField = (String) objects.get(2);
@@ -154,16 +164,13 @@ public class ProfileController {
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
         else
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
+
         if (connection == null)
             return null;
         return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
 
     public static SendingPacket updateRequests(ArrayList<Object> objects) {
-
-        for (User user: User.getAllUsers()){
-            System.out.println(user.getUsername() + "    salam");
-        }
 
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
         User user = (User) objects.get(1);
@@ -178,6 +185,10 @@ public class ProfileController {
 //    objects1.add(user1);
 //}
 //        ApplicationController.saveTheUsersInGson(User.getAllUsers());
+//TODO check this part
+        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
+        ApplicationController.saveTheUsersInGson(objects1);
+
         return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
     }
 
