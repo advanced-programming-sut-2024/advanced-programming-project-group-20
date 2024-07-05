@@ -16,7 +16,7 @@ public class User {
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-     private ArrayList<String> friends = new ArrayList<>();
+    private ArrayList<String> friends = new ArrayList<>();
     transient private Faction faction;
     transient private Leader leader;
     transient private User opponentUser;

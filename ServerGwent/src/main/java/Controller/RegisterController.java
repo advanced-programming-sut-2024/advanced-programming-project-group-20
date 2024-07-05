@@ -10,10 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -71,18 +68,17 @@ public class RegisterController {
 
     public static void addUserToServerModel(ArrayList<Object> objects) {
         Gson gson = new Gson();
-        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
-        if (user != null)
-            User.getAllUsers().add(user);
-        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
-
-        ApplicationController.saveTheUsersInGson(objects1);
-    }
-
-    public static void saveServerUsersToJson(ArrayList<Object> objects) {
+        int i = 0;
+        for (Object object : objects) {
+            User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
+            if (user != null)
+                User.getAllUsers().add(user);
+            i++;
+        }
         ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
         ApplicationController.saveTheUsersInGson(objects1);
     }
+
 
     public static SendingPacket randomPassword(ArrayList<Object> objects) {
         Random random = new Random();
@@ -106,8 +102,9 @@ public class RegisterController {
         return new SendingPacket("RegisterMenu", "showConfirmAlertOfRandomPassword", objects1.toArray());
     }
 
+
+    ///this method just is called first of program and don't use it for giving users from it
     public static SendingPacket parseFile(ArrayList<Object> objects) {
-        ArrayList<User> arr = new ArrayList<>();
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader("users.json"), JsonArray.class);
@@ -117,23 +114,28 @@ public class RegisterController {
                     JsonReader reader = new JsonReader(new StringReader(e.toString()));
                     reader.setLenient(true);
                     User obj = gson.fromJson(reader, User.class);
-                    arr.add(obj);
+                    User.getAllUsers().add(obj);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             });
         } catch (FileNotFoundException e) {
-//            saveToFile(arr, file); //if file is not present, make it for first time
+            //if file is not present, make it for first time
+            try {
+                FileWriter fileWriter = new FileWriter("users.json");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+//            saveToFile(arr, file);
         }
         // todo afshari check it
-        User.getAllUsers().clear();
-        for (User user : arr) {
-            if (user != null)
-                User.getAllUsers().add(user);
-        }
-
+//        User.getAllUsers().clear();
+//        for (User user : arr) {
+//            if (user != null)
+//                User.getAllUsers().add(user);
+//        }
         ArrayList<Object> objects1 = new ArrayList<>();
-        for (User user : arr) {
+        for (User user : User.getAllUsers()) {
             objects1.add(user);
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());

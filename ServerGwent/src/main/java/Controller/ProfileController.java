@@ -11,49 +11,64 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static Controller.RegisterController.saveServerUsersToJson;
+//import static Controller.RegisterController.saveServerUsersToJson;
 
 public class ProfileController {
 
-    public static void changeUserName(String username) {
-        User.getLoggedUser().setUsername(username);
+    public static void changeUserName(String lastUsername, String usernameField) {
+//        System.out.println(username);
+        User.getUserByName(lastUsername).setUsername(usernameField);
     }
 
-    public static void changePassword(String password) {
-        User.getLoggedUser().setPassword(password);
+    public static void changePassword(User user, String passwordField) {
+        user.setPassword(passwordField);
     }
 
-    public static void changeNickName(String nickname) {
-        User.getLoggedUser().setNickName(nickname);
+    public static void changeNickName(User user, String nickNameField) {
+        user.setNickName(nickNameField);
     }
 
-    public static void changeEmail(String email) {
-        User.getLoggedUser().setEmail(email);
+    public static void changeEmail(User user, String emailField) {
+        user.setEmail(emailField);
     }
 
-    public static void saveChangesInServer(ArrayList<Object> objects) {
-        String username = (String) objects.get(0);
-        String password = (String) objects.get(1);
-        String email = (String) objects.get(2);
-        String nickname = (String) objects.get(3);
-
-//        String respond
-        if (User.getLoggedUser().getUsername().equals(username)
-                && User.getLoggedUser().getPassword().equals(password)
-                && User.getLoggedUser().getPassword().equals(email)
-                && User.getLoggedUser().getNickName().equals(nickname)) {
-            ApplicationController.alert("no changes!", "change at least one parameter");
-        } else {
-//            System.out.println("po");
-//            changeInformation(username, password, email, nickname, objects);
-            saveTheUsersInGson(User.getAllUsers());
-        }
-    }
+//    public static void saveChanges(ArrayList<Object> objects) {
+//        String username = (String) objects.get(0);
+//        String password = (String) objects.get(1);
+//        String email = (String) objects.get(2);
+//        String nickname = (String) objects.get(3);
+//
+////        String respond
+//        if (User.getLoggedUser().getUsername().equals(username)
+//                && User.getLoggedUser().getPassword().equals(password)
+//                && User.getLoggedUser().getPassword().equals(email)
+//                && User.getLoggedUser().getNickName().equals(nickname)) {
+//            ApplicationController.alert("no changes!", "change at least one parameter");
+//        } else {
+////            System.out.println("po");
+////            changeInformation(username, password, email, nickname, objects);1
+//            Gson gson = new Gson();
+//            User.getAllUsers().clear();
+//            int i = 0;
+//            for (Object object : objects) {
+//                User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
+//                if (user != null)
+//                    User.getAllUsers().add(user);
+//                i++;
+//            }
+//            for (User user : User.getAllUsers()) {
+//                System.out.println(user.getUsername());
+//            }
+//            saveTheUsersInGson(User.getAllUsers());
+//        }
+//    }
 
     public static void saveTheUsersInGson(ArrayList<User> users) {
+
+        for (User user : User.getAllUsers()) {
+            System.out.println(user.getUsername() + "      1111"
+            );
+        }
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(users);
@@ -64,11 +79,12 @@ public class ProfileController {
         }
     }
 
-    public static SendingPacket changeInformation(ArrayList<Object> objects) {
-        String usernameField = (String) objects.get(0);
-        String passwordField = (String) objects.get(1);
-        String emailField = (String) objects.get(2);
-        String nickNameField = (String) objects.get(3);
+    public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
+        String lastUsername = (String) objects.get(0);
+        String usernameField = (String) objects.get(1);
+        String passwordField = (String) objects.get(2);
+        String emailField = (String) objects.get(3);
+        String nickNameField = (String) objects.get(4);
 
         String respond = "";
 
@@ -85,7 +101,7 @@ public class ProfileController {
             respond = ("nickname section is empty!");
 
         } else if (User.giveUserByUsername(usernameField) != null
-                && !User.getLoggedUser().getUsername().equals(usernameField)) {
+                && !lastUsername.equals(usernameField)) {
             respond = ("this username already given");
 
         } else if (!usernameField.matches("[-a-zA-Z0-9]+")) {
@@ -94,12 +110,15 @@ public class ProfileController {
         } else if (!emailField.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
             respond = ("enter a valid email!");
 
+        } else if (!passwordField.matches("\\S{8,}")) {
+            respond = "password should contains at least 8 characters";
+
         } else if (!passwordField.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])(?=.*[^a-zA-Z0-9\\s]).+$")) {
             respond = ("password should contains a-z,A-Z,numbers and special characters");
-        } else if (User.getLoggedUser().getUsername().equals(usernameField)
-                && User.getLoggedUser().getPassword().equals(passwordField)
-                && User.getLoggedUser().getPassword().equals(emailField)
-                && User.getLoggedUser().getNickName().equals(nickNameField)) {
+        } else if (User.getUserByName(lastUsername).getUsername().equals(usernameField)
+                && User.getUserByName(lastUsername).getPassword().equals(passwordField)
+                && User.getUserByName(lastUsername).getPassword().equals(emailField)
+                && User.getUserByName(lastUsername).getNickName().equals(nickNameField)) {
             respond = ("change at least one parameter");
         }
 //        ========================================
@@ -112,10 +131,15 @@ public class ProfileController {
             return new SendingPacket(className, methodeName, respondObjects.toArray());
         } else {
             // set the new information
-            changeUserName(usernameField);
-            changePassword(passwordField);
-            changeEmail(emailField);
-            changeNickName(nickNameField);
+            for (User user : User.getAllUsers()) {
+                System.out.println("User: " + user.getUsername()
+                );
+            }
+            System.out.println(lastUsername + "   last");
+            changeUserName(lastUsername, usernameField);
+            changePassword(User.getUserByName(usernameField), passwordField);
+            changeEmail(User.getUserByName(usernameField), emailField);
+            changeNickName(User.getUserByName(usernameField), nickNameField);
             saveTheUsersInGson(User.getAllUsers());
             return new SendingPacket("ProfileMenu", "changeInformationInClientModel", objects.toArray());
         }
@@ -130,12 +154,17 @@ public class ProfileController {
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
         else
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
-        if (connection==null)
+        if (connection == null)
             return null;
         return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
 
     public static SendingPacket updateRequests(ArrayList<Object> objects) {
+
+        for (User user: User.getAllUsers()){
+            System.out.println(user.getUsername() + "    salam");
+        }
+
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
         User user = (User) objects.get(1);
         ArrayList<String> strings = new ArrayList<>();
@@ -143,9 +172,12 @@ public class ProfileController {
             System.out.println("requ khali nist");
             strings.addAll(user.getFriendRequests());
         }
-
         user.getFriendRequests().clear();
-        saveServerUsersToJson(objects);
+//ArrayList<Object> objects1 = new ArrayList<>();
+//for (User user1: User.getAllUsers()){
+//    objects1.add(user1);
+//}
+        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
     }
 
