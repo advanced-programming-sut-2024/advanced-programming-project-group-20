@@ -23,7 +23,7 @@ public class RegisterController {
         String nickNameField = (String) (objects.get(3));
         String repeatedPasswordField = (String) (objects.get(4));
         String respond = "";
-        parseFile(new ArrayList<>());
+//        parseFile(new ArrayList<>());
         if (usernameField.isEmpty()) {
             respond = ("username section is empty!");
 
@@ -128,12 +128,6 @@ public class RegisterController {
             }
 //            saveToFile(arr, file);
         }
-        // todo afshari check it
-//        User.getAllUsers().clear();
-//        for (User user : arr) {
-//            if (user != null)
-//                User.getAllUsers().add(user);
-//        }
 
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user : User.getAllUsers()) {

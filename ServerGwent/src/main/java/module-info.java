@@ -4,6 +4,7 @@ module ServerGwent {
     requires javafx.controls;
     requires com.google.gson;
     requires org.json;
+    requires java.sql;
     exports Controller;
     exports WebConnection;
     opens Controller to javafx.fxml;

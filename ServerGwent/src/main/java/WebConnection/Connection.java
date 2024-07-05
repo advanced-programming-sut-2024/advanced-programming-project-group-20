@@ -59,8 +59,8 @@ public class Connection extends Thread {
         SendingPacket sendingPacket;
         System.out.println("inja");
         receivingPacket.getParameters().add(this.currentUser);
-        System.out.println("current :" + this.currentUser.getUsername()
-        );
+//        System.out.println("current :" + this.currentUser.getUsername()
+//        );
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         if (result == null)
             return;

@@ -177,7 +177,7 @@ public class ProfileController {
 //for (User user1: User.getAllUsers()){
 //    objects1.add(user1);
 //}
-        ApplicationController.saveTheUsersInGson(User.getAllUsers());
+//        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
     }
 
