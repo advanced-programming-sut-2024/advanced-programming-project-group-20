@@ -1,7 +1,11 @@
 package View;
 
+import Model.Faction;
+import Model.Leader;
 import Model.User;
+import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,6 +30,13 @@ public class MainMenu extends Application {
     public TextField opponentName;
     private static Alert alert;
     public Button gameMode;
+    public Button goProfile;
+    public Button gameMenu;
+    public Button requestHistory;
+    public Button randomGame;
+    public Button register;
+    private ScaleTransition scaleTransition;
+
 
 
     public static void main(String[] args) {
@@ -36,18 +47,20 @@ public class MainMenu extends Application {
     public void start(Stage stage) throws Exception {
         alert = new Alert(Alert.AlertType.NONE);
         stage.setHeight(720);
-        stage.setWidth(900);
+        stage.setWidth(1200);
         URL url = RegisterMenu.class.getResource("/FXML/MainMenu.fxml");
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/main.jpg"
+        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Ciri_CGI_1920x1080_EN.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
     }
 
     @FXML
     public void initialize() {
+//        setScaleTransition();
+
         if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
         else gameMode.setText("Public");
 
@@ -57,6 +70,26 @@ public class MainMenu extends Application {
             else gameMode.setText("Public");
         });
     }
+
+    private void setScaleTransition() {
+        scaleTransition = new ScaleTransition(Duration.millis(200), gameMenu);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), goProfile);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), gameMode);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), randomGame);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+        scaleTransition = new ScaleTransition(Duration.millis(200), requestHistory);
+        scaleTransition.setToX(1.2); // Scale factor for x-axis
+        scaleTransition.setToY(1.2); // Scale factor for y-axis
+
+    }
+
     public void goToProfileMenu(MouseEvent mouseEvent) {
         ProfileMenu profileMenu = new ProfileMenu();
         try {
@@ -248,6 +281,76 @@ public class MainMenu extends Application {
         });
     }
 
+    public static void showCurrentGames(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ArrayList<String> names = (ArrayList<String>) objects.get(0);
+            VBox newRoot = new VBox(10);
+            newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setPadding(new Insets(20));
+            Scene newScene = new Scene(newRoot, 300, 200);
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.setTitle("TV");
+            newStage.show();
+            Button submitButton = new Button("OK");
+            submitButton.setOnAction(event -> {
+                newStage.close();
+            });
+            for (String name : names) {
+                Label nameLabel = new Label(name);
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setOnMouseClicked(mouseEvent -> {
+                    String[] parts = name.split(" ");
+                    boolean privateGame;
+                    if (parts[2].equals("private")) privateGame = true;
+                    else privateGame = false;
+                    Client.getConnection().doInServer("MainController", "seeGame",
+                            User.getLoggedUser().getUsername(), parts[0],parts[1], privateGame);
+                    newStage.close();
+                });
+                newRoot.getChildren().add(nameLabel);
+            }
+
+        });
+    }
+
+    public static void showGame(ArrayList<Object> objects) throws Exception {
+        Gson gson = new Gson();
+        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        User user2 = gson.fromJson(gson.toJson(objects.get(1)), User.class);
+        user.readyForGame();
+        user2.readyForGame();
+        user.setFaction(Faction.giveFactionByName(user.getFactionName()));
+        user.setLeader(Leader.giveLeaderByNameAndFaction(user.getLeaderName(), user.getFaction()));
+        user2.setFaction(Faction.giveFactionByName(user2.getFactionName()));
+        user2.setLeader(Leader.giveLeaderByNameAndFaction(user2.getLeaderName(), user2.getFaction()));
+        user.setOpponentUser(user2);
+        user2.setOpponentUser(user);
+        Platform.runLater(() -> {
+            Spectator spectator = new Spectator();
+            Spectator.setGameUser(user);
+            try {
+                spectator.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public static void privateGame(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            Alert alert1 = new Alert(Alert.AlertType.ERROR);
+            alert1.setTitle("Error");
+            alert1.setHeaderText("Private Game");
+            alert1.setContentText("You don't have access to this private game.");
+            alert1.show();
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> alert1.close()));
+            timeline.setCycleCount(1);
+            timeline.play();
+        });
+    }
+
+
     public void requestHistories(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getGameRequests",User.getLoggedUser().getUsername());
     }
@@ -255,4 +358,23 @@ public class MainMenu extends Application {
     public void randomGames(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getRandomGames",User.getLoggedUser().getUsername());
     }
+
+    public void TV(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("MainController","getCurrentGames",User.getLoggedUser().getUsername());
+    }
+    public void enlargeButton(MouseEvent event) {
+        // Expand button on mouse enter
+        Button button = (Button) event.getSource();
+        button.setScaleX(1.1);
+        button.setScaleY(1.1);
+
+    }
+
+    public void shrinkButton(MouseEvent event) {
+        // Shrink button on mouse exit
+        Button button = (Button) event.getSource();
+        button.setScaleX(1.0);
+        button.setScaleY(1.0);
+    }
+
 }

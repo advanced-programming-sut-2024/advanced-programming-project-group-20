@@ -16,7 +16,7 @@ public class User {
     private String nickName;
     private String secureQuestion;
     private String secureAnswer;
-     private ArrayList<String> friends = new ArrayList<>();
+    private ArrayList<String> friends = new ArrayList<>();
     transient private Faction faction;
     transient private Leader leader;
     transient private User opponentUser;
@@ -46,9 +46,16 @@ public class User {
     private String lastSeen = "longtime ago";
     private String factionName;
     private String leaderName;
-
     private ArrayList<String> friendRequests =new ArrayList<>();
     private boolean privateGame = true;
+
+    public String getFactionName() {
+        return factionName;
+    }
+
+    public String getLeaderName() {
+        return leaderName;
+    }
 
     public boolean isPrivateGame() {
         return privateGame;
@@ -172,9 +179,9 @@ public class User {
         }
         cards.put(15,new ArrayList<>(names));
         names.clear();
-        if (User.getLoggedUser().getLeader().isUsed()) names.add("true");
+        if (this.getLeader().isUsed()) names.add("true");
         else names.add("false");
-        for (Boolean b : User.getLoggedUser().getBoard().leaderBoost) {
+        for (Boolean b : this.getBoard().leaderBoost) {
             if (b) names.add("true");
             else names.add("false");
         }
@@ -184,9 +191,9 @@ public class User {
         else names.add("false");
         cards.put(16,new ArrayList<>(names));
         names.clear();
-        if (User.getLoggedUser().getOpponentUser().getLeader().isUsed()) names.add("true");
+        if (this.getOpponentUser().getLeader().isUsed()) names.add("true");
         else names.add("false");
-        for (Boolean b : User.getLoggedUser().getOpponentUser().getBoard().leaderBoost) {
+        for (Boolean b : this.getOpponentUser().getBoard().leaderBoost) {
             if (b) names.add("true");
             else names.add("false");
         }
@@ -304,23 +311,23 @@ public class User {
         }
         if (cards.get(16) != null) {
             ArrayList<String > strings = cards.get(16);
-            if (strings.get(0).equals("true")) User.getLoggedUser().getLeader().setUsed(true);
-            else if (strings.get(0).equals("false")) User.getLoggedUser().getLeader().setUsed(false);
+            if (strings.get(0).equals("true")) this.getLeader().setUsed(true);
+            else if (strings.get(0).equals("false")) this.getLeader().setUsed(false);
             for (int i = 1; i < 6; i++) {
-                User.getLoggedUser().getBoard().leaderBoost[i - 1] = strings.get(i).equals("true");
+                this.getBoard().leaderBoost[i - 1] = strings.get(i).equals("true");
             }
-            User.getLoggedUser().setPassed(strings.get(6).equals("true"));
-            User.getLoggedUser().setFullHealth(strings.get(7).equals("true"));
+            this.setPassed(strings.get(6).equals("true"));
+            this.setFullHealth(strings.get(7).equals("true"));
         }
         if (cards.get(17) != null) {
             ArrayList<String > strings = cards.get(17);
-            if (strings.get(0).equals("true")) User.getLoggedUser().getOpponentUser().getLeader().setUsed(true);
-            else if (strings.get(0).equals("false")) User.getLoggedUser().getOpponentUser().getLeader().setUsed(false);
+            if (strings.get(0).equals("true")) this.getOpponentUser().getLeader().setUsed(true);
+            else if (strings.get(0).equals("false")) this.getOpponentUser().getLeader().setUsed(false);
             for (int i = 1; i < 6; i++) {
-                User.getLoggedUser().getOpponentUser().getBoard().leaderBoost[i - 1] = strings.get(i).equals("true");
+                this.getOpponentUser().getBoard().leaderBoost[i - 1] = strings.get(i).equals("true");
             }
-            User.getLoggedUser().getOpponentUser().setPassed(strings.get(6).equals("true"));
-            User.getLoggedUser().getOpponentUser().setFullHealth(strings.get(7).equals("true"));
+            this.getOpponentUser().setPassed(strings.get(6).equals("true"));
+            this.getOpponentUser().setFullHealth(strings.get(7).equals("true"));
         }
         if (cards.get(18) != null) {
             for (String name : cards.get(18)) {

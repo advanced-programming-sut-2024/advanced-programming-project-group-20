@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Spectator">
+    <ImageView fitHeight="890" fitWidth="1540">
+        <Image url="@../someImages/board.jpg">
+
+        </Image>
+    </ImageView>
+    <ImageView fx:id="highScoreImage" fitHeight="63.0" fitWidth="87.0" layoutX="319.0" layoutY="582.0">
+        <Image url="@../someImages/icon_high_score.png">
+        </Image>
+    </ImageView>
+
+    <Label fx:id="passedOpponent" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="310.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+        <font>
+            <Font name="Book Antiqua" size="20.0" />
+        </font>
+    </Label>
+    <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="470.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+        <font>
+            <Font name="Book Antiqua" size="20.0" />
+        </font>
+    </Label>
+    <Label layoutX="81.0" layoutY="199.0" prefHeight="134.0" prefWidth="235.0" style="-fx-background-color: #11111190;" />
+    <Label layoutX="81.0" layoutY="520.0" prefHeight="134.0" prefWidth="235.0" style="-fx-background-color: #11111190;" />
+    <HBox fx:id="turnRanged" alignment="CENTER" layoutX="574.0" layoutY="470.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="turnSiege" alignment="CENTER" layoutX="574.0" layoutY="582.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="opponentCombat" alignment="CENTER" layoutX="574.0" layoutY="233.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="opponentSiege" alignment="CENTER" layoutX="574.0" layoutY="14.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="opponentRanged" alignment="CENTER" layoutX="574.0" layoutY="121.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="turnCombat" alignment="CENTER" layoutX="569.0" layoutY="363.0" prefHeight="100.0" prefWidth="644.0" />
+    <HBox fx:id="spellHbox" alignment="CENTER" layoutX="108.0" layoutY="369.0" prefHeight="117.0" prefWidth="229.0" />
+    <ImageView fx:id="turnBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="688.0" pickOnBounds="true" preserveRatio="true" />
+    <ImageView fx:id="opponentBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true" />
+    <Button fx:id="exit" alignment="CENTER" contentDisplay="CENTER" layoutX="241.0" layoutY="82.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="110.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="next player" textAlignment="CENTER" textFill="#d0ef04">
+        <font>
+            <Font name="Agency FB Bold" size="20.0" />
+        </font>
+    </Button>
+    <HBox fx:id="turnSiegeNext" alignment="CENTER" layoutX="463.0" layoutY="582.0" prefHeight="100.0" prefWidth="95.0" />
+    <HBox fx:id="turnRangedNext" alignment="CENTER" layoutX="463.0" layoutY="469.0" prefHeight="100.0" prefWidth="95.0" />
+    <HBox fx:id="turnCloseNext" alignment="CENTER" layoutX="456.0" layoutY="356.0" prefHeight="100.0" prefWidth="95.0" />
+    <HBox fx:id="opponentCloseNext" alignment="CENTER" layoutX="463.0" layoutY="233.0" prefHeight="100.0" prefWidth="95.0" />
+    <HBox fx:id="opponentRangedNext" alignment="CENTER" layoutX="463.0" layoutY="121.0" prefHeight="100.0" prefWidth="95.0" />
+    <HBox fx:id="opponentSiegeNext" alignment="CENTER" layoutX="463.0" layoutY="14.0" prefHeight="100.0" prefWidth="95.0" />
+
+    <Button fx:id="chatButton" layoutX="1442.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: rgba(222,201,0,0.27);" text="chat" textFill="#cfb74a">
+        <font>
+            <Font name="Baskerville Old Face" size="17.0" />
+        </font>
+    </Button>
+    <AnchorPane fx:id="chatPane" layoutX="1257.0" layoutY="220.0" prefHeight="434.0" prefWidth="235.0">
+        <children>
+            <ScrollPane fx:id="chatScroll" prefHeight="408.0" prefWidth="235.0">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                </content>
+            </ScrollPane>
+            <Button fx:id="sendButton" layoutX="183.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="send" />
+            <TextField fx:id="sendField" layoutX="-1.0" layoutY="409.0" prefHeight="26.0" prefWidth="185.0" />
+        </children>
+    </AnchorPane>
+
+
+
+</AnchorPane>

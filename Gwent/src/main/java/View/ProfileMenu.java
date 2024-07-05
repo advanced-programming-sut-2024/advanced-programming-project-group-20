@@ -82,7 +82,9 @@ public class ProfileMenu extends Application {
     }
 
     private void setFriendsTable() {
+        //Todo problem of null user is here!
         Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+        //
         Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
         try {
             Thread.sleep(1000);
@@ -269,12 +271,15 @@ public class ProfileMenu extends Application {
 
     public void saveChangesInServer(MouseEvent mouseEvent) {
         ArrayList<Object> objects = new ArrayList<>();
+
+        objects.add(User.getLoggedUser().getUsername());
         objects.add(username.getText());
         objects.add(password.getText());
         objects.add(email.getText());
         objects.add(nickname.getText());
-//        objects.add(User.getLoggedUser());
-        Client.getConnection().doInServer("ProfileController", "changeInformation", objects.toArray());
+
+        Client.getConnection().doInServer("ProfileController"
+                , "changeInformationUsingButtonSaveChanges", objects.toArray());
     }
 
     public void BackToMainMenu(MouseEvent mouseEvent) {
@@ -286,11 +291,10 @@ public class ProfileMenu extends Application {
     }
 
     public static void changeInformationInClientModel(ArrayList<Object> objects) {
-        System.out.println("bia");
-        User.getLoggedUser().setUsername((String) objects.get(0));
-        User.getLoggedUser().setPassword((String) objects.get(1));
-        User.getLoggedUser().setEmail((String) objects.get(2));
-        User.getLoggedUser().setNickName((String) objects.get(3));
+        User.getLoggedUser().setUsername((String) objects.get(1));
+        User.getLoggedUser().setPassword((String) objects.get(2));
+        User.getLoggedUser().setEmail((String) objects.get(3));
+        User.getLoggedUser().setNickName((String) objects.get(4));
         confirmAlert();
     }
 
@@ -374,7 +378,6 @@ public class ProfileMenu extends Application {
             node.setVisible(false);
         }
     }
-
 
 
     public static void setRequest(ArrayList<Object> objects) {
