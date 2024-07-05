@@ -2,6 +2,7 @@ package View;
 
 import Model.GameHistory;
 import Model.User;
+import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -72,12 +73,6 @@ public class ProfileMenu extends Application {
 
     @FXML
     public void initialize() {
-
-//        try {
-//            Thread.sleep(100);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
         root = pane;
         setRankOfUsers();
         contentsOfProfileMenu();
@@ -89,6 +84,11 @@ public class ProfileMenu extends Application {
     private void setFriendsTable() {
         Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
         Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         TilePane collectionContent = new TilePane(2, 3);
         collectionContent.setPrefWidth(200);
         collectionContent.setMinHeight(300);
@@ -107,9 +107,6 @@ public class ProfileMenu extends Application {
 
 
         // todo handel friends
-        for (User user : User.getAllUsers()) {
-            System.out.println(user.getUsername());
-        }
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
@@ -122,6 +119,7 @@ public class ProfileMenu extends Application {
             Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
         });
 
+        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
     }
 
     private void setRankOfUsers() {

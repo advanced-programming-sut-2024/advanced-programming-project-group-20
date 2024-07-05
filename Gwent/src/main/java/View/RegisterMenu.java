@@ -73,6 +73,7 @@ public class RegisterMenu extends Application {
         Gson gson = new Gson();
 //todo check
         User.getAllUsers().clear();
+        User.setAllUsers(new ArrayList<>());
         for (Object object : objects) {
             if (object==null)
                 continue;

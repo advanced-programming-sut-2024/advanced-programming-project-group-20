@@ -4,6 +4,8 @@ module grafic {
     requires javafx.controls;
     requires com.google.gson;
     requires org.json;
+    requires org.simplejavamail.core;
+    requires org.simplejavamail;
     exports View;
     opens View to javafx.fxml;
     exports Controller;
