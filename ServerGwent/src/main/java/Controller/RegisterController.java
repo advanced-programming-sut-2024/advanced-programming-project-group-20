@@ -105,6 +105,7 @@ public class RegisterController {
 
     ///this method just is called first of program and don't use it for giving users from it
     public static SendingPacket parseFile(ArrayList<Object> objects) {
+        User.getAllUsers().clear();
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader("users.json"), JsonArray.class);

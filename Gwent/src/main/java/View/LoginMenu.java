@@ -118,6 +118,7 @@ public class LoginMenu extends Application {
 
     public static void loginToMainMenu(ArrayList<Object> objects) {
 Platform.runLater(()->{
+    // todo uncomment
         ApplicationController.alert("check your Email", "we sent a Verification code to your email");
         staticvBox.getChildren().get(2).setVisible(true);
         Button button = getLoginButton();
@@ -125,19 +126,19 @@ Platform.runLater(()->{
         Random random = new Random();
         confirmNumber = random.nextInt(100000, 999999);
     button.setOnMouseClicked(mouseEvent -> {
-        if (((TextField) staticvBox.getChildren().get(2)).getText().equals(String.valueOf(confirmNumber)))
+//        if (((TextField) staticvBox.getChildren().get(2)).getText().equals(String.valueOf(confirmNumber)))
             goToMainMenu((String) objects.get(0));
     });
-        Email email = EmailBuilder.startingBlank()
-                .from("alirezamohandesi1384@gmail.com")
-                .to(User.getUserByName((String) objects.get(0)).getEmail())
-                .withSubject("Gwent cofirm")
-                .withPlainText(String.valueOf(confirmNumber))
-                .buildEmail();
-        Mailer mailer = MailerBuilder
-                .withSMTPServer("smtp.gmail.com", 587, "alirezamohandesi1384@gmail.com", "zmhj asox ghvl raba")
-                .buildMailer();
-        mailer.sendMail(email);
+//        Email email = EmailBuilder.startingBlank()
+//                .from("alirezamohandesi1384@gmail.com")
+//                .to(User.getUserByName((String) objects.get(0)).getEmail())
+//                .withSubject("Gwent cofirm")
+//                .withPlainText(String.valueOf(confirmNumber))
+//                .buildEmail();
+//        Mailer mailer = MailerBuilder
+//                .withSMTPServer("smtp.gmail.com", 587, "alirezamohandesi1384@gmail.com", "zmhj asox ghvl raba")
+//                .buildMailer();
+//        mailer.sendMail(email);
     });
     }
 

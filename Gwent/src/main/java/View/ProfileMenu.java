@@ -2,6 +2,7 @@ package View;
 
 import Model.GameHistory;
 import Model.User;
+import com.google.gson.Gson;
 import javafx.animation.Transition;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -25,6 +26,7 @@ import webConnection.Connection;
 import java.net.URL;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ProfileMenu extends Application {
     public static Pane root;
@@ -83,11 +85,11 @@ public class ProfileMenu extends Application {
 
     private void setFriendsTable() {
         //Todo problem of null user is here!
-        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+        Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
         //
-        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+//        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -106,22 +108,30 @@ public class ProfileMenu extends Application {
         TableColumn<User, Date> name = new TableColumn<>("Last seen");
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
-
-
+        Gson gson = new Gson();
+        for (User user  : User.getAllUsers())
+            System.out.println(gson.toJson(user));
         // todo handel friends
+        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
         System.out.println("his name" + User.getLoggedUser().getFriends().size());
-
+        ArrayList<Object> objects    = new ArrayList<>();
+        for (String requesterName :User.getLoggedUser().getFriendRequests()){
+            System.out.println("requ hast");
+            objects.add(new Object());
+            objects.add(requesterName);
+            setRequest(objects);
+        }
 
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
             Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
         });
-
-        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+//todo in bashe ya na?
+//        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
     }
 
     private void setRankOfUsers() {
@@ -362,6 +372,7 @@ public class ProfileMenu extends Application {
     }
 
     public void friendButtonClick(ActionEvent actionEvent) {
+        setFriendsTable();
         button1.setScaleX(1);
         button1.setScaleY(1);
         button2.setScaleX(1.0);
@@ -382,6 +393,10 @@ public class ProfileMenu extends Application {
 
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
+        if (root==null){
+            System.out.println("root nulle");
+            return;
+        }
         Platform.runLater(() -> {
             Button noButton;
             Button yesButton;
@@ -396,10 +411,10 @@ public class ProfileMenu extends Application {
                     noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
                     yesButton.setOnMouseClicked(mouseEvent -> {
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-                        if (User.getLoggedUser().getFriends() == null)
-                            User.getLoggedUser().setFriends(new ArrayList<>());
-                        if (!User.getLoggedUser().getFriends().contains(friendName))
-                            User.getLoggedUser().getFriends().add(friendName);
+//                        if (User.getLoggedUser().getFriends() == null)
+//                            User.getLoggedUser().setFriends(new ArrayList<>());
+//                        if (!User.getLoggedUser().getFriends().contains(friendName))
+//                            User.getLoggedUser().getFriends().add(friendName);
                         System.out.println("dost add shode " + friendName);
                         System.out.println("User in client" + User.getLoggedUser().getUsername());
                         Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());

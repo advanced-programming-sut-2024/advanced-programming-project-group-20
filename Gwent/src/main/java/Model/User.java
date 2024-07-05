@@ -615,4 +615,12 @@ public class User {
         if (user.activeGame.getWinner() != null) activeGame.setWinner(user.activeGame.getWinner());
         activeGame.countTotalPoints();
     }
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
+    }
 }
