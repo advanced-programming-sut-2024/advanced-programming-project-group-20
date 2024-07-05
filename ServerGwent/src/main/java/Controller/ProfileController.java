@@ -130,9 +130,9 @@ public class ProfileController {
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
         else
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
-        if (connection==null)
-            return null;
-        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
+//        if (connection==null)
+        return null;
+//        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
 
     public static SendingPacket updateRequests(ArrayList<Object> objects) {
@@ -144,7 +144,8 @@ public class ProfileController {
             strings.addAll(user.getFriendRequests());
         }
         user.getFriendRequests().clear();
-        saveServerUsersToJson(objects);
+        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
+        ApplicationController.saveTheUsersInGson(objects1);
         return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
     }
 
