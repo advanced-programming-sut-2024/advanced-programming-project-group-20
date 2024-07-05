@@ -350,6 +350,7 @@ public class MainMenu extends Application {
         });
     }
 
+
     public void requestHistories(MouseEvent actionEvent) {
         Client.getConnection().doInServer("MainController","getGameRequests",User.getLoggedUser().getUsername());
     }

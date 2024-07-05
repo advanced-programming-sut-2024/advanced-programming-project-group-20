@@ -9,18 +9,24 @@
     <children>
         <Label layoutX="14.0" layoutY="163.0" prefHeight="375.0" prefWidth="395.0" style="-fx-background-color: rgba(18,18,19,0.85)" textFill="WHITE" />
 
-        <Button id="ProfileTransmit" fx:id="goProfile" layoutX="111.0" layoutY="426.0" onMouseClicked="#goToProfileMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="36.0" prefWidth="198.0" styleClass="button" text="Profile menu" />
+        <Button id="ProfileTransmit" fx:id="goProfile" layoutX="111.0" layoutY="424.0" onMouseClicked="#goToProfileMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Profile menu" />
 
-        <Button id="GameTransmit" fx:id="gameMenu" layoutX="28.0" layoutY="175.0" onMouseClicked="#goToPregameMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />
-        <Button fx:id="requestHistory" layoutX="111.0" layoutY="292.0" onMouseClicked="#requestHistories" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />
-        <Button fx:id="randomGame" layoutX="111.0" layoutY="229.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />
-        <Button fx:id="gameMode" layoutX="111.0" layoutY="358.0" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text=" " />
+        <Button id="GameTransmit" fx:id="gameMenu" layoutX="24.0" layoutY="175.0" onMouseClicked="#goToPregameMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />
+        <Button fx:id="requestHistory" layoutX="111.0" layoutY="296.0" onMouseClicked="#requestHistories" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />
+        <Button fx:id="randomGame" layoutX="111.0" layoutY="233.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />
+        <Button fx:id="gameMode" layoutX="111.0" layoutY="360.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text=" " />
+
+<!--        <Button id="GameTransmit" fx:id="gameMenu" layoutX="28.0" layoutY="175.0" onMouseClicked="#goToPregameMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Game menu" />-->
+<!--        <Button fx:id="requestHistory" layoutX="111.0" layoutY="292.0" onMouseClicked="#requestHistories" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />-->
+<!--        <Button fx:id="randomGame" layoutX="111.0" layoutY="229.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />-->
+<!--        <Button fx:id="gameMode" layoutX="111.0" layoutY="358.0" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text=" " />-->
+<!--&gt;>>>>>> 03adc147bec1b2c4148472372068256d7d27a5d3-->
         <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" style="-fx-text-fill: #11ff00" text="Main menu">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
-        <Button fx:id="register" layoutX="152.0" layoutY="486.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefWidth="117.0" text="Register menu" textFill="#3e0606" />
+        <Button fx:id="register" layoutX="112.0" layoutY="486.0" mnemonicParsing="false" onMouseClicked="#goToRegisterMenu" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47" prefWidth="198.0" text="Register menu" textFill="#3e0606" />
 
 
       <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="229.0" layoutY="181.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />

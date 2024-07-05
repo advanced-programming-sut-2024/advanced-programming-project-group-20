@@ -1,10 +1,10 @@
 package View;
 
-import Controller.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -13,19 +13,29 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.simplejavamail.api.email.Email;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.api.mailer.Mailer;
+import org.simplejavamail.mailer.MailerBuilder;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 import Model.User;
 import webConnection.Client;
 
 public class LoginMenu extends Application {
     public static Pane root;
+    private static int confirmNumber;
     public Button confirmButton;
+    public TextField VerificationTextField;
+    public VBox vbox;
+    private static VBox staticvBox;
     @FXML
     private Button forgetButton;
     @FXML
@@ -49,6 +59,12 @@ public class LoginMenu extends Application {
         stage.setScene(scene);
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
+    }
+
+    @FXML
+    public void initialize() {
+        LoginMenu.staticvBox = this.vbox;
+        VerificationTextField.setVisible(false);
     }
 
     public void login(MouseEvent mouseEvent) {
@@ -81,27 +97,61 @@ public class LoginMenu extends Application {
             }
         }
     }
+
     public void securityAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText("Answer the security question!");
         alert.setHeaderText("security check");
         alert.show();
     }
+
     public void confirmSecurity(MouseEvent mouseEvent) {
         checkSecurityQuestion();
     }
+    public static  Button getLoginButton(){
+        for (Node node :root.getChildren()){
+            if (node.getId().equals("loginButton"))
+                return (Button)    node;
+        }
+        return null;
+    }
 
     public static void loginToMainMenu(ArrayList<Object> objects) {
-        User.setLoggedUser(User.giveUserByUsername((String) objects.getFirst()));
-        MainMenu mainMenu = new MainMenu();
-            Platform.runLater(() -> {
-                try {
-                    mainMenu.start(ApplicationController.getStage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+Platform.runLater(()->{
+    // todo uncomment
+        ApplicationController.alert("check your Email", "we sent a Verification code to your email");
+        staticvBox.getChildren().get(2).setVisible(true);
+        Button button = getLoginButton();
+        button.setText("confirm email");
+        Random random = new Random();
+        confirmNumber = random.nextInt(100000, 999999);
+    button.setOnMouseClicked(mouseEvent -> {
+//        if (((TextField) staticvBox.getChildren().get(2)).getText().equals(String.valueOf(confirmNumber)))
+            goToMainMenu((String) objects.get(0));
+    });
+//        Email email = EmailBuilder.startingBlank()
+//                .from("alirezamohandesi1384@gmail.com")
+//                .to(User.getUserByName((String) objects.get(0)).getEmail())
+//                .withSubject("Gwent cofirm")
+//                .withPlainText(String.valueOf(confirmNumber))
+//                .buildEmail();
+//        Mailer mailer = MailerBuilder
+//                .withSMTPServer("smtp.gmail.com", 587, "alirezamohandesi1384@gmail.com", "zmhj asox ghvl raba")
+//                .buildMailer();
+//        mailer.sendMail(email);
+    });
+    }
 
+    public static void goToMainMenu(String username) {
+        User.setLoggedUser(User.giveUserByUsername(username));
+        MainMenu mainMenu = new MainMenu();
+        Platform.runLater(() -> {
+            try {
+                mainMenu.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void changePasswordOfUser() {

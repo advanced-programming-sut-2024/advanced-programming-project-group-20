@@ -11,9 +11,10 @@
             <Font size="15.0" />
         </font>
     </Button>
-    <VBox layoutX="330.0" layoutY="304.0" prefHeight="74.0" prefWidth="239.0" spacing="10">
+    <VBox fx:id="vbox" layoutX="330.0" layoutY="244.0" prefHeight="125.0" prefWidth="239.0" spacing="10">
         <TextField fx:id="usernameField" promptText="username" styleClass="text-field" />
         <TextField fx:id="passwordField" promptText="password" styleClass="text-field" />
+      <TextField fx:id="VerificationTextField" promptText="Verification code" />
 
     </VBox>
     <Label layoutX="7.0" layoutY="8.0" style="-fx-text-fill: #066007;" text="Login menu" />
@@ -21,6 +22,6 @@
     <Label fx:id="secureQuestionField" layoutX="50.0" layoutY="351.0" prefHeight="18.0" prefWidth="270.0" style="-fx-background-color: #fffb00" text="Label" visible="false" />
     <Button fx:id="confirmButton" layoutX="233.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#confirmSecurity" prefHeight="40.0" prefWidth="200.0" text="confirm" visible="false" />
     <Button id="loginButton" fx:id="forgetButton" layoutX="233.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#forgetPasswordAndShowQuestion" prefHeight="40.0" prefWidth="194.0" text="forgot password" />
-    <Label layoutX="382.0" layoutY="259.0" style="-fx-background-color: yellow; -fx-background-radius: 10px;" text=" We wait for you! " />
+    <Label layoutX="382.0" layoutY="200.0" style="-fx-background-color: yellow; -fx-background-radius: 10px;" text=" We wait for you! " />
 
 </AnchorPane>

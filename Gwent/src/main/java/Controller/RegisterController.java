@@ -137,7 +137,7 @@ public class RegisterController {
             , TextField nickNameField, Label secureQuestion, TextField secureAnswer) {
         User user = new User(usernameField.getText(), passwordField.getText(),
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
-        ApplicationController.saveTheUsersInGson(User.getAllUsers());
+//        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
         LoginMenu loginMenu = new LoginMenu();
         try {

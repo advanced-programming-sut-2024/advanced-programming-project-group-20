@@ -622,4 +622,12 @@ public class User {
     public void setGameHistories(ArrayList<GameHistory> gameHistories) {
         this.gameHistories = gameHistories;
     }
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void setFriendRequests(ArrayList<String> friendRequests) {
+        this.friendRequests = friendRequests;
+    }
 }

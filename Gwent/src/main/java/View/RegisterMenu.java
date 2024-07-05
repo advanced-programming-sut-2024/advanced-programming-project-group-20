@@ -73,10 +73,13 @@ public class RegisterMenu extends Application {
         Gson gson = new Gson();
 //todo check
         User.getAllUsers().clear();
+        User.setAllUsers(new ArrayList<>());
         for (Object object : objects) {
-            if (object==null)
+            if (object == null)
                 continue;
             User user = gson.fromJson(gson.toJson(object), User.class);
+            if (user.getUsername() == null)
+                continue;
             System.out.println("load from server userss"+ user.getUsername());
             User.getAllUsers().add(user);
         }

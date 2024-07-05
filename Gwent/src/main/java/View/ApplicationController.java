@@ -28,7 +28,6 @@ public class ApplicationController {
     private static MediaPlayer mediaPlayer;
 
 
-
     public static Stage getStage() {
         return stage;
     }
@@ -94,6 +93,21 @@ public class ApplicationController {
 
     }
 
+
+//server call this method to set all users of client like its own
+    public static void receiveUsersOfServerSent(ArrayList<Object> objects) {
+        User.getAllUsers().clear();
+        Gson gson = new Gson();
+        int i = 0;
+        for (Object object : objects) {
+            User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
+            if (user != null) {
+                User.getAllUsers().add(user);
+            }
+            i++;
+        }
+    }
+
     public static void alert2(String a) {
 
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -114,17 +128,16 @@ public class ApplicationController {
         }
     }
 
-    public static void saveTheUsersInGson(ArrayList<User> users) {
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(users);
-        try (PrintWriter pw = new PrintWriter("users.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
+//    public static void saveTheUsersInGson(ArrayList<User> users) {
+//
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        String json = gson.toJson(users);
+//        try (PrintWriter pw = new PrintWriter("users.json")) {
+//            pw.write(json);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static Scene getScene() {
         return scene;
