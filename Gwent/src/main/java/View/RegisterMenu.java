@@ -110,32 +110,6 @@ public class RegisterMenu extends Application {
         Client.getConnection().doInServer("RegisterController", "register", objects.toArray());
     }
 
-    //TODO delete this later
-    public void gotoMainMenu(MouseEvent mouseEvent) throws Exception {
-        Object[] objects = new Object[2];
-        objects[0] = "hamid";
-        objects[1] = "ali";
-        Client.getConnection().doInServer("PreGameController", "getUserByName", objects);
-    }
-    public static void setLogin(ArrayList<Object> objects) throws Exception {
-        Gson gson = new Gson();
-        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
-        User.setLoggedUser(user);
-        User opponent = gson.fromJson(gson.toJson(objects.get(1)), User.class);
-        user.setOpponentUser(opponent);
-        opponent.setOpponentUser(user);
-        User.getLoggedUser().readyForGame();
-        User.getLoggedUser().getOpponentUser().readyForGame();
-        Platform.runLater(() -> {
-            PreGameMenu preGameMenu = new PreGameMenu();
-            try {
-                preGameMenu.start(ApplicationController.getStage());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-    }
 
 //    public void makeRandomPassword(MouseEvent mouseEvent) {
 //        RegisterController.randomPassword(passwordField, repeatedPasswordField);

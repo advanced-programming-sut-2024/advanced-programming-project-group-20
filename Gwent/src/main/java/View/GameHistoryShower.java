@@ -1,19 +1,17 @@
 package View;
 
-import Model.AbilityActions;
-import Model.Card;
-import Model.SpecialAction;
-import Model.User;
-import com.google.gson.Gson;
+import Model.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,14 +23,15 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import webConnection.Client;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
-import java.util.Timer;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Spectator extends Application {
+public class GameHistoryShower extends Application {
+    public HBox deckHbox;
     public HBox turnSiegeNext;
     public HBox turnRangedNext;
     public HBox turnCloseNext;
@@ -44,7 +43,6 @@ public class Spectator extends Application {
     public Button sendButton;
     public TextField sendField;
     public AnchorPane chatPane;
-    @FXML
     public Label passed;
     public Label passedOpponent;
     public AnchorPane pane;
@@ -59,21 +57,23 @@ public class Spectator extends Application {
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
     private static User gameUser;
+    private static GameHistory gameHistory;
     public Button exit;
-    private static Spectator spectator;
-    Timeline timeline;
-
     public static void setGameUser(User gameUser) {
-        Spectator.gameUser = gameUser;
+        GameHistoryShower.gameUser = gameUser;
     }
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
-    
+
+    public static void setGameHistory(GameHistory gameHistory) {
+        GameHistoryShower.gameHistory = gameHistory;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         ApplicationController.setStage(stage);
         ApplicationController.setMedia("/music/along-the-wayside-medieval-folk-music-128697.mp3");
-        URL url = PreGameMenu.class.getResource("/FXML/Spectator.fxml");
+        URL url = PreGameMenu.class.getResource("/FXML/GameHistoryShower.fxml");
         Pane root = new Pane();
         root = FXMLLoader.load(url);
         ApplicationController.setRoot(root);
@@ -96,19 +96,13 @@ public class Spectator extends Application {
         stage.setHeight(741);
         stage.centerOnScreen();
     }
-    
+
     @FXML
-    public void initialize() {
+    public void initialize() throws Exception {
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
-        timeline = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
-            Client.getConnection().doInServer("GameController","getUpdateGame",gameUser);
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
         exit.setOnMouseClicked(mouseEvent -> {
-            timeline.stop();
             MainMenu mainMenu = new MainMenu();
             try {
                 mainMenu.start(ApplicationController.getStage());
@@ -118,8 +112,29 @@ public class Spectator extends Application {
         });
         setHboxes();
         setImagesOfBoard();
-        setHighScoreIcon();
-        spectator = this;
+        nextState();
+    }
+
+    public void nextState() throws Exception {
+        AtomicInteger i = new AtomicInteger();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
+            if (i.get() == gameHistory.getMoves().size()) {
+                MainMenu mainMenu = new MainMenu();
+                try {
+                    mainMenu.start(ApplicationController.getStage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                gameUser.setCards(gameHistory.getMoves().get(i.get()));
+                gameUser.boardMaker();
+                setImagesOfBoard();
+                i.getAndIncrement();
+                System.out.println(i.get());
+            }
+        }));
+        timeline.setCycleCount(gameHistory.getMoves().size() + 1);
+        timeline.play();
     }
 
     private void setHboxes() {
@@ -169,11 +184,30 @@ public class Spectator extends Application {
         setLeaderImage(gameUser.getOpponentUser(), 64);
     }
 
+    private void setHighScoreIcon() {
+        if (!ApplicationController.getRoot().getChildren().contains(highScoreImage))
+            ApplicationController.getRoot().getChildren().add(highScoreImage);
+        highScoreImage.setLayoutX(319);
+        if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) > getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3)))
+            highScoreImage.setLayoutY(582);
+        else
+            highScoreImage.setLayoutY(245);
+        highScoreImage.setFitWidth(87);
+        highScoreImage.setFitHeight(63);
+        if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) == getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3))) {
+            ApplicationController.getRoot().getChildren().remove(highScoreImage);
+        }
+    }
+
     public void updateBorder() {
         User user1 = gameUser;
         User user2 = gameUser.getOpponentUser();
+        deckHbox.getChildren().clear();
         for (HBox hBox : hBoxes) {
             hBox.getChildren().clear();
+        }
+        for (Card card : user1.getBoard().getHand()) {
+            deckHbox.getChildren().add(card);
         }
         for (Card card : user1.getBoard().getSiege()) {
             hBoxes.get(0).getChildren().add(card);
@@ -291,6 +325,7 @@ public class Spectator extends Application {
             }
         }
     }
+
     private void setLeaderImage(User user, int height) {
         ImageView leader = new ImageView();
         leader.setImage(new Image(String.valueOf(GameMenu.class.getResource("/Leaders/" + user.getLeader().getName() + ".jpg"))));
@@ -401,45 +436,4 @@ public class Spectator extends Application {
         } else opponentBurnt.setImage(null);
     }
 
-    private void setHighScoreIcon() {
-        if (!ApplicationController.getRoot().getChildren().contains(highScoreImage))
-            ApplicationController.getRoot().getChildren().add(highScoreImage);
-        highScoreImage.setLayoutX(319);
-        if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) > getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3)))
-            highScoreImage.setLayoutY(582);
-        else
-            highScoreImage.setLayoutY(245);
-        highScoreImage.setFitWidth(87);
-        highScoreImage.setFitHeight(63);
-        if (getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0)) == getTotalHboxPower(hBoxes.get(5)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(3))) {
-            ApplicationController.getRoot().getChildren().remove(highScoreImage);
-        }
-    }
-
-
-    public static void updateGame (ArrayList<Object> objects) {
-        Platform.runLater(() -> {
-            Gson gson = new Gson();
-            User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
-            gameUser.setCards(user.getCards());
-            gameUser.boardMaker();
-            spectator.setImagesOfBoard();
-        });
-    }
-
-    public static void endGame(ArrayList<Object> objects) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("End Game");
-            alert.setHeaderText("Game Over");
-            alert.show();
-            Spectator.spectator.timeline.stop();
-            MainMenu mainMenu = new MainMenu();
-            try {
-                mainMenu.start(ApplicationController.getStage());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
 }

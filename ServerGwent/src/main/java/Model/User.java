@@ -4,6 +4,7 @@ package Model;
 import Controller.ApplicationController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class User {
@@ -39,6 +40,16 @@ public class User {
     private boolean search;
     private ArrayList<String> gameRequests = new ArrayList<>();
     private boolean privateGame = true;
+    transient private ArrayList<HashMap<Integer,ArrayList<String>>> moves = new ArrayList<>();
+
+    public void addMove(HashMap<Integer,ArrayList<String>> move){
+        if (moves == null) moves = new ArrayList<>();
+        moves.add(move);
+    }
+
+    public ArrayList<HashMap<Integer, ArrayList<String>>> getMoves() {
+        return moves;
+    }
 
     public boolean isPrivateGame() {
         return privateGame;
@@ -312,7 +323,14 @@ public class User {
     }
 
     public void mergeActiveGame(User user) {
-        if (activeGame == null) activeGame = user.getActiveGame();
+        if (activeGame == null) {
+            activeGame = new GameHistory(user,new Date());
+            activeGame.setDate(user.activeGame.getDate());
+        }
+        activeGame.setOppFactionName(user.activeGame.getFactionName());
+        activeGame.setOppLeaderName(user.activeGame.getLeaderName());
+        activeGame.setFactionName(user.activeGame.getOppFactionName());
+        activeGame.setLeaderName(user.activeGame.getOppLeaderName());
         activeGame.setFirstRoundPointMe(user.activeGame.getFirstRoundPointOpponent());
         activeGame.setSecondRoundPointMe(user.activeGame.getSecondRoundPointOpponent());
         activeGame.setThirdRoundPointMe(user.activeGame.getThirdRoundPointOpponent());
@@ -346,6 +364,10 @@ public class User {
 
     public ArrayList<String> getGameRequests() {
         return gameRequests;
+    }
+
+    public void setGameHistories(ArrayList<GameHistory> gameHistories) {
+        this.gameHistories = gameHistories;
     }
 }
 

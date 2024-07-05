@@ -1,7 +1,10 @@
 package View;
 
+import Model.Faction;
 import Model.GameHistory;
+import Model.Leader;
 import Model.User;
+import com.google.gson.Gson;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -65,6 +68,7 @@ public class ProfileMenu extends Application {
     private TextField email;
     @FXML
     private TextField nickname;
+    private static ProfileMenu profileMenu;
 
     public static void main(String[] args) {
         launch(args);
@@ -79,13 +83,26 @@ public class ProfileMenu extends Application {
 //            throw new RuntimeException(e);
 //        }
         root = pane;
+        setFriendsTable();
         setRankOfUsers();
         contentsOfProfileMenu();
-        setHistoryContents();
         setTablePointsContent();
-        setFriendsTable();
+        setHistoryContents();
+        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        profileMenu = this;
     }
-
+    public static void setGameHistories(ArrayList<Object> objects) {
+        Gson gson = new Gson();
+        User.getLoggedUser().setGameHistories(new ArrayList<>());
+        GameHistory gameHistory;
+        for (Object object : objects) {
+            gameHistory = gson.fromJson(gson.toJson(object), GameHistory.class);
+            User.getLoggedUser().getGameHistories().add(gameHistory);
+        }
+        Platform.runLater(() -> {
+            profileMenu.setHistoryContents();
+        });
+    }
     private void setFriendsTable() {
         Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
         Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
@@ -162,7 +179,16 @@ public class ProfileMenu extends Application {
     }
 
     private void setHistoryContents() {
-
+        if (User.getLoggedUser().getGameHistories() == null) {
+            User.getLoggedUser().setGameHistories(new ArrayList<>());
+        }
+        double topTotalScore = 0;
+        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+            if (gameHistory.getTotalPointsMe() > topTotalScore) {
+                topTotalScore = gameHistory.getTotalPointsMe();
+            }
+        }
+        topScoreLabel.setText(topScoreLabel.getText() + topTotalScore);
         TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(1230);
         collectionContent.setMinHeight(600);
@@ -218,8 +244,35 @@ public class ProfileMenu extends Application {
         tableView.getColumns().add(winner);
 
         for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+            System.out.println(gameHistory.getWinner());
+            System.out.println(gameHistory.getOppFactionName());
+            System.out.println(gameHistory.getMoves());
             tableView.getItems().add(gameHistory);
         }
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                GameHistory gameHistory = tableView.getSelectionModel().getSelectedItem();
+                if (gameHistory != null) {
+                    GameHistoryShower gameHistoryShower = new GameHistoryShower();
+                    GameHistoryShower.setGameUser(User.getLoggedUser());
+                    GameHistoryShower.setGameHistory(gameHistory);
+                    User.getLoggedUser().setOpponentUser(User.getUserByName(gameHistory.getOpponentName()));
+                    User.getLoggedUser().readyForGame();
+                    User.getLoggedUser().getOpponentUser().readyForGame();
+                    User.getLoggedUser().setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
+                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(),User.getLoggedUser().getFaction()));
+                    User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
+                    User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
+                            User.getLoggedUser().getOpponentUser().getFaction()));
+                    User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+                    try {
+                        gameHistoryShower.start(ApplicationController.getStage());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfHistory.setContent(collectionContent);
     }
@@ -229,14 +282,6 @@ public class ProfileMenu extends Application {
         password.setText(User.getLoggedUser().getPassword());
         email.setText(User.getLoggedUser().getEmail());
         nickname.setText(User.getLoggedUser().getNickName());
-
-        double topTotalScore = 0;
-        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-            if (gameHistory.getTotalPointsMe() > topTotalScore) {
-                topTotalScore = gameHistory.getTotalPointsMe();
-            }
-        }
-        topScoreLabel.setText(topScoreLabel.getText() + topTotalScore);
         totalGamesLabel.setText(totalGamesLabel.getText() + User.getLoggedUser().getNumberOfGames());
         rankLabel.setText(rankLabel.getText() + User.getLoggedUser().getRank());
         winLabel.setText(winLabel.getText() + User.getLoggedUser().getNumberOfWins());
@@ -267,7 +312,6 @@ public class ProfileMenu extends Application {
         stage.setHeight(height);
         stage.setWidth(width);
     }
-
 
     public void saveChangesInServer(MouseEvent mouseEvent) {
         ArrayList<Object> objects = new ArrayList<>();

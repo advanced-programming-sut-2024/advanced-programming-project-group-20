@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
@@ -62,6 +63,15 @@ public class ProfileController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static SendingPacket getGameHistories(ArrayList<Object> objects) {
+        User user = User.getUserByName((String) objects.get(0));
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (GameHistory gameHistory : user.getGameHistories()) {
+            objects1.add(gameHistory);
+        }
+        return new SendingPacket("ProfileMenu","setGameHistories", objects1.toArray());
     }
 
     public static SendingPacket changeInformation(ArrayList<Object> objects) {

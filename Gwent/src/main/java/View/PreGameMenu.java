@@ -288,9 +288,11 @@ public class PreGameMenu extends Application {
         }
         ArrayList<Object> objects = new ArrayList<>();
         User.getLoggedUser().hashMapMaker();
+        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
+        User.getLoggedUser().getActiveGame().setFactionName(User.getLoggedUser().getFaction().getName());
+        User.getLoggedUser().getActiveGame().setLeaderName(User.getLoggedUser().getLeader().getName());
         objects.add(User.getLoggedUser());
-        objects.add(User.getLoggedUser().getFaction().getName());
-        objects.add(User.getLoggedUser().getLeader().getName());
+        objects.add(User.getLoggedUser().getActiveGame());
         root.getChildren().remove(ready);
         Client.getConnection().doInServer("PreGameController","ready",objects.toArray());
     }
@@ -678,7 +680,8 @@ public class PreGameMenu extends Application {
         User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName((String) objects.get(1)));
         User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(
                 (String) objects.get(2), User.getLoggedUser().getOpponentUser().getFaction()));
-        User.getLoggedUser().setActiveGame(new GameHistory(User.getLoggedUser().getOpponentUser(), new Date()));
+        User.getLoggedUser().getActiveGame().setOppLeaderName((String) objects.get(2));
+        User.getLoggedUser().getActiveGame().setOppFactionName((String) objects.get(1));
         User.getLoggedUser().boardMaker();
         Platform.runLater(() -> {
             GameMenu gameMenu = new GameMenu();

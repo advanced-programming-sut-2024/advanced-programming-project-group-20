@@ -138,7 +138,7 @@ public class AbilityActions {
         if (card.getAbility() == null || !card.getAbility().contains("tightBond")) return number;
         int multi = 0;
         for (Card card1 : unit) {
-            if (card1.getPower() == card.getPower()) multi++;
+            if (card1.getAbility() != null && card1.getAbility().contains("tightBond") && card1.getPower() == card.getPower()) multi++;
         }
         return multi * number;
     }

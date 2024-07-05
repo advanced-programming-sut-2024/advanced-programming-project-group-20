@@ -16,6 +16,10 @@ public class GameHistory {
     private int thirdRoundPointOpponent = -1;
     private int totalPointsMe;
     private int totalPointsOpponent;
+    private String factionName;
+    private String leaderName;
+    private String oppFactionName;
+    private String oppLeaderName;
     private String date;
     private ArrayList<HashMap<Integer,ArrayList<String>>> moves = new ArrayList<>();
 
@@ -116,5 +120,37 @@ public class GameHistory {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getFactionName() {
+        return factionName;
+    }
+
+    public void setFactionName(String factionName) {
+        this.factionName = factionName;
+    }
+
+    public String getLeaderName() {
+        return leaderName;
+    }
+
+    public void setLeaderName(String leaderName) {
+        this.leaderName = leaderName;
+    }
+
+    public String getOppLeaderName() {
+        return oppLeaderName;
+    }
+
+    public void setOppLeaderName(String oppLeaderName) {
+        this.oppLeaderName = oppLeaderName;
+    }
+
+    public String getOppFactionName() {
+        return oppFactionName;
+    }
+
+    public void setOppFactionName(String oppFactionName) {
+        this.oppFactionName = oppFactionName;
     }
 }

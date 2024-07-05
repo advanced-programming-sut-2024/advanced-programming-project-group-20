@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 
 import WebConnection.SendingPacket;
@@ -131,6 +132,7 @@ public class RegisterController {
 
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user : User.getAllUsers()) {
+            if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
             objects1.add(user);
         }
         return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
