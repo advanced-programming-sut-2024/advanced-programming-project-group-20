@@ -592,7 +592,7 @@ public class GameMenu extends Application {
         card.setSelect(true);
     }
 
-    public void setBurntCard(ImageView turnBurnt, ImageView opponentBurnt) {
+    public void setBurntCard() {
         if (!User.getLoggedUser().getBoard().getBurnedCard().isEmpty()) {
             turnBurnt.setImage(User.getLoggedUser().getBoard().getBurnedCard().getLast().getGameImage());
             turnBurnt.setOnMouseClicked(mouseEvent -> {
@@ -1157,7 +1157,7 @@ public class GameMenu extends Application {
         setLabels(User.getLoggedUser());
         setLabels(User.getLoggedUser().getOpponentUser());
         setHighScoreIcon();
-        setBurntCard(turnBurnt, opponentBurnt);
+        setBurntCard();
     }
 
     public void updateCardEvent() {

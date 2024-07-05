@@ -1,11 +1,12 @@
 package Model;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class GameHistory {
     private String winnerName;
-
     private String opponentName;
     private int firstRoundPointMe = -1;
     private int firstRoundPointOpponent = -1;
@@ -16,6 +17,7 @@ public class GameHistory {
     private int totalPointsMe;
     private int totalPointsOpponent;
     private String date;
+    private ArrayList<HashMap<Integer, String>> moves;
 
     public GameHistory(User opponent, Date date) {
         this.opponentName = opponent.getUsername();

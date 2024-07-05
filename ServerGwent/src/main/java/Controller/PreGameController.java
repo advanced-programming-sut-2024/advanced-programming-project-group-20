@@ -44,17 +44,6 @@ public class PreGameController {
 
     }
 
-    public static SendingPacket getUserByName(ArrayList<Object> objects) {
-        User user = User.getUserByName((String) objects.get(0));
-        User user2 = User.getUserByName((String) objects.get(1));
-        Connection.getConnections().getLast().setCurrentUser(user);
-        user.setOppName(user2.getUsername());
-        user2.setOppName(user.getUsername());
-        Object[] objects1 = new Object[2];
-        objects1[0] = user;
-        objects1[1] = user2;
-        return new SendingPacket("RegisterMenu", "setLogin", objects1);
-    }
 
 
 }

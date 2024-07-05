@@ -134,6 +134,7 @@ public class RegisterController {
 //            if (user != null)
 //                User.getAllUsers().add(user);
 //        }
+
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user : User.getAllUsers()) {
             objects1.add(user);
