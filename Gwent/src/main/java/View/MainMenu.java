@@ -2,6 +2,7 @@ package View;
 
 import Model.Faction;
 import Model.Leader;
+import Model.Tournament;
 import Model.User;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
@@ -128,9 +129,9 @@ public class MainMenu extends Application {
                     User.getLoggedUser().getUsername(), opponentName.getText(),User.getLoggedUser().isPrivateGame());
         }
     }
+
     public static void goToPreGame(ArrayList<Object> objects) {
         User opponent = User.getUserByName((String) objects.get(0));
-        if (opponent == null) opponent = new User((String) objects.get(0));
         opponent.setOpponentUser(User.getLoggedUser());
         User.getLoggedUser().setOpponentUser(opponent);
         User.getLoggedUser().readyForGame();
@@ -159,6 +160,7 @@ public class MainMenu extends Application {
         });
 
     }
+
     public static void inGame(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             Alert alert1 = new Alert(Alert.AlertType.ERROR);
@@ -171,6 +173,7 @@ public class MainMenu extends Application {
             timeline.play();
         });
     }
+
     public static void wrongFriend(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             Alert alert1 = new Alert(Alert.AlertType.ERROR);
@@ -183,6 +186,7 @@ public class MainMenu extends Application {
             timeline.play();
         });
     }
+
     public static void waitFriend(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             alert.setTitle("Waiting");
@@ -192,6 +196,7 @@ public class MainMenu extends Application {
             alert.show();
         });
     }
+
     public static void gameRequest(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
@@ -200,7 +205,6 @@ public class MainMenu extends Application {
             alert1.setContentText((String) objects.get(0) + " wants play with you");
             ButtonType accept = new ButtonType("Accept");
             ButtonType reject = new ButtonType("Reject");
-            objects.add(User.getLoggedUser().getUsername());
             alert1.getButtonTypes().setAll(accept, reject);
             alert1.showAndWait().ifPresent(response -> {
                 if (response == accept) {
@@ -212,6 +216,7 @@ public class MainMenu extends Application {
             });
         });
     }
+
     public static void rejectRequest(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             Alert alert1 = new Alert(Alert.AlertType.ERROR);
@@ -377,8 +382,22 @@ public class MainMenu extends Application {
         button.setScaleY(1.0);
     }
 
-    public void showGameHistories(MouseEvent mouseEvent) {
-//        Client.getConnection().doInServer("MainMenu","getGameHistories",User.getLoggedUser().getUsername());
+
+    public void tournament(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("TournamentController","startTournamentMenu",User.getLoggedUser().getUsername());
     }
 
+    public static void goToTournament(ArrayList<Object> objects) throws Exception {
+        Gson gson = new Gson();
+        Tournament tournament = gson.fromJson(gson.toJson(objects.get(0)), Tournament.class);
+        Tournament.setTournament(tournament);
+        Platform.runLater(() -> {
+            TournamentMenu tournamentMenu = new TournamentMenu();
+            try {
+                tournamentMenu.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
 }

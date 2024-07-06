@@ -102,6 +102,13 @@ public class GameController {
         user.setActiveGame(gameHistory);
         user.getActiveGame().setMoves(user.getMoves());
         if (user.getOppName() != null) {
+            if (user.getActiveGame().getWinner() == null) {
+                System.out.println("Draw");
+            } else if (user.getActiveGame().getWinner().equals(user.getUsername())) {
+                TournamentController.setResult(user.getUsername(),user.getOppName());
+            } else {
+                TournamentController.setResult(user.getOppName(),user.getUsername());
+            }
             User user2 = User.getUserByName(user.getOppName());
             user2.mergeActiveGame(user);
             user2.mergeHashMap(user);
