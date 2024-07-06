@@ -128,6 +128,7 @@ public class MainMenu extends Application {
                     User.getLoggedUser().getUsername(), opponentName.getText(),User.getLoggedUser().isPrivateGame());
         }
     }
+
     public static void goToPreGame(ArrayList<Object> objects) {
         User opponent = User.getUserByName((String) objects.get(0));
         if (opponent == null) opponent = new User((String) objects.get(0));

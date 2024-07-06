@@ -218,6 +218,7 @@ public class User {
 
 
     public ArrayList<GameHistory> getGameHistories() {
+        if (gameHistories == null) gameHistories = new ArrayList<>();
         return gameHistories;
     }
 

@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
