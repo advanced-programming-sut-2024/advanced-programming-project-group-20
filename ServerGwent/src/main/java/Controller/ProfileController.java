@@ -198,4 +198,13 @@ public class ProfileController {
         return null;
 
     }
+
+    public static SendingPacket showLastGame(ArrayList<Object> objects) {
+        User user = User.getUserByName((String) objects.get(0));
+        GameHistory gameHistory = user.getGameHistories().getLast();
+        Object[] objects1 = new Object[2];
+        objects1[0] = user.getUsername();
+        objects1[1] = gameHistory;
+        return new SendingPacket("ProfileMenu", "showLastGame", objects1);
+    }
 }

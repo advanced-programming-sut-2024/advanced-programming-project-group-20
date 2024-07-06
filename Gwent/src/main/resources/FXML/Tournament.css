@@ -1,0 +1,10 @@
+.button {
+    -fx-background-color: linear-gradient(#6DCFF6, #4C8CB5);
+    -fx-background-radius: 5;
+    -fx-border-width: 2;
+    -fx-border-color: #4C8CB5;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-border-radius: 5px;
+}

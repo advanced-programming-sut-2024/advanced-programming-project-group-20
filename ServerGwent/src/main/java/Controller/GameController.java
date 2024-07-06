@@ -129,16 +129,18 @@ public class GameController {
             user.setNumberOfLose(user.getNumberOfLose() + 1);
         }
         user.getGameHistories().add(user.getActiveGame());
-        user.setOppName(null);
         user.setPassed(false);
+        ArrayList<Object> objects2 = new ArrayList<>();
+        for (User user1 : User.getAllUsers()) {
+            System.out.println(user1.getUsername());
+            objects2.add(user1);
+        }
+        if (user.getOppName() == null) {}
+            ApplicationController.saveTheUsersInGson(objects2);
+        user.setOppName(null);
         Object[] objects1 = new Object[2];
         objects1[0] = user;
         objects1[1] = user.getActiveGame();
-        ArrayList<Object> objects2 = new ArrayList<>();
-        for (User user1 : User.getAllUsers()) {
-            objects2.add(user1);
-        }
-        ApplicationController.saveTheUsersInGson(objects2);
         return new SendingPacket("GameMenu", "endShower",objects1);
     }
 

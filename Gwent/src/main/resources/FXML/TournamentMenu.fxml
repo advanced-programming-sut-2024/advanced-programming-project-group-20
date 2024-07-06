@@ -5,7 +5,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.TournamentMenu">
+<AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/17.0.2-ea" stylesheets="@Tournament.css" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.TournamentMenu">
    <children>
       <Label fx:id="pot0" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="100.0" layoutY="105.0" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: black" textAlignment="CENTER" textFill="WHITE">
          <font>
@@ -118,8 +118,8 @@
       <Line endX="355.5" endY="130.0" layoutX="171.0" layoutY="60.0" startX="355.5" startY="329.0" />
       <Line endX="200.0" endY="120.0" layoutX="327.0" layoutY="170.0" startX="225" startY="120.0" />
       <Line endX="200.0" endY="120.0" layoutX="451.0" layoutY="170.0" startX="225" startY="120.0" />
-      <Line endX="200.0" endY="120.0" layoutX="477.0" layoutY="170.0" startX="225" startY="120.0" />
-      <Line endX="215.5" endY="56.0" layoutX="461.0" layoutY="99.0" startX="215.5" startY="190.5" />
+      <Line endX="200.0" endY="120.0" layoutX="477.0" layoutY="170.0" startX="228.0" startY="120.0" />
+      <Line endX="216.79998779296875" endY="52.0" layoutX="461.0" layoutY="99.0" startX="215.5" startY="190.5" />
       <Label fx:id="champion" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="569.0" layoutY="99.0" prefHeight="52.0" prefWidth="217.0" style="-fx-background-color: black" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="35.0" />
@@ -160,7 +160,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Line endX="215.5" endY="56.0" layoutX="539.0" layoutY="257.0" startX="215.5" startY="134.5" />
+      <Line endX="216.0" endY="49.4000244140625" layoutX="539.0" layoutY="257.0" startX="215.5" startY="134.5" />
       <Label fx:id="pot18" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="1075.0" layoutY="385.0" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #5d05f6" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font size="20.0" />
@@ -210,7 +210,7 @@
          </font>
       </Label>
       <Line endX="215.5" endY="90.5" layoutX="832.0" layoutY="310.0" startX="215.5" startY="176.5" />
-      <Line endX="200.0" endY="120.0" layoutX="848.0" layoutY="280.0" startX="225" startY="120.0" />
+      <Line endX="200.0" endY="120.0" layoutX="848.0" layoutY="280.0" startX="227.0" startY="120.19998168945312" />
       <Line endX="200.0" endY="120.0" layoutX="848.0" layoutY="367.0" startX="225" startY="120.0" />
       <Line endX="200.0" endY="120.0" layoutX="822.0" layoutY="320.0" startX="225" startY="120.0" />
       <Button fx:id="register" layoutX="578.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#register" prefHeight="52.0" prefWidth="200.0" text="Register">
@@ -218,7 +218,7 @@
             <Font size="30.0" />
          </font>
       </Button>
-      <Button fx:id="play" layoutX="577.0" layoutY="620.0" mnemonicParsing="false" onMouseClicked="#play" prefHeight="52.0" prefWidth="200.0" text="Play">
+      <Button fx:id="play" layoutX="577.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#play" prefHeight="52.0" prefWidth="200.0" text="Play">
          <font>
             <Font size="30.0" />
          </font>
@@ -228,14 +228,9 @@
             <Font size="30.0" />
          </font>
       </Button>
-      <Button mnemonicParsing="false" prefHeight="51.0" prefWidth="124.0" text="Back">
+      <Button mnemonicParsing="false" onMouseClicked="#back" prefHeight="51.0" prefWidth="124.0" text="Back">
          <font>
             <Font size="20.0" />
-         </font>
-      </Button>
-      <Button fx:id="reload" layoutX="100.0" layoutY="588.0" mnemonicParsing="false" onMouseClicked="#reload" prefHeight="51.0" prefWidth="146.0" text="Reload Table">
-         <font>
-            <Font size="19.0" />
          </font>
       </Button>
    </children>

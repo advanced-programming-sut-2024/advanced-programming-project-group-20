@@ -8,8 +8,11 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,6 +23,7 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -62,24 +66,20 @@ public class TournamentMenu extends Application {
     public Button play;
     public Button activeGames;
     public AnchorPane pane;
+    private static TournamentMenu tournamentMenu;
     private ArrayList<Label> pots = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setHeight(720);
+        stage.setHeight(740);
         stage.setWidth(1400);
         URL url = RegisterMenu.class.getResource("/FXML/TournamentMenu.fxml");
         Pane root = FXMLLoader.load(url);
         ApplicationController.setRoot(root);
-        Scale scale = new Scale();
-        scale.xProperty().bind(Bindings.divide(ApplicationController.getRoot().widthProperty(), 1400));
-        scale.yProperty().bind(Bindings.divide(ApplicationController.getRoot().heightProperty(), 720));
-        ApplicationController.getRoot().getTransforms().add(scale);
         Scene scene = new Scene(root);
+        root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/tournament.jpg"
+                , stage.getHeight(), stage.getWidth())));
         stage.setScene(scene);
-        stage.setHeight(740);
-        stage.setWidth(1280);
-        stage.setHeight(741);
         stage.show();
     }
     @FXML
@@ -87,6 +87,7 @@ public class TournamentMenu extends Application {
         ApplicationController.setRoot(pane);
         setPots();
         setContents();
+        tournamentMenu = this;
     }
     private void setPots() {
         pots.add(pot0);
@@ -125,13 +126,17 @@ public class TournamentMenu extends Application {
                 pots.get(i).setText(Tournament.getTournament().getTable()[i]);
             }
         }
-        if (Tournament.getTournament().getTable()[7] != null) ApplicationController.getRoot().getChildren().remove(register);
+        if (Tournament.getTournament().getTable()[7] != null) {
+            pane.getChildren().remove(register);
+            if (!pane.getChildren().contains(play)) pane.getChildren().add(play);
+            if (!pane.getChildren().contains(activeGames)) pane.getChildren().add(activeGames);
+        }
         else {
-            ApplicationController.getRoot().getChildren().remove(play);
-            ApplicationController.getRoot().getChildren().remove(activeGames);
+            pane.getChildren().remove(play);
+            pane.getChildren().remove(activeGames);
         }
         if (!Tournament.getTournament().getNames().contains(User.getLoggedUser().getUsername())) {
-            ApplicationController.getRoot().getChildren().remove(play);
+            pane.getChildren().remove(play);
         }
     }
 
@@ -147,14 +152,16 @@ public class TournamentMenu extends Application {
         Client.getConnection().doInServer("TournamentController","register",User.getLoggedUser().getUsername());
     }
 
-    public void reload(MouseEvent mouseEvent) {
-        setContents();
-    }
 
     public static void updateTournament(ArrayList<Object> objects) {
         Gson gson = new Gson();
         Tournament tournament = gson.fromJson(gson.toJson(objects.get(0)), Tournament.class);
         Tournament.setTournament(tournament);
+        if (tournamentMenu != null && tournamentMenu.pane != null) {
+            Platform.runLater(() -> {
+                tournamentMenu.setContents();
+            });
+        }
     }
 
     public static void notHaveOpp(ArrayList<Object> objects) {
@@ -199,6 +206,40 @@ public class TournamentMenu extends Application {
                     Client.getConnection().doInServer("TournamentController", "giveUp", User.getLoggedUser().getUsername());
                 }
             });
+        });
+    }
+
+    public void back(MouseEvent mouseEvent) throws Exception {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.start(ApplicationController.getStage());
+    }
+
+    public static void showGamesList(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ArrayList<String> names = (ArrayList<String>) objects.get(0);
+            VBox newRoot = new VBox(10);
+            newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setPadding(new Insets(20));
+            Scene newScene = new Scene(newRoot, 300, 200);
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.setTitle("Tournament TV");
+            newStage.show();
+            Button submitButton = new Button("OK");
+            submitButton.setOnAction(event -> {
+                newStage.close();
+            });
+            for (String name : names) {
+                Label nameLabel = new Label(name);
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setOnMouseClicked(mouseEvent -> {
+                    String[] parts = name.split(" ");
+                    Client.getConnection().doInServer("TournamentController", "seeGame", parts[0],parts[1]);
+                    newStage.close();
+                });
+                newRoot.getChildren().add(nameLabel);
+            }
+
         });
     }
 }

@@ -786,8 +786,6 @@ public class GameMenu extends Application {
         vBox.getChildren().add(button);
         User.getLoggedUser().setOpponentUser(null);
         ApplicationController.getRoot().getChildren().add(vBox);
-        //todo check doesn't have exception;
-        Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", User.getLoggedUser());
     }
 
     private Button getButton() {

@@ -45,4 +45,5 @@ public class Tournament {
     public static void setTournament(Tournament tournament) {
         Tournament.tournament = tournament;
     }
+
 }

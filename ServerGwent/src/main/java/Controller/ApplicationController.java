@@ -44,6 +44,7 @@ public class ApplicationController {
 
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
+            System.out.println(user.getUsername() + "ajab");
             usersToSave.add(user);
         }
 
