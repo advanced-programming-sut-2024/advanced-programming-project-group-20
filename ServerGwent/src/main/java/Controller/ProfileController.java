@@ -177,6 +177,7 @@ public class ProfileController {
         User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
         return null;
+
     }
 
     private static void confirmAlert() {

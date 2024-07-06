@@ -20,7 +20,7 @@
 <!--        <Button fx:id="requestHistory" layoutX="111.0" layoutY="292.0" onMouseClicked="#requestHistories" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Request Histories" />-->
 <!--        <Button fx:id="randomGame" layoutX="111.0" layoutY="229.0" onMouseClicked="#randomGames" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text="Random Games" />-->
 <!--        <Button fx:id="gameMode" layoutX="111.0" layoutY="358.0" onMouseEntered="#enlargeButton" onMouseExited="#shrinkButton" prefHeight="47.0" prefWidth="198.0" styleClass="button" text=" " />-->
-<!--&gt;>>>>>> 03adc147bec1b2c4148472372068256d7d27a5d3-->
+
         <Label layoutX="21.0" layoutY="4.0" prefHeight="36.0" prefWidth="88.0" style="-fx-text-fill: #11ff00" text="Main menu">
             <font>
                 <Font size="14.0" />
