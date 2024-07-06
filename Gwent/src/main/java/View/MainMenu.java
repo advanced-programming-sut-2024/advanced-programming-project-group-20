@@ -131,7 +131,6 @@ public class MainMenu extends Application {
 
     public static void goToPreGame(ArrayList<Object> objects) {
         User opponent = User.getUserByName((String) objects.get(0));
-        if (opponent == null) opponent = new User((String) objects.get(0));
         opponent.setOpponentUser(User.getLoggedUser());
         User.getLoggedUser().setOpponentUser(opponent);
         User.getLoggedUser().readyForGame();
@@ -201,7 +200,6 @@ public class MainMenu extends Application {
             alert1.setContentText((String) objects.get(0) + " wants play with you");
             ButtonType accept = new ButtonType("Accept");
             ButtonType reject = new ButtonType("Reject");
-            objects.add(User.getLoggedUser().getUsername());
             alert1.getButtonTypes().setAll(accept, reject);
             alert1.showAndWait().ifPresent(response -> {
                 if (response == accept) {
