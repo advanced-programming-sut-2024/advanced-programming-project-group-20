@@ -213,4 +213,10 @@ public class TournamentController {
     public static SendingPacket getCurrentGames(ArrayList<Object> objects) {
         return null;
     }
+
+    public static SendingPacket startTournamentMenu(ArrayList<Object> objects) {
+        Object[] objects1 = new Object[1];
+        objects1[0] = Tournament.getTournament();
+        return new SendingPacket("MainMenu","goToTournament",objects1);
+    }
 }

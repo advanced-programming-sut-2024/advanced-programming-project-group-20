@@ -30,11 +30,16 @@
 
 
       <TextField fx:id="opponentName" alignment="TOP_CENTER" layoutX="229.0" layoutY="181.0" prefHeight="36.0" prefWidth="172.0" promptText="Opponent" />
-      <ImageView fitHeight="116.0" fitWidth="148.0" layoutX="1045.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#TV">
+      <ImageView fitHeight="116.0" fitWidth="148.0" layoutX="1045.0" layoutY="4.0" onMouseClicked="#TV" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../someImages/TV.PNG" />
          </image></ImageView>
       <Label layoutX="1106.0" layoutY="102.0" prefHeight="26.0" prefWidth="49.0" text="TV" textFill="#18ac27" />
+      <ImageView fitHeight="150.0" fitWidth="148.0" layoutX="1045.0" layoutY="175.0" onMouseClicked="#tournament" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../someImages/tournament.png" />
+         </image>
+      </ImageView>
 
 
     </children>

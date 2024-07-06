@@ -7,17 +7,25 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.RotateEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class TournamentMenu extends Application {
@@ -53,15 +61,32 @@ public class TournamentMenu extends Application {
     public Button register;
     public Button play;
     public Button activeGames;
+    public AnchorPane pane;
     private ArrayList<Label> pots = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        stage.setHeight(720);
+        stage.setWidth(1400);
+        URL url = RegisterMenu.class.getResource("/FXML/TournamentMenu.fxml");
+        Pane root = FXMLLoader.load(url);
+        ApplicationController.setRoot(root);
+        Scale scale = new Scale();
+        scale.xProperty().bind(Bindings.divide(ApplicationController.getRoot().widthProperty(), 1400));
+        scale.yProperty().bind(Bindings.divide(ApplicationController.getRoot().heightProperty(), 720));
+        ApplicationController.getRoot().getTransforms().add(scale);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setHeight(740);
+        stage.setWidth(1280);
+        stage.setHeight(741);
+        stage.show();
     }
     @FXML
     public void initialize() {
+        ApplicationController.setRoot(pane);
         setPots();
+        setContents();
     }
     private void setPots() {
         pots.add(pot0);
@@ -96,7 +121,7 @@ public class TournamentMenu extends Application {
 
     public void setContents() {
         for (int i = 0; i < 28; i++) {
-            if (Tournament.getTournament().getTable()[i] == null) {
+            if (Tournament.getTournament().getTable()[i] != null) {
                 pots.get(i).setText(Tournament.getTournament().getTable()[i]);
             }
         }
@@ -128,7 +153,7 @@ public class TournamentMenu extends Application {
 
     public static void updateTournament(ArrayList<Object> objects) {
         Gson gson = new Gson();
-        Tournament tournament = gson.fromJson(gson.toJson(objects), Tournament.class);
+        Tournament tournament = gson.fromJson(gson.toJson(objects.get(0)), Tournament.class);
         Tournament.setTournament(tournament);
     }
 
