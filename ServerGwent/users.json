@@ -1,0 +1,57 @@
+[
+  {
+    "gameHistories": [],
+    "username": "a",
+    "password": "S7v)e@Gn",
+    "nickName": "a",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "a",
+    "friends": [
+      "b"
+    ],
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "aa@aa.com",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "isReady": false,
+    "rank": 0,
+    "turn": false,
+    "lastSeen": "longtime ago",
+    "friendRequests": [],
+    "search": false,
+    "gameRequests": [],
+    "privateGame": true
+  },
+  {
+    "username": "b",
+    "password": "S7v)e@Gn",
+    "nickName": "b",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "b",
+    "friends": [
+      "a"
+    ],
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "bb@bb.cim",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "isReady": false,
+    "rank": 0,
+    "turn": false,
+    "lastSeen": "online",
+    "friendRequests": [],
+    "search": false,
+    "gameRequests": [],
+    "privateGame": true
+  }
+]
