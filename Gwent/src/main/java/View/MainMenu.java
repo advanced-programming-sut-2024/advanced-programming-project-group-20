@@ -379,7 +379,7 @@ public class MainMenu extends Application {
     }
 
     public void showGameHistories(MouseEvent mouseEvent) {
-        Client.getConnection().doInServer("MainMenu","getGameHistories",User.getLoggedUser().getUsername());
+//        Client.getConnection().doInServer("MainMenu","getGameHistories",User.getLoggedUser().getUsername());
     }
 
 }

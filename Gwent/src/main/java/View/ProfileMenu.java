@@ -79,14 +79,15 @@ public class ProfileMenu extends Application {
     @FXML
     public void initialize() {
         root = pane;
-        setFriendsTable();
         setRankOfUsers();
         contentsOfProfileMenu();
         setTablePointsContent();
         setHistoryContents();
-        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+//        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        setFriendsTable();
         profileMenu = this;
     }
+
     public static void setGameHistories(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -99,11 +100,9 @@ public class ProfileMenu extends Application {
             profileMenu.setHistoryContents();
         });
     }
+
     private void setFriendsTable() {
-        //Todo problem of null user is here!
         Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
-        //
-//        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -125,29 +124,47 @@ public class ProfileMenu extends Application {
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
         Gson gson = new Gson();
-        for (User user  : User.getAllUsers())
+        for (User user : User.getAllUsers())
             System.out.println(gson.toJson(user));
-        // todo handel friends
         User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
         System.out.println("his name" + User.getLoggedUser().getFriends().size());
-        ArrayList<Object> objects    = new ArrayList<>();
-        for (String requesterName :User.getLoggedUser().getFriendRequests()){
+        ArrayList<Object> objects = new ArrayList<>();
+        for (String requesterName : User.getLoggedUser().getFriendRequests()) {
             System.out.println("requ hast");
             objects.add(new Object());
             objects.add(requesterName);
             setRequest(objects);
         }
-
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
+
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
-            Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
+            if (User.getUserByName(((TextField) sendRequestHbox.getChildren().get(0)).getText()) == null)
+                ApplicationController.alert("this user doesnt exist", "erorre!!");
+            else{
+                showFriendInfo(((TextField) sendRequestHbox.getChildren().get(0)).getText());
+                ((TextField) sendRequestHbox.getChildren().get(0)).setText("");
+            }
         });
-//todo in bashe ya na?
-//        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+    }
+
+    private void showFriendInfo(String text) {
+
+        User user = User.getUserByName(text);
+        Label label = new Label();
+        label.setText(user.getUsername() + "\nEmail: " + user.getEmail() + "\nWins Number:" + user.getNumberOfWins());
+        Button button = new Button("send");
+        button.setOnMouseClicked(mouseEvent -> {
+            Client.getConnection().doInServer("ProfileController", "sendRequest", text);
+            ((TextField) sendRequestHbox.getChildren().get(0)).setText("");
+            friendRequest.getChildren().remove(1);
+        });
+
+        HBox sendHbox = new HBox(label, button);
+        friendRequest.getChildren().add(sendHbox);
     }
 
     private void setRankOfUsers() {
@@ -179,6 +196,10 @@ public class ProfileMenu extends Application {
         TableColumn<User, Double> numberOfWins = new TableColumn<>("number of wins");
         numberOfWins.setCellValueFactory(new PropertyValueFactory<>("numberOfWins"));
         tableView.getColumns().add(numberOfWins);
+
+        TableColumn<User, Date> lastSeen = new TableColumn<>("Last seen");
+        lastSeen.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
+        tableView.getColumns().add(lastSeen);
 
         for (User user : User.getAllUsers()) {
             tableView.getItems().add(user);
@@ -266,7 +287,7 @@ public class ProfileMenu extends Application {
                     User.getLoggedUser().readyForGame();
                     User.getLoggedUser().getOpponentUser().readyForGame();
                     User.getLoggedUser().setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
-                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(),User.getLoggedUser().getFaction()));
+                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(), User.getLoggedUser().getFaction()));
                     User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
                     User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
                             User.getLoggedUser().getOpponentUser().getFaction()));
@@ -432,10 +453,9 @@ public class ProfileMenu extends Application {
     }
 
 
-
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
-        if (root==null){
+        if (root == null) {
             System.out.println("root nulle");
             return;
         }
@@ -450,17 +470,16 @@ public class ProfileMenu extends Application {
                     ((VBox) node).getChildren().add(hBox = new HBox(new Label("Friend request from " + friendName),
                             yesButton = new Button("ok"), noButton = new Button("no")));
                     hBox.setId(friendName);
-                    noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
+                    noButton.setOnMouseClicked(event -> {
+                        ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
+                        Client.getConnection().doInServer("ProfileController", "updateRequests", friendName);
+
+                    });
                     yesButton.setOnMouseClicked(mouseEvent -> {
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-//                        if (User.getLoggedUser().getFriends() == null)
-//                            User.getLoggedUser().setFriends(new ArrayList<>());
-//                        if (!User.getLoggedUser().getFriends().contains(friendName))
-//                            User.getLoggedUser().getFriends().add(friendName);
                         System.out.println("dost add shode " + friendName);
                         System.out.println("User in client" + User.getLoggedUser().getUsername());
                         Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());
-
                     });
                 }
             }
@@ -468,15 +487,5 @@ public class ProfileMenu extends Application {
 
     }
 
-    public static void updateRequestInMenu(ArrayList<Object> objects) {
-        System.out.println("sefre?" + objects.size());
-        for (Object object : objects) {
-            System.out.println(object);
-            ArrayList<Object> objectArrayList = new ArrayList<>();
-            objectArrayList.add(new Object());
-            objectArrayList.add(object);
-            setRequest(objectArrayList);
-        }
 
-    }
 }
