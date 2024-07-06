@@ -3,6 +3,9 @@ package WebConnection;
 import Controller.RegisterController;
 import com.google.gson.Gson;
 import Model.User;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,6 +16,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Connection extends Thread {
@@ -44,6 +50,9 @@ public class Connection extends Thread {
                 sendRespond(receivingPacket, controllerMethod);
             } catch (IOException e) {
                 System.out.println("Connection \"ip=" + socket.getInetAddress().getHostAddress() + " port=" + socket.getPort() + "\" lost!");
+                if (currentUser==null)
+                    break;
+                currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
                 connections.remove(this);
                 break;
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
@@ -52,6 +61,20 @@ public class Connection extends Thread {
                 e.printStackTrace();
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    private static void checkConnections() {
+        for (Connection connection : connections) {
+            try {
+
+                System.out.println(connection.in.readUTF());
+                new ObjectOutputStream(connection.out).writeObject("check");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(" raft");
+
         }
     }
 
@@ -70,12 +93,12 @@ public class Connection extends Thread {
         if (result.getMethodName().equals("loginToMainMenu")) {
             System.out.println("userName taraf:" + result.getParameters().get(0));
             this.currentUser = User.getUserByName((String) result.getParameters().get(0));
+            currentUser.setLastSeen("online");
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
             result.getParameters().set(0, null);
             System.out.println("inja4");
-
         }
 
         Field[] fields = SendingPacket.class.getDeclaredFields();

@@ -369,6 +369,14 @@ public class User {
     public void setGameHistories(ArrayList<GameHistory> gameHistories) {
         this.gameHistories = gameHistories;
     }
+
+    public String getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
+    }
 }
 
 

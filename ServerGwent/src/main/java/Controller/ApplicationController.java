@@ -32,8 +32,10 @@ public class ApplicationController {
 
     // if you want to have all users of Server you should call this method in your client
     public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects){
+        ProfileController.saveTheUsersInGson(User.getAllUsers());
         return new SendingPacket("ApplicationController"
                 , "receiveUsersOfServerSent", User.getAllUsers().toArray());
+
     }
 
     public static void saveTheUsersInGson(ArrayList<Object> objects) {

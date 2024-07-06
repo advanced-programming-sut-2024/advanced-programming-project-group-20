@@ -118,7 +118,7 @@ public class GameMenu extends Application {
     public void initialize() {
         //chat
         //todo real name
-        chat = new Chat("ali");
+        chat = new Chat(User.getLoggedUser().getUsername());
         chat.setvBox(new VBox());
         chat.getvBox().setPrefWidth(chatScroll.getPrefWidth() - 30);
         chat.getvBox().getChildren().add(new Label("salam"));
@@ -138,10 +138,9 @@ public class GameMenu extends Application {
             Message message = new Message(sendField.getText(), chat.getName(), Chat.getTime());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(message);
-            //todo real username
-            objects.add("ali");
+            objects.add(User.getLoggedUser().getUsername());
             chat.getMessages().clear();
-            Client.getConnection().doInServer("ChatController", "getMessages", message, "ali");
+            Client.getConnection().doInServer("ChatController", "getMessages", message, User.getLoggedUser().getUsername());
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

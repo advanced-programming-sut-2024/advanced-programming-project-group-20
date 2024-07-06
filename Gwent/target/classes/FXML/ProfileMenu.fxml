@@ -66,7 +66,7 @@
             <HBox fx:id="sendRequestHbox" alignment="TOP_RIGHT" prefHeight="38.0" prefWidth="230.0">
                <children>
                   <TextField prefHeight="38.0" prefWidth="194.0" promptText="Friend request" />
-                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="67.0" text="send" />
+                  <Button mnemonicParsing="false" prefHeight="41.0" prefWidth="67.0" text="search" />
                </children>
             </HBox>
          </children></VBox>

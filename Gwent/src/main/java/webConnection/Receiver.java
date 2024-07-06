@@ -39,6 +39,8 @@ public class Receiver extends Thread {
         while (true) {
             try {
                 receivedPacket = (String) new ObjectInputStream(in).readObject();
+                if (receivedPacket.equals("check"))
+                    continue;
                 System.out.println(receivedPacket);
                 isReceivedPacketAccessible = false;
 

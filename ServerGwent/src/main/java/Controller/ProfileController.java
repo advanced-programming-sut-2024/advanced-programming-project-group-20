@@ -1,5 +1,6 @@
 package Controller;
 
+import Model.GameHistory;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
@@ -85,10 +86,10 @@ public class ProfileController {
         for (GameHistory gameHistory : user.getGameHistories()) {
             objects1.add(gameHistory);
         }
-        return new SendingPacket("ProfileMenu","setGameHistories", objects1.toArray());
+        return new SendingPacket("ProfileMenu", "setGameHistories", objects1.toArray());
     }
 
-        public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
+    public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
         String lastUsername = (String) objects.get(0);
         String usernameField = (String) objects.get(1);
         String passwordField = (String) objects.get(2);
@@ -161,27 +162,21 @@ public class ProfileController {
         System.out.println("into send request" + ((User) objects.get(1)).getUsername());
         if (User.getUserByName(friend) == null)
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
-        else
+        else if (!User.getUserByName(friend).getFriendRequests().contains(user.getUsername()))
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
-
-        if (connection == null)
+//todo age request kar nakard inon comment nakon
+//        if (connection == null)
             return null;
-        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
+//        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
 
     public static SendingPacket updateRequests(ArrayList<Object> objects) {
-
+        String friendName =(String) objects.get(0);
+        String username = ((User)objects.get(1)).getUsername();
+        User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
+        User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
-        User user = (User) objects.get(1);
-        ArrayList<String> strings = new ArrayList<>();
-        if (user.getFriendRequests() != null && !user.getFriendRequests().isEmpty()) {
-            System.out.println("requ khali nist");
-            strings.addAll(user.getFriendRequests());
-        }
-        user.getFriendRequests().clear();
-        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
-        ApplicationController.saveTheUsersInGson(objects1);
-        return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
+        return null;
     }
 
     private static void confirmAlert() {
@@ -196,6 +191,10 @@ public class ProfileController {
             User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
         if (!User.getUserByName((String) objects.get(1)).getFriends().contains((String) objects.get(0)))
             User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
+        User.getUserByName((String) objects.get(0)).getFriendRequests().removeIf(string -> string.equals((String) objects.get(1)));
+        User.getUserByName((String) objects.get(1)).getFriendRequests().removeIf(string -> string.equals((String) objects.get(0)));
+        saveTheUsersInGson(User.getAllUsers());
         return null;
+
     }
 }
