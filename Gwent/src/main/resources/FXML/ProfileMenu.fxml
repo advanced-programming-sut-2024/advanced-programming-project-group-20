@@ -58,8 +58,9 @@
         <ScrollPane fx:id="scrollOfPointsTable" layoutX="394.0" layoutY="60.0" prefHeight="556.0" prefWidth="522.0" visible="false">
 
         </ScrollPane>
-        <ScrollPane fx:id="scrollOfFriends" layoutX="394.0" layoutY="60.0" prefHeight="556.0" prefWidth="522.0" visible="false">
-
+        <ScrollPane fx:id="scrollOfFriends" layoutX="394.0" layoutY="60.0" prefHeight="270.0" prefWidth="522.0" visible="false">
+        </ScrollPane>
+        <ScrollPane fx:id="scrollOfRequests" layoutX="394.0" layoutY="350.0" prefHeight="270.0" prefWidth="522.0" visible="false">
         </ScrollPane>
       <VBox id="request" fx:id="friendRequest" layoutX="964.0" layoutY="97.0" prefHeight="331.0" prefWidth="260.0" visible="false">
          <children>

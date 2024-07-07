@@ -240,6 +240,10 @@ public class RegisterMenu extends Application {
         User user = new User(username, password,
                 nickName, email, secureQuestion.getText(), secureAnswer.getText());
         User.setLoggedUser(User.giveUserByUsername(username));
+        // todo uncomment login check
+        if (User.giveUserByUsername(username)==null){
+            System.out.println("inja sevvomish taraf :"+username);
+        }
         LoginMenu loginMenu = new LoginMenu();
         try {
             loginMenu.start(ApplicationController.getStage());

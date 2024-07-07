@@ -1,8 +1,9 @@
 [
   {
+    "requests": [],
     "gameHistories": [],
     "username": "a",
-    "password": "S7v)e@Gn",
+    "password": "E1y\u003duDIA",
     "nickName": "a",
     "secureQuestion": "What\u0027s your father\u0027s name?",
     "secureAnswer": "a",
@@ -21,15 +22,30 @@
     "isReady": false,
     "rank": 0,
     "turn": false,
-    "lastSeen": "longtime ago",
+    "lastSeen": "online",
     "friendRequests": [],
     "search": false,
     "gameRequests": [],
     "privateGame": true
   },
   {
+    "requests": [
+      {
+        "friendName": "b",
+        "result": "rejected"
+      },
+      {
+        "friendName": "a",
+        "result": "rejected"
+      },
+      {
+        "friendName": "a",
+        "result": "accepted"
+      }
+    ],
+    "gameHistories": [],
     "username": "b",
-    "password": "S7v)e@Gn",
+    "password": "E1y\u003duDIA",
     "nickName": "b",
     "secureQuestion": "What\u0027s your father\u0027s name?",
     "secureAnswer": "b",
@@ -40,7 +56,7 @@
     "numberOfLose": 0,
     "numberOfWins": 0,
     "numberOfGames": 0,
-    "email": "bb@bb.cim",
+    "email": "aa@aa.com",
     "maxPoint": 0,
     "isPassed": false,
     "isFullHealth": true,

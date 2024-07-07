@@ -139,6 +139,10 @@ public class RegisterController {
                 nickNameField.getText(), emailField.getText(), secureQuestion.getText(), secureAnswer.getText());
 //        ApplicationController.saveTheUsersInGson(User.getAllUsers());
         User.setLoggedUser(User.giveUserByUsername(usernameField.getText()));
+        // todo uncomment login check
+        if (User.giveUserByUsername(usernameField.getText())==null){
+            System.out.println("inja dovvomish taraf :"+usernameField.getText());
+        }
         LoginMenu loginMenu = new LoginMenu();
         try {
             loginMenu.start(ApplicationController.getStage());

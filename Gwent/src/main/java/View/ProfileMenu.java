@@ -1,9 +1,6 @@
 package View;
 
-import Model.Faction;
-import Model.GameHistory;
-import Model.Leader;
-import Model.User;
+import Model.*;
 import com.google.gson.Gson;
 import javafx.animation.Transition;
 import javafx.application.Application;
@@ -38,6 +35,7 @@ public class ProfileMenu extends Application {
     public ScrollPane scrollOfFriends;
     public HBox sendRequestHbox;
     public AnchorPane pane;
+    public ScrollPane scrollOfRequests;
     @FXML
     private Button button1;
     @FXML
@@ -83,7 +81,7 @@ public class ProfileMenu extends Application {
         contentsOfProfileMenu();
         setTablePointsContent();
         setHistoryContents();
-//        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
         setFriendsTable();
         profileMenu = this;
     }
@@ -144,11 +142,37 @@ public class ProfileMenu extends Application {
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
             if (User.getUserByName(((TextField) sendRequestHbox.getChildren().get(0)).getText()) == null)
                 ApplicationController.alert("this user doesnt exist", "erorre!!");
-            else{
+            else {
                 showFriendInfo(((TextField) sendRequestHbox.getChildren().get(0)).getText());
                 ((TextField) sendRequestHbox.getChildren().get(0)).setText("");
             }
         });
+
+        for (Request request : User.getLoggedUser().getRequests()) {
+            if (User.getLoggedUser().getFriends().contains(request.getFriendName()) && !request.getResult().equals("rejected"))
+                request.setResult("accepted");
+            if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getLoggedUser().getUsername()) && !request.getResult().equals("accepted"))
+                request.setResult("rejected");
+        }
+            TilePane collectionContentRequest = new TilePane(2, 3);
+            collectionContentRequest.setPrefWidth(200);
+            collectionContentRequest.setMinHeight(300);
+            TableView<Request> tableViewRequest = new TableView<>();
+            tableViewRequest.setStyle("-fx-background-color: transparent");
+            tableViewRequest.setPrefWidth(500);
+            tableViewRequest.setPrefHeight(600);
+            tableViewRequest.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            TableColumn<Request, String> requestTo = new TableColumn<>("request to");
+            requestTo.setCellValueFactory(new PropertyValueFactory<>("friendName"));
+            tableViewRequest.getColumns().add(requestTo);
+            TableColumn<Request, String> result = new TableColumn<>("result");
+            result.setCellValueFactory(new PropertyValueFactory<>("result"));
+            tableViewRequest.getColumns().add(result);
+            collectionContentRequest.getChildren().add(tableViewRequest);
+            scrollOfRequests.setContent(collectionContentRequest);
+   for (Request request :User.getLoggedUser().getRequests())
+       tableViewRequest.getItems().add(request);
+
     }
 
     private void showFriendInfo(String text) {
@@ -391,6 +415,7 @@ public class ProfileMenu extends Application {
         scrollOfPointsTable.setVisible(true);
         scrollOfHistory.setVisible(false);
         friendRequest.setVisible(false);
+        scrollOfRequests.setVisible(false);
         scrollOfFriends.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
@@ -410,6 +435,7 @@ public class ProfileMenu extends Application {
         scrollOfPointsTable.setVisible(false);
         scrollOfFriends.setVisible(false);
         friendRequest.setVisible(false);
+        scrollOfRequests.setVisible(false);
         scrollOfHistory.setVisible(true);
         for (Node node : informationPane.getChildren())
             node.setVisible(false);
@@ -428,6 +454,7 @@ public class ProfileMenu extends Application {
         scrollOfHistory.setVisible(false);
         friendRequest.setVisible(false);
         scrollOfFriends.setVisible(false);
+        scrollOfRequests.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(true);
         }
@@ -447,6 +474,7 @@ public class ProfileMenu extends Application {
         friendRequest.setVisible(true);
         scrollOfHistory.setVisible(false);
         scrollOfFriends.setVisible(true);
+        scrollOfRequests.setVisible(true);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
         }
@@ -467,6 +495,11 @@ public class ProfileMenu extends Application {
             for (Node node : root.getChildren()) {
                 // todo no hardcode
                 if (node.getId() != null && node.getId().equals("request")) {
+                    for (Node node1 : ((VBox) node).getChildren()) {
+                        if (node1.getId() != null && node1.getId().equals(friendName))
+                            return;
+                    }
+
                     ((VBox) node).getChildren().add(hBox = new HBox(new Label("Friend request from " + friendName),
                             yesButton = new Button("ok"), noButton = new Button("no")));
                     hBox.setId(friendName);
@@ -489,3 +522,5 @@ public class ProfileMenu extends Application {
 
 
 }
+
+

@@ -64,19 +64,7 @@ public class Connection extends Thread {
         }
     }
 
-    private static void checkConnections() {
-        for (Connection connection : connections) {
-            try {
 
-                System.out.println(connection.in.readUTF());
-                new ObjectOutputStream(connection.out).writeObject("check");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println(" raft");
-
-        }
-    }
 
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
@@ -95,6 +83,10 @@ public class Connection extends Thread {
             System.out.println("userName taraf:" + result.getParameters().get(0));
             this.currentUser = User.getUserByName((String) result.getParameters().get(0));
             currentUser.setLastSeen("online");
+        }
+        if (result.getMethodName().equals("logout")){
+            this.currentUser = null;
+            currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());

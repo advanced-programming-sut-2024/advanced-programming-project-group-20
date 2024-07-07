@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.GameHistory;
+import Model.Request;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
@@ -162,8 +163,10 @@ public class ProfileController {
         System.out.println("into send request" + ((User) objects.get(1)).getUsername());
         if (User.getUserByName(friend) == null)
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
-        else if (!User.getUserByName(friend).getFriendRequests().contains(user.getUsername()))
+        else if (!User.getUserByName(friend).getFriendRequests().contains(user.getUsername())) {
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
+            user.getRequests().add(new Request(friend));
+        }
 //todo age request kar nakard inon comment nakon
 //        if (connection == null)
             return null;
@@ -176,8 +179,23 @@ public class ProfileController {
         User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
         User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
+        setRequestHistory(friendName);
         return null;
 
+    }
+
+    private static void setRequestHistory(String friendName) {
+        System.out.println("miad");
+        for (Request request : User.getUserByName(friendName).getRequests()) {
+            if (User.getUserByName(friendName).getFriends().contains(request.getFriendName()) && !request.getResult().equals("rejected")) {
+                request.setResult("accepted");
+                System.out.println(request.getFriendName()+ " accepted");
+            }
+            if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getUserByName(friendName)) && !request.getResult().equals("accepted")) {
+                request.setResult("rejected");
+                System.out.println(request.getFriendName()+ " rejected");
+            }
+        }
     }
 
     private static void confirmAlert() {
@@ -187,13 +205,17 @@ public class ProfileController {
     }
 
     public static SendingPacket beFriend(ArrayList<Object> objects) {
+String friendName = (String) objects.get(0);
+String username = (String) objects.get(1);
         // the second is connection owner
-        if (!User.getUserByName((String) objects.get(0)).getFriends().contains((String) objects.get(1)))
-            User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
-        if (!User.getUserByName((String) objects.get(1)).getFriends().contains((String) objects.get(0)))
-            User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
-        User.getUserByName((String) objects.get(0)).getFriendRequests().removeIf(string -> string.equals((String) objects.get(1)));
-        User.getUserByName((String) objects.get(1)).getFriendRequests().removeIf(string -> string.equals((String) objects.get(0)));
+        if (!User.getUserByName(friendName).getFriends().contains(username))
+            User.getUserByName(friendName).getFriends().add(username);
+        if (!User.getUserByName(username).getFriends().contains(friendName))
+            User.getUserByName(username).getFriends().add(friendName);
+        User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
+        User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
+
+        setRequestHistory(friendName);
         saveTheUsersInGson(User.getAllUsers());
         return null;
 

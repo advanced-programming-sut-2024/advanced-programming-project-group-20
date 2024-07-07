@@ -33,6 +33,16 @@ public class GameController {
         }
 
     }
+    public static void setEmoji(ArrayList<Object> objects ){
+        System.out.println(((User) objects.get(1)).getUsername());
+        User opponent = User.getUserByName(((User) objects.get(1)).getOppName());
+        Connection connection = Connection.getConnectionByUserName(opponent.getUsername());
+        try {
+            connection.sendOrder(new SendingPacket("GameMenu","giveEmojiId",objects.get(0)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static SendingPacket nextTurn(ArrayList<Object> objects) throws InterruptedException, IOException {
         Gson gson = new Gson();

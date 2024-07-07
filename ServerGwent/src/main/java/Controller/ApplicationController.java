@@ -30,6 +30,9 @@ public class ApplicationController {
         alert.setContentText(contentText);
         alert.show();
     }
+    public static void logout(){
+
+    }
 
     // if you want to have all users of Server you should call this method in your client
     public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects){

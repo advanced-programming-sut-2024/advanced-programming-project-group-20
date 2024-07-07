@@ -59,7 +59,8 @@ public class ApplicationController {
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             mediaPlayer.play();
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            mediaPlayer.setVolume(0.5);
+            //todo 1
+            mediaPlayer.setVolume(0.0);
             ApplicationController.mediaPlayer = mediaPlayer;
         }
     }
@@ -106,6 +107,7 @@ public class ApplicationController {
             }
             i++;
         }
+        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
     }
 
     public static void alert2(String a) {
@@ -124,6 +126,7 @@ public class ApplicationController {
 
     public static void setDisable(Pane root) {
         for (Node node : root.getChildren()) {
+if (node.getId()==null||!node.getId().equals("chat"))
             node.setDisable(true);
         }
     }

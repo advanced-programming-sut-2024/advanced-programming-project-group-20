@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class User {
+    private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient private GameHistory activeGame;
     private String username;
@@ -377,6 +378,14 @@ public class User {
 
     public void setLastSeen(String lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    public ArrayList<Request> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(ArrayList<Request> requests) {
+        this.requests = requests;
     }
 }
 

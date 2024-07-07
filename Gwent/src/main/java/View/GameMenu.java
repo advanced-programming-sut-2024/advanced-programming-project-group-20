@@ -9,6 +9,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableNumberValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -32,13 +33,10 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
-import webConnection.Packet;
-import webConnection.serverCommander;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     public Button nextTurn;
@@ -56,6 +54,7 @@ public class GameMenu extends Application {
     public TextField sendField;
     public AnchorPane chatPane;
     public Label yourTurnLabel;
+    public VBox emoji;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -154,6 +153,14 @@ public class GameMenu extends Application {
             sendField.setText("");
         });
         //chat
+        //emoji
+        for (Node node : emoji.getChildren()) {
+            node.setOnMouseClicked(mouseEvent -> {
+                GameMenu.showEmoji(node);
+                Client.getConnection().doInServer("GameController","setEmoji", node.getId());
+            });
+        }
+        //emoji
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(cheatText);
         pane.getChildren().remove(cheatLabel);
@@ -175,6 +182,37 @@ public class GameMenu extends Application {
         updateCardEvent();
         placeCard();
         startCheatMenu();
+    }
+    public static synchronized   void giveEmojiId(ArrayList<Object> objects ){
+        Platform.runLater(()->{
+            if (ApplicationController.getRoot()==null)
+                return;
+            for (Node node: ApplicationController.getRoot().getChildren()){
+            if (node.getId()!=null&&node.getId().equals("emojiVbox")){
+                for (Node node1: ((VBox)node).getChildren()){
+                    if (node1.getId().equals(objects.get(0))) {
+                        showEmoji(node1);
+                        break;
+                    }
+                }
+            }
+        }
+        });
+    }
+
+    public static synchronized void showEmoji(Node node) {
+        ImageView imageView = new ImageView(((ImageView) node).getImage());
+        imageView.setX(735);
+        imageView.setY(350);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+        if (!ApplicationController.getRoot().getChildren().contains(imageView))
+            ApplicationController.getRoot().getChildren().add(imageView);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), imageView);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.play();
     }
 
     private void startCheatMenu() {
