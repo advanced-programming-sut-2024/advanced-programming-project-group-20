@@ -49,6 +49,7 @@ public class User {
     }
 
     public ArrayList<HashMap<Integer, ArrayList<String>>> getMoves() {
+        if (moves == null) moves = new ArrayList<>();
         return moves;
     }
 
@@ -344,11 +345,13 @@ public class User {
     }
 
     public ArrayList<String > getFriends() {
+        if(friends == null) friends = new ArrayList<>();
         return friends;
     }
 
 
     public ArrayList<String> getFriendRequests() {
+        if(friendRequests == null) friendRequests = new ArrayList<>();
         return friendRequests;
     }
 
@@ -365,6 +368,7 @@ public class User {
     }
 
     public ArrayList<String> getGameRequests() {
+        if(gameRequests == null) gameRequests = new ArrayList<>();
         return gameRequests;
     }
 
@@ -381,6 +385,7 @@ public class User {
     }
 
     public ArrayList<Request> getRequests() {
+        if(requests == null) requests = new ArrayList<>();
         return requests;
     }
 

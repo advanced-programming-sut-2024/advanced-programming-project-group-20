@@ -138,6 +138,15 @@ public class ProfileMenu extends Application {
             objects.add(requesterName);
             setRequest(objects);
         }
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                User user = tableView.getSelectionModel().getSelectedItem();
+                if (user != null && user.getNumberOfGames() > 0) {
+                    Client.getConnection().doInServer("MainController", "playWithFriend",
+                            User.getLoggedUser().getUsername(), user.getUsername(),true);
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
 
@@ -170,6 +179,7 @@ public class ProfileMenu extends Application {
             TableColumn<Request, String> result = new TableColumn<>("result");
             result.setCellValueFactory(new PropertyValueFactory<>("result"));
             tableViewRequest.getColumns().add(result);
+
             collectionContentRequest.getChildren().add(tableViewRequest);
             scrollOfRequests.setContent(collectionContentRequest);
    for (Request request :User.getLoggedUser().getRequests())

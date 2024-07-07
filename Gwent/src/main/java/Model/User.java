@@ -9,7 +9,7 @@ import java.util.Formattable;
 import java.util.HashMap;
 
 public class User {
-     private ArrayList<Request> requests = new ArrayList<>();
+    private ArrayList<Request> requests = new ArrayList<>();
     transient private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient public Board board = new Board();
     transient private GameHistory activeGame;
@@ -626,6 +626,7 @@ public class User {
     }
 
     public ArrayList<String> getFriendRequests() {
+        if (friendRequests == null) friendRequests = new ArrayList<>();
         return friendRequests;
     }
 
@@ -634,6 +635,7 @@ public class User {
     }
 
     public ArrayList<Request> getRequests() {
+        if (requests == null) requests = new ArrayList<>();
         return requests;
     }
 
