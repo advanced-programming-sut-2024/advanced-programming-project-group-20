@@ -1,7 +1,6 @@
 [
   {
     "requests": [],
-    "gameHistories": [],
     "username": "a",
     "password": "S1a{dSP)",
     "nickName": "a",
@@ -20,7 +19,7 @@
     "isReady": false,
     "rank": 0,
     "turn": false,
-    "lastSeen": "17:36",
+    "lastSeen": "online",
     "friendRequests": [],
     "search": false,
     "gameRequests": [],
@@ -28,7 +27,6 @@
   },
   {
     "requests": [],
-    "gameHistories": [],
     "username": "b",
     "password": "S1a{dSP)",
     "nickName": "b",

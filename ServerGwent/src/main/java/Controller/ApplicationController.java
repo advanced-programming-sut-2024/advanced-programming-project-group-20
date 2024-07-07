@@ -30,8 +30,8 @@ public class ApplicationController {
         alert.setContentText(contentText);
         alert.show();
     }
-    public static void logout(){
-
+    public static void logout(ArrayList<Object> objects){
+ProfileController.saveTheUsersInGson(User.getAllUsers());
     }
 
     // if you want to have all users of Server you should call this method in your client

@@ -164,7 +164,7 @@ public class GameMenu extends Application {
         //emoji
         for (Node node : emoji.getChildren()) {
             node.setOnMouseClicked(mouseEvent -> {
-                GameMenu.showEmoji(node);
+                GameMenu.showEmoji(node,450);
                 Client.getConnection().doInServer("GameController","setEmoji", node.getId());
             });
         }
@@ -202,19 +202,20 @@ public class GameMenu extends Application {
             if (node.getId()!=null&&node.getId().equals("emojiVbox")){
                 for (Node node1: ((VBox)node).getChildren()){
                     if (node1.getId().equals(objects.get(0))) {
-                        showEmoji(node1);
+                        showEmoji(node1,200);
                         break;
                     }
                 }
+                break;
             }
         }
         });
     }
 
-    public static synchronized void showEmoji(Node node) {
+    public static synchronized void showEmoji(Node node, int height) {
         ImageView imageView = new ImageView(((ImageView) node).getImage());
         imageView.setX(735);
-        imageView.setY(350);
+        imageView.setY(height);
         imageView.setFitHeight(200);
         imageView.setFitWidth(200);
         if (!ApplicationController.getRoot().getChildren().contains(imageView))
@@ -223,6 +224,7 @@ public class GameMenu extends Application {
         fadeTransition.setFromValue(1.0);
         fadeTransition.setToValue(0);
         fadeTransition.setCycleCount(1);
+        fadeTransition.setOnFinished(actionEvent -> ApplicationController.getRoot().getChildren().remove(imageView));
         fadeTransition.play();
     }
 

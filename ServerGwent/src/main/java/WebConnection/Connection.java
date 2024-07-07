@@ -73,6 +73,10 @@ public class Connection extends Thread {
         if (this.currentUser != null)
             receivingPacket.getParameters().add(this.currentUser);
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
+        if (receivingPacket.getMethodName().equals("logout")){
+            currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
+            this.currentUser = null;
+        }
         if (result == null)
             return;
         System.out.println("inja1");
@@ -83,10 +87,6 @@ public class Connection extends Thread {
             System.out.println("userName taraf:" + result.getParameters().get(0));
             this.currentUser = User.getUserByName((String) result.getParameters().get(0));
             currentUser.setLastSeen("online");
-        }
-        if (result.getMethodName().equals("logout")){
-            this.currentUser = null;
-            currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
