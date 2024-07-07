@@ -832,6 +832,7 @@ public class GameMenu extends Application {
         vBox.getChildren().addAll(total, totalPoint, totalPoint2);
         vBox.getChildren().add(button);
         User.getLoggedUser().setOpponentUser(null);
+        User.getLoggedUser().setOppName(null);
         ApplicationController.getRoot().getChildren().add(vBox);
     }
 

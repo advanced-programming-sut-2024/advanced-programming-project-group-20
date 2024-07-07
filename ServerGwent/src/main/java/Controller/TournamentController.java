@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TournamentController {
-    public static SendingPacket register(ArrayList<Object> objects) throws IOException {
+    public static SendingPacket register(ArrayList<Object> objects) throws IOException, InterruptedException {
         String username = (String) objects.get(0);
         if (Tournament.getTournament() == null ) Tournament.setTournament(new Tournament());
         Tournament.getTournament().addPlayer(username);
@@ -17,7 +17,8 @@ public class TournamentController {
         return null;
     }
 
-    private static void sendNewTableForAllConnections() throws IOException {
+    private static void sendNewTableForAllConnections() throws IOException, InterruptedException {
+
         Connection connection;
         Object[] objects = new Object[1];
         if (Tournament.getTournament().getChampion() != null){
@@ -30,6 +31,7 @@ public class TournamentController {
             if (connection == null) continue;
             connection.sendOrder(new SendingPacket("TournamentMenu","updateTournament",objects));
         }
+        Thread.sleep(1000);
     }
 
 
@@ -56,7 +58,7 @@ public class TournamentController {
         return null;
     }
 
-    public static SendingPacket giveUp(ArrayList<Object> objects) throws IOException {
+    public static SendingPacket giveUp(ArrayList<Object> objects) throws IOException, InterruptedException {
         String username = (String) objects.get(0);
         Tournament tournament = Tournament.getTournament();
         int pot = potYob(username);
@@ -92,7 +94,7 @@ public class TournamentController {
         return new SendingPacket("MainMenu", "goToPreGame", objects1);
     }
 
-    public static void setResult(String user, String user1) throws IOException {
+    public static void setResult(String user, String user1) throws IOException, InterruptedException {
         Tournament tournament = Tournament.getTournament();
         for (String string : tournament.getActiveGames()) {
             if (string.contains(user) && string.contains(user1)) {
@@ -102,6 +104,7 @@ public class TournamentController {
             }
         }
         sendNewTableForAllConnections();
+
     }
 
     private static void updateTable(String winner, String loser) {

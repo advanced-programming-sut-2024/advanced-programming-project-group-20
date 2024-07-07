@@ -103,7 +103,7 @@ public class GameController {
         return null;
     }
 
-    public static SendingPacket endGame (ArrayList<Object> objects) throws IOException {
+    public static SendingPacket endGame (ArrayList<Object> objects) throws IOException, InterruptedException {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
@@ -208,7 +208,7 @@ public class GameController {
         return null;
     }
 
-    public static SendingPacket endWithLostConnection(ArrayList<Object> objects) throws IOException {
+    public static SendingPacket endWithLostConnection(ArrayList<Object> objects) throws IOException, InterruptedException {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);

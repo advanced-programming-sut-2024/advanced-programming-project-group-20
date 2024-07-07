@@ -25,7 +25,7 @@
          <Font name="Book Antiqua" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="470.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+   <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="500.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
       <font>
          <Font name="Book Antiqua" size="20.0" />
       </font>
@@ -94,7 +94,7 @@
    </AnchorPane>
    <ImageView fx:id="biggerCardImage" fitHeight="434.0" fitWidth="235.0" layoutX="1257.0" layoutY="220.0">
    </ImageView>
-   <VBox fx:id="emoji" id="emojiVbox" layoutX="389.0" layoutY="669.0" prefHeight="147.0" prefWidth="50.0">
+   <VBox id="emojiVbox" fx:id="emoji" layoutX="389.0" layoutY="669.0" prefHeight="147.0" prefWidth="50.0">
       <children>
          <ImageView id="1" fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../someImages/khande.png" />

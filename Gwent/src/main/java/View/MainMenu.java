@@ -105,7 +105,7 @@ public class MainMenu extends Application {
     }
 
     public void goToRegisterMenu(MouseEvent mouseEvent) {
-        Client.getConnection().doInServer("ApplicationController","logout",new Object());
+        Client.getConnection().doInServer("ApplicationController","logout",new Object[1]);
         RegisterMenu registerMenu = new RegisterMenu();
         try {
             registerMenu.start(ApplicationController.getStage());

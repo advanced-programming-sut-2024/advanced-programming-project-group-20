@@ -21,7 +21,7 @@
             <Font name="Book Antiqua" size="20.0" />
         </font>
     </Label>
-    <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="470.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+    <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="497.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
         <font>
             <Font name="Book Antiqua" size="20.0" />
         </font>
@@ -37,7 +37,7 @@
     <HBox fx:id="spellHbox" alignment="CENTER" layoutX="108.0" layoutY="369.0" prefHeight="117.0" prefWidth="229.0" />
     <ImageView fx:id="turnBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="688.0" pickOnBounds="true" preserveRatio="true" />
     <ImageView fx:id="opponentBurnt" fitHeight="110.0" fitWidth="87.0" layoutX="1240.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true" />
-    <Button fx:id="exit" alignment="CENTER" contentDisplay="CENTER" layoutX="241.0" layoutY="82.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="110.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="exit" textAlignment="CENTER" textFill="#d0ef04">
+    <Button fx:id="exit" alignment="CENTER" contentDisplay="CENTER" layoutX="245.0" layoutY="28.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="110.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="exit" textAlignment="CENTER" textFill="#d0ef04">
         <font>
             <Font name="Agency FB Bold" size="20.0" />
         </font>
@@ -48,24 +48,11 @@
     <HBox fx:id="opponentCloseNext" alignment="CENTER" layoutX="463.0" layoutY="233.0" prefHeight="100.0" prefWidth="95.0" />
     <HBox fx:id="opponentRangedNext" alignment="CENTER" layoutX="463.0" layoutY="121.0" prefHeight="100.0" prefWidth="95.0" />
     <HBox fx:id="opponentSiegeNext" alignment="CENTER" layoutX="463.0" layoutY="14.0" prefHeight="100.0" prefWidth="95.0" />
-
-    <Button fx:id="chatButton" layoutX="1442.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: rgba(222,201,0,0.27);" text="chat" textFill="#cfb74a">
-        <font>
-            <Font name="Baskerville Old Face" size="17.0" />
-        </font>
-    </Button>
-    <AnchorPane fx:id="chatPane" layoutX="1257.0" layoutY="220.0" prefHeight="434.0" prefWidth="235.0">
-        <children>
-            <ScrollPane fx:id="chatScroll" prefHeight="408.0" prefWidth="235.0">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                </content>
-            </ScrollPane>
-            <Button fx:id="sendButton" layoutX="183.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="send" />
-            <TextField fx:id="sendField" layoutX="-1.0" layoutY="409.0" prefHeight="26.0" prefWidth="185.0" />
-        </children>
-    </AnchorPane>
-
+   <Button fx:id="changeGame" alignment="CENTER" contentDisplay="CENTER" layoutX="238.0" layoutY="71.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="124.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="Change Game" textAlignment="CENTER" textFill="#d0ef04">
+      <font>
+         <Font name="Agency FB Bold" size="20.0" />
+      </font>
+   </Button>
 
 
 </AnchorPane>

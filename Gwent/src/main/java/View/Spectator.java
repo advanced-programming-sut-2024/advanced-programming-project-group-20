@@ -1,9 +1,6 @@
 package View;
 
-import Model.AbilityActions;
-import Model.Card;
-import Model.SpecialAction;
-import Model.User;
+import Model.*;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -39,11 +36,6 @@ public class Spectator extends Application {
     public HBox opponentCloseNext;
     public HBox opponentRangedNext;
     public HBox opponentSiegeNext;
-    public Button chatButton;
-    public ScrollPane chatScroll;
-    public Button sendButton;
-    public TextField sendField;
-    public AnchorPane chatPane;
     @FXML
     public Label passed;
     public Label passedOpponent;
@@ -61,6 +53,7 @@ public class Spectator extends Application {
     private static User gameUser;
     public Button exit;
     private static Spectator spectator;
+    public Button changeGame;
     Timeline timeline;
 
     public static void setGameUser(User gameUser) {
@@ -116,6 +109,16 @@ public class Spectator extends Application {
                 throw new RuntimeException(e);
             }
         });
+        boolean tournament = false;
+        for (String string : Tournament.getTournament().getActiveGames()) {
+            if (string.contains(gameUser.getUsername()) && string.contains(gameUser.getOpponentUser().getUsername())) {
+                changeGame.setOnMouseClicked(mouseEvent ->
+                    Client.getConnection().doInServer("TournamentController","getCurrentGames",
+                            User.getLoggedUser().getUsername()));
+                tournament = true;
+            }
+        }
+        if (!tournament) pane.getChildren().remove(changeGame);
         setHboxes();
         setImagesOfBoard();
         setHighScoreIcon();
