@@ -55,6 +55,8 @@ public class GameMenu extends Application {
     public AnchorPane chatPane;
     public Label yourTurnLabel;
     public VBox emoji;
+    public Label lostConnectionLabel;
+    public Label timeLabel;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -73,6 +75,8 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
+    private Timeline lostConnectionTimeLine;
+    private int time = 120;
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     public static Chat chat;
@@ -105,6 +109,10 @@ public class GameMenu extends Application {
         });
         stage.setScene(scene);
         ApplicationController.setStage(stage);
+        stage.setOnCloseRequest(windowEvent -> {
+            Client.getConnection().doInServer("GameController","lostConnection",User.getLoggedUser());
+            System.exit(0);
+        });
         stage.show();
         stage.setHeight(740);
         stage.setWidth(1280);
@@ -168,6 +176,8 @@ public class GameMenu extends Application {
         pane.getChildren().remove(passedOpponent);
         pane.getChildren().remove(turnLabel);
         pane.getChildren().remove(yourTurnLabel);
+        pane.getChildren().remove(timeLabel);
+        pane.getChildren().remove(lostConnectionLabel);
         turnLabel.setId("no");
         yourTurnLabel.setId("no");
         setHboxes();
@@ -176,7 +186,8 @@ public class GameMenu extends Application {
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
         }
-        setRandomHand();
+        if (User.getLoggedUser().getBoard().getHand().isEmpty()) setRandomHand();
+        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         setImagesOfBoard();
         setHighScoreIcon();
         updateCardEvent();
@@ -260,9 +271,7 @@ public class GameMenu extends Application {
                 User.getLoggedUser().getLeader().setUsed(false);
                 break;
             case "5":
-//                User.getLoggedUser().getOpponentUser().setPassed(true);
-//                if (!ApplicationController.getRoot().getChildren().contains(passedLabel))
-//                    ApplicationController.getRoot().getChildren().add(passedLabel);
+                User.getLoggedUser().getBoard().getHand().add(Card.giveCardByName2("Commander’shorn"));
                 break;
             case "6":
                 showOpponentCards(User.getLoggedUser().getOpponentUser().getBoard().getHand());
@@ -824,8 +833,6 @@ public class GameMenu extends Application {
         vBox.getChildren().add(button);
         User.getLoggedUser().setOpponentUser(null);
         ApplicationController.getRoot().getChildren().add(vBox);
-        //todo check doesn't have exception;
-        Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", User.getLoggedUser());
     }
 
     private Button getButton() {
@@ -1351,9 +1358,11 @@ public class GameMenu extends Application {
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
         User.getLoggedUser().setActiveGame(gameHistory);
         User.getLoggedUser().setCards(temp.getCards());
+        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         User.getLoggedUser().boardMaker();
         ApplicationController.setEnable(ApplicationController.getRoot());
         Platform.runLater(() -> {
+            System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
             gameMenu.yourTurn();
@@ -1401,4 +1410,50 @@ public class GameMenu extends Application {
         });
     }
 
+    public static void opponentLostConnection (ArrayList<Object> objects) {
+        Platform.runLater(() ->{
+            ApplicationController.setDisable(ApplicationController.getRoot());
+            gameMenu.opponentLost();
+        });
+    }
+
+    private void opponentLost() {
+        ApplicationController.getRoot().getChildren().add(timeLabel);
+        ApplicationController.getRoot().getChildren().add(lostConnectionLabel);
+        time = 120;
+        lostConnectionTimeLine = new Timeline(new KeyFrame(Duration.seconds(1), actionEvent -> {
+            time--;
+            timeLabel.setText(String.valueOf(time) + " SECONDS");
+            if (time < 1) {
+                int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+                int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
+                calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
+                Client.getConnection().doInServer("GameController","endWithLostConnection",User.getLoggedUser(),User.getLoggedUser().getActiveGame());
+                lostConnectionTimeLine.stop();
+            }
+        }));
+        lostConnectionTimeLine.setCycleCount(120);
+        lostConnectionTimeLine.play();
+    }
+
+    public static void opponentBackTurn (ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            User.getLoggedUser().boardMaker();
+            ApplicationController.setEnable(ApplicationController.getRoot());
+            ApplicationController.getRoot().getChildren().remove(gameMenu.timeLabel);
+            ApplicationController.getRoot().getChildren().remove(gameMenu.lostConnectionLabel);
+            gameMenu.lostConnectionTimeLine.stop();
+            gameMenu.setImagesOfBoard();
+            gameMenu.updateCardEvent();
+            gameMenu.yourTurn();
+        });
+    }
+
+    public static void opponentBack (ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ApplicationController.getRoot().getChildren().remove(gameMenu.timeLabel);
+            ApplicationController.getRoot().getChildren().remove(gameMenu.lostConnectionLabel);
+            gameMenu.lostConnectionTimeLine.stop();
+        });
+    }
 }

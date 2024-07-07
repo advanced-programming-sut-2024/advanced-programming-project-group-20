@@ -72,7 +72,7 @@ public class RegisterController {
         int i = 0;
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
-            if (user != null)
+            if (user != null && User.getUserByName(user.getUsername()) == null)
                 User.getAllUsers().add(user);
             i++;
         }
@@ -106,7 +106,6 @@ public class RegisterController {
 
     ///this method just is called first of program and don't use it for giving users from it
     public static SendingPacket parseFile(ArrayList<Object> objects) {
-        User.getAllUsers().clear();
         Gson gson = new Gson();
         try {
             JsonArray a = gson.fromJson(new FileReader("users.json"), JsonArray.class);
@@ -116,7 +115,8 @@ public class RegisterController {
                     JsonReader reader = new JsonReader(new StringReader(e.toString()));
                     reader.setLenient(true);
                     User obj = gson.fromJson(reader, User.class);
-                    User.getAllUsers().add(obj);
+                    if (User.getUserByName(obj.getUsername()) == null)
+                        User.getAllUsers().add(obj);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }

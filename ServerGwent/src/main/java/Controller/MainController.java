@@ -144,7 +144,6 @@ public class MainController {
                 return new SendingPacket("MainMenu", "showGame", objects1);
             }
         } else {
-            System.out.println("ajabbb");
             return new SendingPacket("MainMenu", "showGame", objects1);
         }
     }

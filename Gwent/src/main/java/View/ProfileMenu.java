@@ -80,8 +80,6 @@ public class ProfileMenu extends Application {
         setRankOfUsers();
         contentsOfProfileMenu();
         setTablePointsContent();
-        setHistoryContents();
-        Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
         setFriendsTable();
         profileMenu = this;
     }
@@ -92,7 +90,12 @@ public class ProfileMenu extends Application {
         GameHistory gameHistory;
         for (Object object : objects) {
             gameHistory = gson.fromJson(gson.toJson(object), GameHistory.class);
+            System.out.println(gameHistory.getWinner());
             User.getLoggedUser().getGameHistories().add(gameHistory);
+        }
+        for (GameHistory gameHistory1 : User.getLoggedUser().getGameHistories()) {
+            System.out.println(gameHistory1.getWinner());
+            System.out.println(gameHistory1.getLeaderName());
         }
         Platform.runLater(() -> {
             profileMenu.setHistoryContents();
@@ -124,7 +127,6 @@ public class ProfileMenu extends Application {
         Gson gson = new Gson();
         for (User user : User.getAllUsers())
             System.out.println(gson.toJson(user));
-        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
@@ -228,10 +230,42 @@ public class ProfileMenu extends Application {
         for (User user : User.getAllUsers()) {
             tableView.getItems().add(user);
         }
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                User user = tableView.getSelectionModel().getSelectedItem();
+                if (user != null && user.getNumberOfGames() > 0) {
+                    Client.getConnection().doInServer("ProfileController", "showLastGame", user.getUsername());
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfPointsTable.setContent(collectionContent);
     }
 
+    public static void showLastGame(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            Gson gson = new Gson();
+            User user = User.getUserByName((String) objects.get(0));
+            GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
+            GameHistoryShower gameHistoryShower = new GameHistoryShower();
+            GameHistoryShower.setGameUser(user);
+            GameHistoryShower.setGameHistory(gameHistory);
+            user.setOpponentUser(User.getUserByName(gameHistory.getOpponentName()));
+            user.readyForGame();
+            user.getOpponentUser().readyForGame();
+            user.setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
+            user.setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(), user.getFaction()));
+            user.getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
+            user.getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
+                    user.getOpponentUser().getFaction()));
+            user.getOpponentUser().setOpponentUser(user);
+            try {
+                gameHistoryShower.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
     private void setHistoryContents() {
         if (User.getLoggedUser().getGameHistories() == null) {
             User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -296,7 +330,6 @@ public class ProfileMenu extends Application {
         TableColumn<GameHistory, String> winner = new TableColumn<>("Winner");
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         tableView.getColumns().add(winner);
-
         for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
             tableView.getItems().add(gameHistory);
         }
@@ -351,6 +384,9 @@ public class ProfileMenu extends Application {
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Gwent_1.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
+        stage.setOnCloseRequest(windowEvent -> {
+            System.exit(0);
+        });
         Rectangle blackOverview = new Rectangle(ApplicationController.getStage().getWidth()
                 , ApplicationController.getStage().getWidth(), Color.rgb(37, 40, 37, 0.88));
         root.getChildren().add(blackOverview);
@@ -521,6 +557,9 @@ public class ProfileMenu extends Application {
     }
 
 
+    public void updateGameHistories(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+    }
 }
 
 

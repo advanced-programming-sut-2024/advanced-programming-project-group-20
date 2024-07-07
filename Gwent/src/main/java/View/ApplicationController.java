@@ -107,7 +107,7 @@ public class ApplicationController {
             }
             i++;
         }
-        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
+        User.setLoggedUser(User.getUserByName(User.getLoggedUser().getUsername()));
     }
 
     public static void alert2(String a) {

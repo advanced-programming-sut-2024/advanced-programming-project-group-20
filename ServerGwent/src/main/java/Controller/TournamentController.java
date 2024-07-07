@@ -4,11 +4,9 @@ import Model.Tournament;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class TournamentController {
     public static SendingPacket register(ArrayList<Object> objects) throws IOException {
@@ -83,6 +81,8 @@ public class TournamentController {
             oppPot = pot - 1;
         }
         User opp = User.getUserByName(Tournament.getTournament().getTable()[oppPot]);
+        user.setOppName(opp.getUsername());
+        opp.setOppName(user.getUsername());
         Tournament.getTournament().getActiveGames().add(user.getUsername() + " " + opp.getUsername());
         Connection connection = Connection.getConnectionByUserName(opp.getUsername());
         Object[] objects1 = new Object[1];
@@ -92,7 +92,7 @@ public class TournamentController {
         return new SendingPacket("MainMenu", "goToPreGame", objects1);
     }
 
-    public static void setResult(String user, String user1) {
+    public static void setResult(String user, String user1) throws IOException {
         Tournament tournament = Tournament.getTournament();
         for (String string : tournament.getActiveGames()) {
             if (string.contains(user) && string.contains(user1)) {
@@ -101,6 +101,7 @@ public class TournamentController {
                 break;
             }
         }
+        sendNewTableForAllConnections();
     }
 
     private static void updateTable(String winner, String loser) {
@@ -211,12 +212,27 @@ public class TournamentController {
     }
 
     public static SendingPacket getCurrentGames(ArrayList<Object> objects) {
-        return null;
+        ArrayList<String> games = new ArrayList<>();
+        for (String string : Tournament.getTournament().getActiveGames()) {
+            games.add(string);
+        }
+        Object[] objects1 = new Object[1];
+        objects1[0] = games;
+        return new SendingPacket("TournamentMenu","showGamesList",objects1);
     }
 
     public static SendingPacket startTournamentMenu(ArrayList<Object> objects) {
         Object[] objects1 = new Object[1];
         objects1[0] = Tournament.getTournament();
         return new SendingPacket("MainMenu","goToTournament",objects1);
+    }
+
+    public static SendingPacket seeGame(ArrayList<Object> objects) throws Exception {
+        User user1 = User.getUserByName((String) objects.get(0));
+        User user2 = User.getUserByName((String) objects.get(1));
+        Object[] objects1 = new Object[2];
+        objects1[0] = user1;
+        objects1[1] = user2;
+        return new SendingPacket("MainMenu", "showGame", objects1);
     }
 }

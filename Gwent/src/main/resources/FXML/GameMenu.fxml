@@ -107,6 +107,16 @@
                  </ImageView>
       </children>
    </VBox>
+   <Label fx:id="lostConnectionLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="447.0" layoutY="260.0" prefHeight="70.0" prefWidth="785.0" text="Your Opponent lost his connection you will win in :" textFill="#74caff">
+      <font>
+         <Font name="Algerian" size="28.0" />
+      </font>
+   </Label>
+   <Label fx:id="timeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="660.0" layoutY="340.0" prefHeight="70.0" prefWidth="300.0" text="120 seconds" textAlignment="CENTER" textFill="#df15cb">
+      <font>
+         <Font name="Algerian" size="28.0" />
+      </font>
+   </Label>
 
 
 
