@@ -57,6 +57,9 @@ public class MainMenu extends Application {
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Ciri_CGI_1920x1080_EN.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
+        stage.setOnCloseRequest(windowEvent -> {
+            System.exit(0);
+        });
     }
 
     @FXML

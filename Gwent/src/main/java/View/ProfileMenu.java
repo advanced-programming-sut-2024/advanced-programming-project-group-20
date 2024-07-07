@@ -384,9 +384,6 @@ public class ProfileMenu extends Application {
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Gwent_1.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
-        stage.setOnCloseRequest(windowEvent -> {
-            System.exit(0);
-        });
         Rectangle blackOverview = new Rectangle(ApplicationController.getStage().getWidth()
                 , ApplicationController.getStage().getWidth(), Color.rgb(37, 40, 37, 0.88));
         root.getChildren().add(blackOverview);
