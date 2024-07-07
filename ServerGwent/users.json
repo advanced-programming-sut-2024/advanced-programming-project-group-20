@@ -1195,6 +1195,260 @@
             ]
           }
         ]
+      },
+      {
+        "winnerName": "user2",
+        "opponentName": "user2",
+        "firstRoundPointMe": 7,
+        "firstRoundPointOpponent": 10,
+        "secondRoundPointMe": -1,
+        "secondRoundPointOpponent": -1,
+        "thirdRoundPointMe": -1,
+        "thirdRoundPointOpponent": -1,
+        "totalPointsMe": 5,
+        "totalPointsOpponent": 8,
+        "factionName": "Nilfgaard",
+        "leaderName": "EmperorOfNilfgaard",
+        "oppFactionName": "Nilfgaard",
+        "oppLeaderName": "EmperorOfNilfgaard",
+        "date": "2024-07-07 14:02:05",
+        "moves": [
+          {
+            "0": [],
+            "1": [],
+            "2": [
+              "Villentretenmerth"
+            ],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "15": [
+              "MorvranVoorhis",
+              "TiborEggebracht",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "TrissMerigold",
+              "Villentretenmerth",
+              "YenneferofVengerberg",
+              "AssirevarAnahid",
+              "CahirMawrDyffrynAepCeallach",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "Vesemir",
+              "EmielRegis",
+              "RenualdAepMatsen",
+              "YoungEmissary"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "19": [],
+            "20": [],
+            "21": []
+          },
+          {
+            "0": [],
+            "1": [],
+            "2": [
+              "Villentretenmerth"
+            ],
+            "3": [],
+            "4": [
+              "TiborEggebracht"
+            ],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "15": [
+              "TrissMerigold",
+              "YenneferofVengerberg",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "EmielRegis"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "19": [
+              "AssirevarAnahid",
+              "Vesemir",
+              "CahirMawrDyffrynAepCeallach",
+              "MorvranVoorhis",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "YoungEmissary",
+              "Villentretenmerth",
+              "RenualdAepMatsen"
+            ],
+            "20": [],
+            "21": []
+          },
+          {
+            "0": [],
+            "1": [],
+            "2": [
+              "Villentretenmerth"
+            ],
+            "3": [],
+            "4": [
+              "TiborEggebracht"
+            ],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "15": [
+              "TrissMerigold",
+              "YenneferofVengerberg",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "EmielRegis"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "19": [
+              "AssirevarAnahid",
+              "Vesemir",
+              "CahirMawrDyffrynAepCeallach",
+              "MorvranVoorhis",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "YoungEmissary",
+              "Villentretenmerth",
+              "RenualdAepMatsen"
+            ],
+            "20": [],
+            "21": []
+          }
+        ]
       }
     ],
     "username": "user1",
@@ -1204,19 +1458,21 @@
     "secureAnswer": "a",
     "friends": [],
     "numberOfDraws": 0,
-    "numberOfLose": 0,
+    "numberOfLose": 1,
     "numberOfWins": 1,
-    "numberOfGames": 1,
+    "numberOfGames": 2,
     "email": "aasdsa@gmail.com",
     "maxPoint": 0,
     "cards": {
-      "0": [
-        "MorvranVoorhis"
-      ],
+      "0": [],
       "1": [],
-      "2": [],
+      "2": [
+        "Villentretenmerth"
+      ],
       "3": [],
-      "4": [],
+      "4": [
+        "TiborEggebracht"
+      ],
       "5": [],
       "6": [],
       "7": [],
@@ -1228,14 +1484,18 @@
       "13": [],
       "14": [
         "BlackInfantryArcher",
-        "BlackInfantryArcher",
-        "MennoCoehoorn"
+        "LethoofGulet",
+        "MennoCoehoorn",
+        "MorvranVoorhis",
+        "AssirevarAnahid"
       ],
       "15": [
-        "MorvranVoorhis",
-        "ShilardFitz-Oesterlen",
+        "TrissMerigold",
         "YenneferofVengerberg",
-        "OlgierdVonEverc"
+        "FringillaVigo",
+        "OlgierdVonEverc",
+        "SiegeEngineer",
+        "EmielRegis"
       ],
       "16": [
         "false",
@@ -1254,36 +1514,33 @@
         "false",
         "false",
         "false",
-        "true",
-        "false"
+        "false",
+        "true"
       ],
       "18": [
+        "YenneferofVengerberg",
         "HeavyZerrikanianFireScorpion",
         "ShilardFitz-Oesterlen",
+        "CahirMawrDyffrynAepCeallach",
         "StefanSkellen",
-        "Villentretenmerth",
+        "BlackInfantryArcher",
         "TrissMerigold",
-        "TiborEggebracht",
-        "AssirevarAnahid",
-        "LethoofGulet"
+        "GeraltofRivia",
+        "TiborEggebracht"
       ],
       "19": [
-        "CahirMawrDyffrynAepCeallach",
-        "Villentretenmerth",
         "AssirevarAnahid",
+        "Vesemir",
+        "CahirMawrDyffrynAepCeallach",
+        "MorvranVoorhis",
         "StefanSkellen",
-        "HeavyZerrikanianFireScorpion",
-        "FringillaVigo",
-        "TiborEggebracht",
-        "TrissMerigold",
-        "LethoofGulet"
+        "ShilardFitz-Oesterlen",
+        "YoungEmissary",
+        "Villentretenmerth",
+        "RenualdAepMatsen"
       ],
-      "20": [
-        "GeraltofRivia"
-      ],
-      "21": [
-        "MennoCoehoorn"
-      ]
+      "20": [],
+      "21": []
     },
     "isPassed": false,
     "isFullHealth": true,
@@ -1291,17 +1548,271 @@
     "isReady": false,
     "rank": 0,
     "turn": true,
-    "oppName": "user",
     "factionName": "Nilfgaard",
     "leaderName": "EmperorOfNilfgaard",
-    "lastSeen": "online",
+    "lastSeen": "14:02",
     "friendRequests": [],
     "search": false,
     "gameRequests": [],
     "privateGame": true
   },
   {
-    "gameHistories": [],
+    "gameHistories": [
+      {
+        "winnerName": "user2",
+        "opponentName": "user1",
+        "firstRoundPointMe": 10,
+        "firstRoundPointOpponent": 7,
+        "secondRoundPointMe": -1,
+        "secondRoundPointOpponent": -1,
+        "thirdRoundPointMe": -1,
+        "thirdRoundPointOpponent": -1,
+        "totalPointsMe": 0,
+        "totalPointsOpponent": 0,
+        "factionName": "Nilfgaard",
+        "leaderName": "EmperorOfNilfgaard",
+        "oppFactionName": "Nilfgaard",
+        "oppLeaderName": "EmperorOfNilfgaard",
+        "date": "2024-07-07 14:02:00",
+        "moves": [
+          {
+            "0": [],
+            "1": [],
+            "2": [],
+            "3": [
+              "Villentretenmerth"
+            ],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "MorvranVoorhis",
+              "TiborEggebracht",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "TrissMerigold",
+              "Villentretenmerth",
+              "YenneferofVengerberg",
+              "AssirevarAnahid",
+              "CahirMawrDyffrynAepCeallach",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "Vesemir",
+              "EmielRegis",
+              "RenualdAepMatsen",
+              "YoungEmissary"
+            ],
+            "15": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [],
+            "19": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "20": [],
+            "21": []
+          },
+          {
+            "0": [],
+            "1": [
+              "TiborEggebracht"
+            ],
+            "2": [],
+            "3": [
+              "Villentretenmerth"
+            ],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "TrissMerigold",
+              "YenneferofVengerberg",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "EmielRegis"
+            ],
+            "15": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [
+              "AssirevarAnahid",
+              "Vesemir",
+              "CahirMawrDyffrynAepCeallach",
+              "MorvranVoorhis",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "YoungEmissary",
+              "Villentretenmerth",
+              "RenualdAepMatsen"
+            ],
+            "19": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "20": [],
+            "21": []
+          },
+          {
+            "0": [],
+            "1": [
+              "TiborEggebracht"
+            ],
+            "2": [],
+            "3": [
+              "Villentretenmerth"
+            ],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+            "13": [],
+            "14": [
+              "TrissMerigold",
+              "YenneferofVengerberg",
+              "FringillaVigo",
+              "OlgierdVonEverc",
+              "SiegeEngineer",
+              "EmielRegis"
+            ],
+            "15": [
+              "BlackInfantryArcher",
+              "LethoofGulet",
+              "MennoCoehoorn",
+              "MorvranVoorhis",
+              "AssirevarAnahid"
+            ],
+            "16": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "17": [
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "false",
+              "true"
+            ],
+            "18": [
+              "AssirevarAnahid",
+              "Vesemir",
+              "CahirMawrDyffrynAepCeallach",
+              "MorvranVoorhis",
+              "StefanSkellen",
+              "ShilardFitz-Oesterlen",
+              "YoungEmissary",
+              "Villentretenmerth",
+              "RenualdAepMatsen"
+            ],
+            "19": [
+              "YenneferofVengerberg",
+              "HeavyZerrikanianFireScorpion",
+              "ShilardFitz-Oesterlen",
+              "CahirMawrDyffrynAepCeallach",
+              "StefanSkellen",
+              "BlackInfantryArcher",
+              "TrissMerigold",
+              "GeraltofRivia",
+              "TiborEggebracht"
+            ],
+            "20": [],
+            "21": []
+          }
+        ]
+      }
+    ],
     "username": "user2",
     "password": "1",
     "nickName": "a",
@@ -1310,16 +1821,97 @@
     "friends": [],
     "numberOfDraws": 0,
     "numberOfLose": 0,
-    "numberOfWins": 0,
-    "numberOfGames": 0,
+    "numberOfWins": 1,
+    "numberOfGames": 1,
     "email": "aasdsa@gmail.com",
     "maxPoint": 0,
+    "cards": {
+      "0": [],
+      "1": [
+        "TiborEggebracht"
+      ],
+      "2": [],
+      "3": [
+        "Villentretenmerth"
+      ],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": [],
+      "10": [],
+      "11": [],
+      "12": [],
+      "13": [],
+      "14": [
+        "TrissMerigold",
+        "YenneferofVengerberg",
+        "FringillaVigo",
+        "OlgierdVonEverc",
+        "SiegeEngineer",
+        "EmielRegis"
+      ],
+      "15": [
+        "BlackInfantryArcher",
+        "LethoofGulet",
+        "MennoCoehoorn",
+        "MorvranVoorhis",
+        "AssirevarAnahid"
+      ],
+      "16": [
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "true"
+      ],
+      "17": [
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "false",
+        "true"
+      ],
+      "18": [
+        "AssirevarAnahid",
+        "Vesemir",
+        "CahirMawrDyffrynAepCeallach",
+        "MorvranVoorhis",
+        "StefanSkellen",
+        "ShilardFitz-Oesterlen",
+        "YoungEmissary",
+        "Villentretenmerth",
+        "RenualdAepMatsen"
+      ],
+      "19": [
+        "YenneferofVengerberg",
+        "HeavyZerrikanianFireScorpion",
+        "ShilardFitz-Oesterlen",
+        "CahirMawrDyffrynAepCeallach",
+        "StefanSkellen",
+        "BlackInfantryArcher",
+        "TrissMerigold",
+        "GeraltofRivia",
+        "TiborEggebracht"
+      ],
+      "20": [],
+      "21": []
+    },
     "isPassed": false,
     "isFullHealth": true,
     "firstTurn": true,
     "isReady": false,
     "rank": 0,
     "turn": false,
+    "factionName": "Nilfgaard",
+    "leaderName": "EmperorOfNilfgaard",
     "lastSeen": "online",
     "friendRequests": [],
     "search": false,

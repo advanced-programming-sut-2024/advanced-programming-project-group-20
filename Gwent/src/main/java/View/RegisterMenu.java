@@ -65,6 +65,9 @@ public class RegisterMenu extends Application {
         if (User.getAllUsers().isEmpty()) {
             Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
         }
+        stage.setOnCloseRequest(windowEvent -> {
+            System.exit(0);
+        });
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }

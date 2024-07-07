@@ -103,6 +103,8 @@ public class GameHistoryShower extends Application {
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
         exit.setOnMouseClicked(mouseEvent -> {
+            User.getLoggedUser().setOpponentUser(null);
+            User.getLoggedUser().setOppName(null);
             MainMenu mainMenu = new MainMenu();
             try {
                 mainMenu.start(ApplicationController.getStage());
@@ -119,6 +121,8 @@ public class GameHistoryShower extends Application {
         AtomicInteger i = new AtomicInteger();
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), event -> {
             if (i.get() == gameHistory.getMoves().size()) {
+                User.getLoggedUser().setOpponentUser(null);
+                User.getLoggedUser().setOppName(null);
                 MainMenu mainMenu = new MainMenu();
                 try {
                     mainMenu.start(ApplicationController.getStage());

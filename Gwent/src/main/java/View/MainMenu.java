@@ -1,9 +1,6 @@
 package View;
 
-import Model.Faction;
-import Model.Leader;
-import Model.Tournament;
-import Model.User;
+import Model.*;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
 import javafx.animation.ScaleTransition;
@@ -17,11 +14,13 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.simplejavamail.api.internal.clisupport.model.Cli;
 import webConnection.Client;
 
 import java.net.URL;
@@ -36,6 +35,8 @@ public class MainMenu extends Application {
     public Button requestHistory;
     public Button randomGame;
     public Button register;
+    public Button continueGame;
+    public AnchorPane pane;
     private ScaleTransition scaleTransition;
 
 
@@ -61,7 +62,7 @@ public class MainMenu extends Application {
     @FXML
     public void initialize() {
 //        setScaleTransition();
-
+        if (User.getLoggedUser().getOppName() == null) pane.getChildren().remove(continueGame);
         if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
         else gameMode.setText("Public");
 
@@ -367,6 +368,7 @@ public class MainMenu extends Application {
     public void TV(MouseEvent mouseEvent) {
         Client.getConnection().doInServer("MainController","getCurrentGames",User.getLoggedUser().getUsername());
     }
+
     public void enlargeButton(MouseEvent event) {
         // Expand button on mouse enter
         Button button = (Button) event.getSource();
@@ -381,7 +383,6 @@ public class MainMenu extends Application {
         button.setScaleX(1.0);
         button.setScaleY(1.0);
     }
-
 
     public void tournament(MouseEvent mouseEvent) {
         Client.getConnection().doInServer("TournamentController","startTournamentMenu",User.getLoggedUser().getUsername());
@@ -400,4 +401,39 @@ public class MainMenu extends Application {
             }
         });
     }
+
+    public void continueGame(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("GameController","backToGame",User.getLoggedUser().getUsername());
+    }
+    public static void backTurn(ArrayList<Object> objects) {
+        Gson gson = new Gson();
+        User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
+        User.getLoggedUser().setCards(temp.getCards());
+        User.getLoggedUser().setActiveGame(gameHistory);
+        User.getLoggedUser().setTurn(temp.isTurn());
+        User.getLoggedUser().setFirstTurn(false);
+        User.getLoggedUser().setOpponentUser(User.giveUserByUsername(User.getLoggedUser().getOppName()));
+        User.getLoggedUser().getOpponentUser().setOpponentUser(User.getLoggedUser());
+        User.getLoggedUser().setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
+        User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(),User.getLoggedUser().getFaction()));
+        User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
+        User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(
+                gameHistory.getOppLeaderName(), User.getLoggedUser().getOpponentUser().getFaction()));
+        User.getLoggedUser().getOpponentUser().mergeActiveGame(User.getLoggedUser());
+        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
+        User.getLoggedUser().boardMaker();
+        Platform.runLater(() -> {
+            GameMenu gameMenu = new GameMenu();
+            try {
+                gameMenu.start(ApplicationController.getStage());
+                if (!User.getLoggedUser().isTurn()) {
+                    ApplicationController.setDisable(ApplicationController.getRoot());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
 }
