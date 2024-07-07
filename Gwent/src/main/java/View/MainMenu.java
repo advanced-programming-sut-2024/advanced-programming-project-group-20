@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
@@ -52,6 +53,7 @@ public class MainMenu extends Application {
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Ciri_CGI_1920x1080_EN.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
@@ -231,9 +233,13 @@ public class MainMenu extends Application {
             VBox newRoot = new VBox(10);
             newRoot.setPadding(new Insets(20));
             newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setPrefHeight(100);
+            newRoot.setPrefWidth(100);
             for (String name : names) {
                 Label nameLabel = new Label(name);
+                nameLabel.setFont(Font.font(20));
                 nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #00ff59");
+                nameLabel.setPrefWidth(100);
                 newRoot.getChildren().add(nameLabel);
             }
             Scene newScene = new Scene(newRoot, 300, 200);
@@ -254,6 +260,8 @@ public class MainMenu extends Application {
             VBox newRoot = new VBox(10);
             newRoot.setAlignment(Pos.TOP_CENTER);
             newRoot.setPadding(new Insets(20));
+            newRoot.setPrefHeight(100);
+            newRoot.setPrefWidth(100);
             Scene newScene = new Scene(newRoot, 300, 200);
             Stage newStage = new Stage();
             newStage.setScene(newScene);
@@ -265,7 +273,9 @@ public class MainMenu extends Application {
             });
             for (String name : names) {
                 Label nameLabel = new Label(name);
+                nameLabel.setFont(Font.font(20));
                 nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setPrefWidth(100);
                 nameLabel.setOnMouseClicked(mouseEvent -> {
                     String[] parts = name.split(" ");
                     boolean privateGame;

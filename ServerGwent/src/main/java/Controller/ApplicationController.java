@@ -41,11 +41,18 @@ public class ApplicationController {
         Gson gson = new Gson();
         ArrayList<User> usersToSave = new ArrayList<>();
 
+        for (User user: User.getAllUsers()){
+            System.out.println("Userrr: "+ user.getUsername());
+        }
+
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
             usersToSave.add(user);
         }
 
+for (User user: usersToSave){
+    System.out.println("User: "+ user.getUsername());
+}
 
         ///delete last content (we don't need that)
 //        try (Writer writer = new FileWriter("users.json")) {
@@ -55,8 +62,10 @@ public class ApplicationController {
 //        }
 
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson1.toJson(usersToSave);
-
+        String json = gson1.toJson(User.getAllUsers());
+for (User user: User.getAllUsers()){
+    System.out.println(user.getUsername());
+}
 
 //========================================================================================================================
 //         store gson in data base
@@ -69,6 +78,10 @@ public class ApplicationController {
             // Delete the last inserted data
             // stmt.execute("DELETE FROM users WHERE id = (SELECT MAX(id) FROM your_table)");
 
+            String dropQuery = "DROP TABLE IF EXISTS users";
+
+            // Execute the delete statement
+            stmt.executeUpdate(dropQuery);
             // Create table
             String sql = "CREATE TABLE IF NOT EXISTS users (names TEXT)";
             stmt.execute(sql);
@@ -92,12 +105,12 @@ public class ApplicationController {
             e.printStackTrace();
         }
 //=================================================================================================================
-
-        try (PrintWriter pw = new PrintWriter("users.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+// we save it in database
+//        try (PrintWriter pw = new PrintWriter("users.json")) {
+//            pw.write(json);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

@@ -84,9 +84,10 @@ public class ProfileMenu extends Application {
         contentsOfProfileMenu();
         setTablePointsContent();
         setHistoryContents();
-        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
         profileMenu = this;
     }
+
     public static void setGameHistories(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -99,11 +100,10 @@ public class ProfileMenu extends Application {
             profileMenu.setHistoryContents();
         });
     }
+
     private void setFriendsTable() {
-        //Todo problem of null user is here!
         Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
-        //
-//        Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -125,7 +125,7 @@ public class ProfileMenu extends Application {
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
         Gson gson = new Gson();
-        for (User user  : User.getAllUsers())
+        for (User user : User.getAllUsers())
             System.out.println(gson.toJson(user));
         // todo handel friends
         User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
@@ -133,8 +133,8 @@ public class ProfileMenu extends Application {
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
         System.out.println("his name" + User.getLoggedUser().getFriends().size());
-        ArrayList<Object> objects    = new ArrayList<>();
-        for (String requesterName :User.getLoggedUser().getFriendRequests()){
+        ArrayList<Object> objects = new ArrayList<>();
+        for (String requesterName : User.getLoggedUser().getFriendRequests()) {
             System.out.println("requ hast");
             objects.add(new Object());
             objects.add(requesterName);
@@ -251,10 +251,14 @@ public class ProfileMenu extends Application {
         TableColumn<GameHistory, String> winner = new TableColumn<>("Winner");
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         tableView.getColumns().add(winner);
-
-        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-            tableView.getItems().add(gameHistory);
+        if (User.getLoggedUser().getGameHistories() != null) {
+            for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+                tableView.getItems().add(gameHistory);
+            }
+        } else {
+            User.getLoggedUser().setGameHistories(new ArrayList<>());
         }
+
         tableView.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1) {
                 GameHistory gameHistory = tableView.getSelectionModel().getSelectedItem();
@@ -266,7 +270,7 @@ public class ProfileMenu extends Application {
                     User.getLoggedUser().readyForGame();
                     User.getLoggedUser().getOpponentUser().readyForGame();
                     User.getLoggedUser().setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
-                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(),User.getLoggedUser().getFaction()));
+                    User.getLoggedUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(), User.getLoggedUser().getFaction()));
                     User.getLoggedUser().getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
                     User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
                             User.getLoggedUser().getOpponentUser().getFaction()));
@@ -432,10 +436,9 @@ public class ProfileMenu extends Application {
     }
 
 
-
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
-        if (root==null){
+        if (root == null) {
             System.out.println("root nulle");
             return;
         }

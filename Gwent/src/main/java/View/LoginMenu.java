@@ -83,17 +83,21 @@ public class LoginMenu extends Application {
     @FXML
     private void forgetPasswordAndShowQuestion() {
         if (!confirmButton.isVisible()) {
-            if (!usernameField.getText().equals("")) {
-                forgetButton.setVisible(false);
-                confirmButton.setVisible(true);
-//                Client.getConnection().doInServer("LoginController", "securityAlert", new ArrayList<Object>().toArray());
-                securityAlert();
-                passwordField.setText("");
-                secureQuestionField.setText(User.getUserByName(usernameField.getText()).getSecureQuestion());
-                secureQuestionField.setVisible(true);
-                passwordField.setPromptText("security answer");
-            } else {
-                ApplicationController.alert("Empty Username", "Enter Your Username");
+            if (User.getUserByName(usernameField.getText()) != null) {
+                if (!usernameField.getText().equals("")) {
+                    forgetButton.setVisible(false);
+                    confirmButton.setVisible(true);
+                    securityAlert();
+                    passwordField.setText("");
+                    secureQuestionField.setText(User.getUserByName(usernameField.getText()).getSecureQuestion());
+                    secureQuestionField.setVisible(true);
+                    passwordField.setPromptText("security answer");
+                } else {
+                    ApplicationController.alert("Empty Username", "Enter Your Username");
+                }
+            }
+            else {
+                ApplicationController.alert("no such user!", "");
             }
         }
     }
@@ -235,7 +239,6 @@ Platform.runLater(()->{
     }
 
     public void checkSecurityQuestion() {
-
         if (!forgetButton.isVisible()) {
             if (usernameField.getText().equals("")) {
                 ApplicationController.alert("Empty username", "Enter the username");

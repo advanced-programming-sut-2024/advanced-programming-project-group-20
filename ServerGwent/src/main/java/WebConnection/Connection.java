@@ -58,14 +58,9 @@ public class Connection extends Thread {
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
         System.out.println("inja");
-//<<<<<<< HEAD
-        receivingPacket.getParameters().add(this.currentUser);
-//        System.out.println("current :" + this.currentUser.getUsername()
-//        );
-//=======
+
         if (this.currentUser != null)
             receivingPacket.getParameters().add(this.currentUser);
-//>>>>>>> edba26d87a669765f3c506604cfe58f10ac1853c
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         if (result == null)
             return;

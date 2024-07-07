@@ -9,6 +9,7 @@ import java.util.Formattable;
 import java.util.HashMap;
 
 public class User {
+
     transient private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient public Board board = new Board();
     transient private GameHistory activeGame;

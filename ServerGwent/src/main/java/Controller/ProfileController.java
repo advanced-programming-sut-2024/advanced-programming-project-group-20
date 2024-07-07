@@ -64,28 +64,33 @@ public class ProfileController {
 //        }
 //    }
 
-    public static void saveTheUsersInGson(ArrayList<User> users) {
-
-        for (User user : User.getAllUsers()) {
-            System.out.println(user.getUsername() + "      1111"
-            );
-        }
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(users);
-        try (PrintWriter pw = new PrintWriter("users.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void saveTheUsersInGson(ArrayList<User> users) {
+//
+//        for (User user : User.getAllUsers()) {
+//            System.out.println(user.getUsername() + "      1111"
+//            );
+//        }
+//
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//        String json = gson.toJson(users);
+//        try (PrintWriter pw = new PrintWriter("users.json")) {
+//            pw.write(json);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public static SendingPacket getGameHistories(ArrayList<Object> objects) {
         User user = User.getUserByName((String) objects.get(0));
         ArrayList<Object> objects1 = new ArrayList<>();
-        for (GameHistory gameHistory : user.getGameHistories()) {
-            objects1.add(gameHistory);
+        if (user.getGameHistories() != null) {
+            for (GameHistory gameHistory : user.getGameHistories()) {
+                objects1.add(gameHistory);
+            }
+        } else {
+            user.setGameHistories(new ArrayList<>());
         }
+
         return new SendingPacket("ProfileMenu","setGameHistories", objects1.toArray());
     }
 
@@ -141,16 +146,21 @@ public class ProfileController {
             return new SendingPacket(className, methodeName, respondObjects.toArray());
         } else {
             // set the new information
-            for (User user : User.getAllUsers()) {
-                System.out.println("User: " + user.getUsername()
-                );
-            }
-            System.out.println(lastUsername + "   last");
+//            for (User user : User.getAllUsers()) {
+//                System.out.println("User: " + user.getUsername()
+//                );
+//            }
+//            System.out.println(lastUsername + "   last");
             changeUserName(lastUsername, usernameField);
             changePassword(User.getUserByName(usernameField), passwordField);
             changeEmail(User.getUserByName(usernameField), emailField);
             changeNickName(User.getUserByName(usernameField), nickNameField);
-            saveTheUsersInGson(User.getAllUsers());
+//            saveTheUsersInGson(User.getAllUsers());
+            ArrayList<Object> objects1 = new ArrayList<>();
+            for (User user: User.getAllUsers()){
+                objects1.add(user);
+            }
+            ApplicationController.saveTheUsersInGson(objects1);
             return new SendingPacket("ProfileMenu", "changeInformationInClientModel", objects.toArray());
         }
     }

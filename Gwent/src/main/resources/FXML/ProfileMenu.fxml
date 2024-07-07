@@ -6,9 +6,10 @@
 
 <AnchorPane fx:id="pane" prefHeight="720.0" prefWidth="1280.0" stylesheets="@Profile.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.ProfileMenu">
     <children>
-        <Pane fx:id="informationPane" layoutX="14.0">
+        <Pane fx:id="informationPane" layoutX="3.0" prefHeight="614.0" prefWidth="853.0">
             <children>
-                <VBox layoutX="494.0" layoutY="215.0" prefHeight="129.0" prefWidth="148.0" spacing="2" stylesheets="@Profile.css">
+                <Label layoutX="455.0" layoutY="136.0" prefHeight="485.0" prefWidth="387.0" style="-fx-background-color: rgba(2,2,2,0.76)" />
+                <VBox layoutX="496.0" layoutY="168.0" prefHeight="129.0" prefWidth="148.0" spacing="2" stylesheets="@Profile.css">
                     <children>
                         <Label prefHeight="30.0" prefWidth="160.0" text="username:" />
                         <Label prefHeight="30.0" prefWidth="153.0" text="password:" />
@@ -16,7 +17,7 @@
                         <Label prefHeight="30.0" prefWidth="200.0" text="nickname:" />
                     </children>
                 </VBox>
-                <VBox layoutX="658.0" layoutY="221.0" prefHeight="110.0" prefWidth="136.0" spacing="2">
+                <VBox layoutX="665.0" layoutY="175.0" prefHeight="110.0" prefWidth="136.0" spacing="2">
                     <children>
                         <TextField fx:id="username" />
                         <TextField fx:id="password" />
@@ -24,26 +25,26 @@
                         <TextField fx:id="nickname" prefHeight="26.0" prefWidth="136.0" />
                     </children>
                 </VBox>
-                <Label alignment="CENTER" layoutX="514.0" layoutY="109.0" prefHeight="56.0" prefWidth="260.0" text="your informations!" textAlignment="CENTER">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
+                <Label alignment="CENTER" layoutX="484.0" layoutY="84.0" prefHeight="52.0" prefWidth="322.0" style="-fx-font-size: 40; -fx-background-color: rgba(1,1,1,0); -fx-font-weight: bold; -fx-border-color: rgba(255,174,0,0); -fx-font-family: Century; -fx-text-fill: #666683;" text="your informations!" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="40.0" />
+               </font>
                 </Label>
-                <VBox layoutX="542.0" layoutY="413.0" prefHeight="98.0" prefWidth="204.0" spacing="3" stylesheets="@Profile.css">
+                <VBox layoutX="498.0" layoutY="368.0" prefHeight="116.0" prefWidth="291.0" spacing="3" stylesheets="@Profile.css">
                     <children>
-                        <Label fx:id="topScoreLabel" prefHeight="30.0" prefWidth="208.0" text="top score:" />
-                        <Label fx:id="rankLabel" prefHeight="30.0" prefWidth="203.0" text="rank:" />
-                        <Label fx:id="totalGamesLabel" prefHeight="30.0" prefWidth="204.0" text="number of games:" />
+                        <Label fx:id="topScoreLabel" prefHeight="43.0" prefWidth="297.0" text="top score:   " />
+                        <Label fx:id="rankLabel" prefHeight="44.0" prefWidth="291.0" text="rank:   " />
+                        <Label fx:id="totalGamesLabel" prefHeight="45.0" prefWidth="294.0" text="number of games:   " />
                     </children>
                 </VBox>
-                <VBox layoutX="608.0" layoutY="512.0" prefHeight="66.0" prefWidth="100.0" spacing="3">
+                <VBox layoutX="592.0" layoutY="492.0" prefHeight="108.0" prefWidth="116.0" spacing="3">
                     <children>
-                        <Label fx:id="winLabel" prefHeight="94.0" prefWidth="100.0" text="win:" />
-                        <Label fx:id="drawLabel" prefHeight="94.0" prefWidth="100.0" text="draw:" />
-                        <Label fx:id="loseLabel" prefHeight="94.0" prefWidth="100.0" text="fail:" />
+                        <Label fx:id="winLabel" prefHeight="39.0" prefWidth="116.0" style="-fx-background-color: green" text="win:   " />
+                        <Label fx:id="drawLabel" prefHeight="42.0" prefWidth="116.0" style="-fx-background-color: white" text="draw:   " />
+                        <Label fx:id="loseLabel" prefHeight="42.0" prefWidth="120.0" style="-fx-background-color: #af1717" text="fail:   " />
                     </children>
                 </VBox>
-                <Button layoutX="578.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#saveChangesInServer" prefHeight="26.0" prefWidth="131.0" text="save changes" />
+                <Button layoutX="579.0" layoutY="320.0" mnemonicParsing="false" onMouseClicked="#saveChangesInServer" prefHeight="26.0" prefWidth="131.0" text="save changes" />
             </children>
         </Pane>
         <Button layoutX="43.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#BackToMainMenu" prefHeight="26.0" prefWidth="116.0" text="Back" />
