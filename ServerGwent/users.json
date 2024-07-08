@@ -1,0 +1,65 @@
+[
+  {
+    "requests": [],
+    "gameHistories": [],
+    "username": "a",
+    "password": "S1a{dSP)",
+    "nickName": "a",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "a",
+    "friends": [
+      "b"
+    ],
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "aa@aa.com",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "isReady": false,
+    "rank": 0,
+    "turn": false,
+    "lastSeen": "online",
+    "friendRequests": [],
+    "search": false,
+    "gameRequests": [],
+    "privateGame": true
+  },
+  {
+    "requests": [
+      {
+        "friendName": "a",
+        "result": "accepted"
+      }
+    ],
+    "gameHistories": [],
+    "username": "b",
+    "password": "S1a{dSP)",
+    "nickName": "b",
+    "secureQuestion": "What\u0027s your father\u0027s name?",
+    "secureAnswer": "b",
+    "friends": [
+      "a"
+    ],
+    "numberOfDraws": 0,
+    "numberOfLose": 0,
+    "numberOfWins": 0,
+    "numberOfGames": 0,
+    "email": "bb@bb.com",
+    "maxPoint": 0,
+    "isPassed": false,
+    "isFullHealth": true,
+    "firstTurn": true,
+    "isReady": false,
+    "rank": 0,
+    "turn": false,
+    "lastSeen": "online",
+    "friendRequests": [],
+    "search": false,
+    "gameRequests": [],
+    "privateGame": true
+  }
+]

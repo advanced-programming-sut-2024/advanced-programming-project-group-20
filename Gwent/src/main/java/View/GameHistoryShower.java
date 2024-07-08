@@ -38,11 +38,6 @@ public class GameHistoryShower extends Application {
     public HBox opponentCloseNext;
     public HBox opponentRangedNext;
     public HBox opponentSiegeNext;
-    public Button chatButton;
-    public ScrollPane chatScroll;
-    public Button sendButton;
-    public TextField sendField;
-    public AnchorPane chatPane;
     public Label passed;
     public Label passedOpponent;
     public AnchorPane pane;

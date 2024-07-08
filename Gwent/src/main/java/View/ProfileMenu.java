@@ -276,6 +276,7 @@ public class ProfileMenu extends Application {
             }
         });
     }
+
     private void setHistoryContents() {
         if (User.getLoggedUser().getGameHistories() == null) {
             User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -408,7 +409,6 @@ public class ProfileMenu extends Application {
         stage.setWidth(width);
     }
 
-
     public void saveChangesInServer(MouseEvent mouseEvent) {
         ArrayList<Object> objects = new ArrayList<>();
 
@@ -465,7 +465,6 @@ public class ProfileMenu extends Application {
             node.setVisible(false);
         }
     }
-
 
     public void button2Clicked(ActionEvent actionEvent) {
         button1.setScaleX(1.0);
@@ -524,7 +523,6 @@ public class ProfileMenu extends Application {
         }
     }
 
-
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
         if (root == null) {
@@ -563,7 +561,6 @@ public class ProfileMenu extends Application {
         });
 
     }
-
 
     public void updateGameHistories(MouseEvent mouseEvent) {
         Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());

@@ -30,6 +30,7 @@ public class ApplicationController {
         alert.setContentText(contentText);
         alert.show();
     }
+//<<<<<<< HEAD
 
     public static void logout(ArrayList<Object> objects) {
         ArrayList<Object> objects1 = new ArrayList<>();
@@ -68,12 +69,6 @@ public class ApplicationController {
             System.out.println("User: " + user.getUsername());
         }
 
-        ///delete last content (we don't need that)
-//        try (Writer writer = new FileWriter("users.json")) {
-//            writer.write("");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         for (User user: User.getAllUsers()){
             System.out.println("("+user.getUsername()+")");
         }
@@ -120,12 +115,7 @@ public class ApplicationController {
             e.printStackTrace();
         }
 //=================================================================================================================
-// we save it in database
-//        try (PrintWriter pw = new PrintWriter("users.json")) {
-//            pw.write(json);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+
     }
 
 }

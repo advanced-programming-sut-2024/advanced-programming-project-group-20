@@ -126,7 +126,7 @@ public class ApplicationController {
 
     public static void setDisable(Pane root) {
         for (Node node : root.getChildren()) {
-if (node.getId()==null||!node.getId().equals("chat"))
+if (node.getId()==null||(!node.getId().startsWith("chat")&&!node.getId().matches("[123]")))
             node.setDisable(true);
         }
     }

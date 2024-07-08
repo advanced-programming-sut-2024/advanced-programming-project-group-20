@@ -15,7 +15,7 @@
       <Image url="@../someImages/icon_high_score.png">
       </Image>
    </ImageView>
-   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="256.0" layoutY="711.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="42.0" prefWidth="95.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="pass" textAlignment="CENTER" textFill="#d0ef04">
+   <Button alignment="CENTER" contentDisplay="CENTER" layoutX="255.0" layoutY="669.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="42.0" prefWidth="95.0" style="-fx-background-color: #111111; -fx-border-color: #444444; -fx-border-width: 3; -fx-border-radius: 15; -fx-background-radius: 15;" text="pass" textAlignment="CENTER" textFill="#d0ef04">
       <font>
          <Font name="Agency FB Bold" size="30.0" />
       </font>
@@ -94,7 +94,7 @@
    </AnchorPane>
    <ImageView fx:id="biggerCardImage" fitHeight="434.0" fitWidth="235.0" layoutX="1257.0" layoutY="220.0">
    </ImageView>
-   <VBox id="emojiVbox" fx:id="emoji" layoutX="389.0" layoutY="669.0" prefHeight="147.0" prefWidth="50.0">
+   <VBox id="emojiVbox" fx:id="emoji" layoutX="389.0" layoutY="669.0" prefHeight="118.0" prefWidth="50.0">
       <children>
          <ImageView id="1" fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../someImages/khande.png" />
@@ -117,6 +117,13 @@
          <Font name="Algerian" size="28.0" />
       </font>
    </Label>
+   <Pane  fx:id="reaction" layoutX="237.0" layoutY="737.0" prefHeight="84.0" prefWidth="142.0">
+      <children>
+         <TextField id="chat2" prefHeight="80.0" prefWidth="90.0" />
+         <Button id="chat2" layoutX="90.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="50.0" text="send" />
+         <Button id="chat2" layoutX="90.0" layoutY="34.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="50.0" text="ready" />
+      </children>
+   </Pane>
 
 
 

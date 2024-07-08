@@ -4,8 +4,10 @@ import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public class MainController {
 
@@ -29,9 +31,10 @@ public class MainController {
         for (User user : User.getAllUsers()) {
             if (user.isSearch()) {
                 String gameMode;
-                if (user.isPrivateGame()) gameMode = " private";
-                else gameMode = " public";
-                randomGames.add(user.getUsername() + gameMode);
+                if (user.isPrivateGame()) gameMode = " private ";
+                else gameMode = " public ";
+                randomGames.add(user.getUsername() + gameMode +  user.getNumberOfWins() + "-" + user.getNumberOfDraws() + "-" + user.getNumberOfLose());
+                System.out.println(randomGames.getLast());
             }
         }
         Object[] object = new Object[1];
@@ -83,7 +86,9 @@ public class MainController {
         user.setOppName(self.getUsername());
         self.setPrivateGame(user.isPrivateGame());
         Connection connection = Connection.getConnectionByUserName(user.getUsername());
-        user.getGameRequests().add((String) objects.get(1) + " Accept");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = sdf.format(new Date());
+        user.getGameRequests().add((String) objects.get(1) + " Accept " + date);
         Object[] objects1 = new Object[1];
         objects1[0] = self.getUsername();
         connection.sendOrder(new SendingPacket("MainMenu", "goToPreGame", objects1));
@@ -93,7 +98,9 @@ public class MainController {
 
     public static SendingPacket rejectFriend(ArrayList<Object> objects) throws Exception {
         User user = User.getUserByName((String) objects.get(0));
-        user.getGameRequests().add((String) objects.get(1) + " Reject");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = sdf.format(new Date());
+        user.getGameRequests().add((String) objects.get(1) + " Reject " + date);
         Connection connection = Connection.getConnectionByUserName(user.getUsername());
         connection.sendOrder(new SendingPacket("MainMenu", "rejectRequest", new Object[1]));
         return null;
