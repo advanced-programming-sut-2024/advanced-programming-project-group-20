@@ -12,12 +12,12 @@ public class GameController {
     public synchronized static void turnStarter(User user1, User user2) {
         user1.setPassed(false);
         user2.setPassed(false);
-        if (user1.getFactionName().equals("ScoiaTeal") &&
-                !user2.getFactionName().equals("ScoiaTeal")) {
+        if (user1.getFactionName().equals("ScoiaTael") &&
+                !user2.getFactionName().equals("ScoiaTael")) {
                 user1.setTurn(true);
                 user2.setTurn(false);
-        } else if (!user1.getFactionName().equals("ScoiaTeal") &&
-                user2.getFactionName().equals("ScoiaTeal")) {
+        } else if (!user1.getFactionName().equals("ScoiaTael") &&
+                user2.getFactionName().equals("ScoiaTael")) {
             user1.setTurn(false);
             user2.setTurn(true);
         } else if ((user1.isTurn() && user2.isTurn()) || (!user2.isTurn() && !user1.isTurn())) {
@@ -32,6 +32,16 @@ public class GameController {
             }
         }
 
+    }
+    public static void setEmoji(ArrayList<Object> objects ){
+        System.out.println(((User) objects.get(1)).getUsername());
+        User opponent = User.getUserByName(((User) objects.get(1)).getOppName());
+        Connection connection = Connection.getConnectionByUserName(opponent.getUsername());
+        try {
+            connection.sendOrder(new SendingPacket("GameMenu","giveEmojiId",objects.get(0)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static SendingPacket nextTurn(ArrayList<Object> objects) throws InterruptedException, IOException {
@@ -93,7 +103,7 @@ public class GameController {
         return null;
     }
 
-    public static SendingPacket endGame (ArrayList<Object> objects) throws IOException {
+    public static SendingPacket endGame (ArrayList<Object> objects) throws IOException, InterruptedException {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
@@ -102,6 +112,13 @@ public class GameController {
         user.setActiveGame(gameHistory);
         user.getActiveGame().setMoves(user.getMoves());
         if (user.getOppName() != null) {
+            if (user.getActiveGame().getWinner() == null) {
+                System.out.println("Draw");
+            } else if (user.getActiveGame().getWinner().equals(user.getUsername())) {
+                TournamentController.setResult(user.getUsername(),user.getOppName());
+            } else {
+                TournamentController.setResult(user.getOppName(),user.getUsername());
+            }
             User user2 = User.getUserByName(user.getOppName());
             user2.mergeActiveGame(user);
             user2.mergeHashMap(user);
@@ -122,16 +139,18 @@ public class GameController {
             user.setNumberOfLose(user.getNumberOfLose() + 1);
         }
         user.getGameHistories().add(user.getActiveGame());
-        user.setOppName(null);
         user.setPassed(false);
+        ArrayList<Object> objects2 = new ArrayList<>();
+        for (User user1 : User.getAllUsers()) {
+            System.out.println(user1.getUsername());
+            objects2.add(user1);
+        }
+        if (user.getOppName() == null)
+            ApplicationController.saveTheUsersInGson(objects2);
+        user.setOppName(null);
         Object[] objects1 = new Object[2];
         objects1[0] = user;
         objects1[1] = user.getActiveGame();
-        ArrayList<Object> objects2 = new ArrayList<>();
-        for (User user1 : User.getAllUsers()) {
-            objects2.add(user1);
-        }
-        ApplicationController.saveTheUsersInGson(objects2);
         return new SendingPacket("GameMenu", "endShower",objects1);
     }
 
@@ -176,6 +195,75 @@ public class GameController {
         Object[] objects1 = new Object[1];
         objects1[0] = user;
         return new SendingPacket("Spectator" , "updateGame", objects1);
+    }
+
+    public static SendingPacket lostConnection(ArrayList<Object> objects) throws IOException {
+        Gson gson = new Gson();
+        User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        User user = User.getUserByName(temp.getUsername());
+        user.setCards(temp.getCards());
+        User user2 = User.getUserByName(user.getOppName());
+        Connection connection = Connection.getConnectionByUserName(user2.getUsername());
+        connection.sendOrder(new SendingPacket("GameMenu","opponentLostConnection",new Object[1]));
+        return null;
+    }
+
+    public static SendingPacket endWithLostConnection(ArrayList<Object> objects) throws IOException, InterruptedException {
+        Gson gson = new Gson();
+        User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+        GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
+        User user = User.getUserByName(temp.getUsername());
+        user.addMove(user.getCards());
+        user.setActiveGame(gameHistory);
+        user.getActiveGame().setWinner(user.getUsername());
+        user.getActiveGame().setMoves(user.getMoves());
+        if (user.getActiveGame().getWinner() == null) {
+            System.out.println("Draw");
+        } else if (user.getActiveGame().getWinner().equals(user.getUsername())) {
+            TournamentController.setResult(user.getUsername(),user.getOppName());
+        } else {
+            TournamentController.setResult(user.getOppName(),user.getUsername());
+        }
+        User user2 = User.getUserByName(user.getOppName());
+        user2.mergeActiveGame(user);
+        user2.mergeHashMap(user);
+        user2.setOppName(null);
+        user2.setPassed(false);
+        user2.addMove(user2.getCards());
+        user2.getActiveGame().setMoves(user2.getMoves());
+        user.setNumberOfGames(user.getNumberOfGames() + 1);
+        user2.setNumberOfGames(user2.getNumberOfGames() + 1);
+        user.setNumberOfWins(user.getNumberOfWins() + 1);
+        user2.setNumberOfLose(user2.getNumberOfLose() + 1);
+        user.getGameHistories().add(user.getActiveGame());
+        user2.getGameHistories().add(user2.getActiveGame());
+        user.setPassed(false);
+        ArrayList<Object> objects2 = new ArrayList<>();
+        for (User user1 : User.getAllUsers()) {
+            objects2.add(user1);
+        }
+        if (user.getOppName() == null)
+            ApplicationController.saveTheUsersInGson(objects2);
+        user.setOppName(null);
+        Object[] objects1 = new Object[2];
+        objects1[0] = user;
+        objects1[1] = user.getActiveGame();
+        return new SendingPacket("GameMenu", "endShower",objects1);
+    }
+
+    public static SendingPacket backToGame(ArrayList<Object> objects) throws IOException {
+        User user = User.getUserByName((String) objects.get(0));
+        User user2 = User.getUserByName(user.getOppName());
+        Connection connection = Connection.getConnectionByUserName(user2.getUsername());
+        Object[] objects1 = new Object[2];
+        objects1[0] = user;
+        objects1[1] = user2.getActiveGame();
+        if (user2.isTurn()) {
+            connection.sendOrder(new SendingPacket("GameMenu", "opponentBackTurn", new Object[1]));
+        } else {
+            connection.sendOrder(new SendingPacket("GameMenu", "opponentBack", new Object[1]));
+        }
+        return new SendingPacket("MainMenu", "backTurn", objects1);
     }
 }
 

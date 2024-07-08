@@ -79,6 +79,8 @@ public class MainController {
     public static SendingPacket acceptFriend(ArrayList<Object> objects) throws Exception {
         User user = User.getUserByName((String) objects.get(0));
         User self = User.getUserByName((String) objects.get(1));
+        self.setOppName(user.getUsername());
+        user.setOppName(self.getUsername());
         self.setPrivateGame(user.isPrivateGame());
         Connection connection = Connection.getConnectionByUserName(user.getUsername());
         user.getGameRequests().add((String) objects.get(1) + " Accept");
@@ -142,7 +144,6 @@ public class MainController {
                 return new SendingPacket("MainMenu", "showGame", objects1);
             }
         } else {
-            System.out.println("ajabbb");
             return new SendingPacket("MainMenu", "showGame", objects1);
         }
     }

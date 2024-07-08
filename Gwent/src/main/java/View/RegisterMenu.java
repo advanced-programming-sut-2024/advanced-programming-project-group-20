@@ -65,10 +65,9 @@ public class RegisterMenu extends Application {
         if (User.getAllUsers().isEmpty()) {
             Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<>());
         }
-        for (User user: User.getAllUsers()){
-            System.out.println("User: "+ user.getUsername());
-        }
-
+        stage.setOnCloseRequest(windowEvent -> {
+            System.exit(0);
+        });
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/hh.jpg", stage.getHeight(), stage.getWidth())));
         stage.show();
     }
@@ -244,6 +243,10 @@ public class RegisterMenu extends Application {
         User user = new User(username, password,
                 nickName, email, secureQuestion.getText(), secureAnswer.getText());
         User.setLoggedUser(User.giveUserByUsername(username));
+        // todo uncomment login check
+        if (User.giveUserByUsername(username)==null){
+            System.out.println("inja sevvomish taraf :"+username);
+        }
         LoginMenu loginMenu = new LoginMenu();
         try {
             loginMenu.start(ApplicationController.getStage());

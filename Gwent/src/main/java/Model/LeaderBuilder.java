@@ -413,7 +413,8 @@ public class LeaderBuilder {
                         }
                     }
                     for (Card card : user.getBoard().getRanged()) {
-                        if (!card.getType().equals("agileUnit") || card.getAbility().contains("hero")) continue;
+                        if (!card.getType().equals("agileUnit") ||
+                                (card.getAbility() != null && card.getAbility().contains("hero"))) continue;
                         int currentPower = card.getPower(), secondPower = card.getPower();
                         currentPower = SpecialAction.impenetrableFog(currentPower, user);
                         secondPower = SpecialAction.bitingFrost(secondPower, user);

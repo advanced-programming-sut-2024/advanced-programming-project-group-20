@@ -111,42 +111,56 @@ public class RegisterController {
 
         ResultSet rs = null;
         String gsonString = "";
-
-        try {
-            // Establishing the database connection
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
-            Statement stmt = conn.createStatement();
-
-            // Query data
-            rs = stmt.executeQuery("SELECT * FROM users");
-            while (rs.next()) {
-                gsonString = rs.getString("names");
+        File file = new File("sample.db");
+        if (!file.exists()) {
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
+            return null;
+        } else {
+            try {
+                // Establishing the database connection
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
+                Statement stmt = conn.createStatement();
 
-            // Closing the resources
-            stmt.close();
-            conn.close();
-            ArrayList<Object> objects1;
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<User>>() {
-            }.getType();
-            objects1 = gson.fromJson(gsonString, listType);
-
-            if (objects1 != null) {
-                for (Object object : objects1) {
-                    User.getAllUsers().add((User) object);
-                    User user = (User) object;
-                    if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
+                ResultSet resultSet = stmt.executeQuery("SELECT COUNT(*) AS count FROM users");
+                int rowCount = resultSet.getInt("count");
+                if (rowCount == 0) {
+                    System.out.println("Nothing in the table");
+                    return null;
+                }
+                // Query data
+                rs = stmt.executeQuery("SELECT * FROM users");
+                while (rs.next()) {
+                    gsonString = rs.getString("names");
                 }
 
-            } else {
-                objects1 = new ArrayList<>();
-            }
-            return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", new ArrayList<>());
-    }
+                // Closing the resources
+                stmt.close();
+                conn.close();
+                ArrayList<Object> objects1;
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<User>>() {
+                }.getType();
+                objects1 = gson.fromJson(gsonString, listType);
 
+                if (objects1 != null) {
+                    for (Object object : objects1) {
+                        User.getAllUsers().add((User) object);
+                        User user = (User) object;
+                        if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
+                    }
+
+                } else {
+                    objects1 = new ArrayList<>();
+                }
+                return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 }

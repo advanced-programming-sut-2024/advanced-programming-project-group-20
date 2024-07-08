@@ -12,6 +12,7 @@ public class PreGameController {
         GameController.turnStarter(user1, user2);
         Object[] objects = new Object[3];
         user1.getCards().put(15, user2.getCards().get(14));
+        Thread.sleep(1500);
         while (!user1.isTurn()) {
             Thread.sleep(1000);
         }

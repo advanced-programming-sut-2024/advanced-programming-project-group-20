@@ -31,8 +31,21 @@ public class ApplicationController {
         alert.show();
     }
 
+    public static void logout(ArrayList<Object> objects) {
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (User user : User.getAllUsers()) {
+            objects1.add(user);
+        }
+        ApplicationController.saveTheUsersInGson(objects1);
+    }
+
     // if you want to have all users of Server you should call this method in your client
     public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects) {
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (User user : User.getAllUsers()) {
+            objects1.add(user);
+        }
+        ApplicationController.saveTheUsersInGson(objects1);
         return new SendingPacket("ApplicationController"
                 , "receiveUsersOfServerSent", User.getAllUsers().toArray());
     }
@@ -41,18 +54,19 @@ public class ApplicationController {
         Gson gson = new Gson();
         ArrayList<User> usersToSave = new ArrayList<>();
 
-        for (User user: User.getAllUsers()){
-            System.out.println("Userrr: "+ user.getUsername());
+        for (User user : User.getAllUsers()) {
+            System.out.println("Userrr: " + user.getUsername());
         }
 
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
+            System.out.println(user.getUsername() + "ajab");
             usersToSave.add(user);
         }
 
-for (User user: usersToSave){
-    System.out.println("User: "+ user.getUsername());
-}
+        for (User user : usersToSave) {
+            System.out.println("User: " + user.getUsername());
+        }
 
         ///delete last content (we don't need that)
 //        try (Writer writer = new FileWriter("users.json")) {
@@ -60,12 +74,13 @@ for (User user: usersToSave){
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+        for (User user: User.getAllUsers()){
+            System.out.println("("+user.getUsername()+")");
+        }
 
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
         String json = gson1.toJson(User.getAllUsers());
-for (User user: User.getAllUsers()){
-    System.out.println(user.getUsername());
-}
+
 
 //========================================================================================================================
 //         store gson in data base

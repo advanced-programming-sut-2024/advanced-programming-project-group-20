@@ -9,6 +9,7 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableNumberValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -32,13 +33,10 @@ import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
-import webConnection.Packet;
-import webConnection.serverCommander;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 public class GameMenu extends Application {
     public Button nextTurn;
@@ -56,6 +54,9 @@ public class GameMenu extends Application {
     public TextField sendField;
     public AnchorPane chatPane;
     public Label yourTurnLabel;
+    public VBox emoji;
+    public Label lostConnectionLabel;
+    public Label timeLabel;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -74,6 +75,8 @@ public class GameMenu extends Application {
     public Label turnLabel;
     public ImageView turnBurnt;
     public ImageView opponentBurnt;
+    private Timeline lostConnectionTimeLine;
+    private int time = 120;
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     public static Chat chat;
@@ -106,6 +109,10 @@ public class GameMenu extends Application {
         });
         stage.setScene(scene);
         ApplicationController.setStage(stage);
+        stage.setOnCloseRequest(windowEvent -> {
+            Client.getConnection().doInServer("GameController","lostConnection",User.getLoggedUser());
+            System.exit(0);
+        });
         stage.show();
         stage.setHeight(740);
         stage.setWidth(1280);
@@ -118,7 +125,7 @@ public class GameMenu extends Application {
     public void initialize() {
         //chat
         //todo real name
-        chat = new Chat("ali");
+        chat = new Chat(User.getLoggedUser().getUsername());
         chat.setvBox(new VBox());
         chat.getvBox().setPrefWidth(chatScroll.getPrefWidth() - 30);
         chat.getvBox().getChildren().add(new Label("salam"));
@@ -138,10 +145,9 @@ public class GameMenu extends Application {
             Message message = new Message(sendField.getText(), chat.getName(), Chat.getTime());
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(message);
-            //todo real username
-            objects.add("ali");
+            objects.add(User.getLoggedUser().getUsername());
             chat.getMessages().clear();
-            Client.getConnection().doInServer("ChatController", "getMessages", message, "ali");
+            Client.getConnection().doInServer("ChatController", "getMessages", message, User.getLoggedUser().getUsername());
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -155,6 +161,14 @@ public class GameMenu extends Application {
             sendField.setText("");
         });
         //chat
+        //emoji
+        for (Node node : emoji.getChildren()) {
+            node.setOnMouseClicked(mouseEvent -> {
+                GameMenu.showEmoji(node,450);
+                Client.getConnection().doInServer("GameController","setEmoji", node.getId());
+            });
+        }
+        //emoji
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(cheatText);
         pane.getChildren().remove(cheatLabel);
@@ -162,6 +176,8 @@ public class GameMenu extends Application {
         pane.getChildren().remove(passedOpponent);
         pane.getChildren().remove(turnLabel);
         pane.getChildren().remove(yourTurnLabel);
+        pane.getChildren().remove(timeLabel);
+        pane.getChildren().remove(lostConnectionLabel);
         turnLabel.setId("no");
         yourTurnLabel.setId("no");
         setHboxes();
@@ -170,12 +186,46 @@ public class GameMenu extends Application {
             card.setOnMouseEntered(event -> biggerCardImage.setImage(card.getImage()));
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
         }
-        setRandomHand();
+        if (User.getLoggedUser().getBoard().getHand().isEmpty()) setRandomHand();
+        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         setImagesOfBoard();
         setHighScoreIcon();
         updateCardEvent();
         placeCard();
         startCheatMenu();
+    }
+    public static synchronized   void giveEmojiId(ArrayList<Object> objects ){
+        Platform.runLater(()->{
+            if (ApplicationController.getRoot()==null)
+                return;
+            for (Node node: ApplicationController.getRoot().getChildren()){
+            if (node.getId()!=null&&node.getId().equals("emojiVbox")){
+                for (Node node1: ((VBox)node).getChildren()){
+                    if (node1.getId().equals(objects.get(0))) {
+                        showEmoji(node1,200);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        });
+    }
+
+    public static synchronized void showEmoji(Node node, int height) {
+        ImageView imageView = new ImageView(((ImageView) node).getImage());
+        imageView.setX(735);
+        imageView.setY(height);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+        if (!ApplicationController.getRoot().getChildren().contains(imageView))
+            ApplicationController.getRoot().getChildren().add(imageView);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), imageView);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.setOnFinished(actionEvent -> ApplicationController.getRoot().getChildren().remove(imageView));
+        fadeTransition.play();
     }
 
     private void startCheatMenu() {
@@ -223,9 +273,7 @@ public class GameMenu extends Application {
                 User.getLoggedUser().getLeader().setUsed(false);
                 break;
             case "5":
-//                User.getLoggedUser().getOpponentUser().setPassed(true);
-//                if (!ApplicationController.getRoot().getChildren().contains(passedLabel))
-//                    ApplicationController.getRoot().getChildren().add(passedLabel);
+                User.getLoggedUser().getBoard().getHand().add(Card.giveCardByName2("Commander’shorn"));
                 break;
             case "6":
                 showOpponentCards(User.getLoggedUser().getOpponentUser().getBoard().getHand());
@@ -786,9 +834,8 @@ public class GameMenu extends Application {
         vBox.getChildren().addAll(total, totalPoint, totalPoint2);
         vBox.getChildren().add(button);
         User.getLoggedUser().setOpponentUser(null);
+        User.getLoggedUser().setOppName(null);
         ApplicationController.getRoot().getChildren().add(vBox);
-        //todo check doesn't have exception;
-        Client.getConnection().doInServer("ApplicationController", "saveTheUsersInGson", User.getLoggedUser());
     }
 
     private Button getButton() {
@@ -1314,9 +1361,11 @@ public class GameMenu extends Application {
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
         User.getLoggedUser().setActiveGame(gameHistory);
         User.getLoggedUser().setCards(temp.getCards());
+        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         User.getLoggedUser().boardMaker();
         ApplicationController.setEnable(ApplicationController.getRoot());
         Platform.runLater(() -> {
+            System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
             gameMenu.yourTurn();
@@ -1362,6 +1411,53 @@ public class GameMenu extends Application {
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
 
+        });
+    }
+
+    public static void opponentLostConnection (ArrayList<Object> objects) {
+        Platform.runLater(() ->{
+            ApplicationController.setDisable(ApplicationController.getRoot());
+            gameMenu.opponentLost();
+        });
+    }
+
+    private void opponentLost() {
+        ApplicationController.getRoot().getChildren().add(timeLabel);
+        ApplicationController.getRoot().getChildren().add(lostConnectionLabel);
+        time = 120;
+        lostConnectionTimeLine = new Timeline(new KeyFrame(Duration.seconds(1), actionEvent -> {
+            time--;
+            timeLabel.setText(String.valueOf(time) + " SECONDS");
+            if (time < 1) {
+                int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
+                int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
+                calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
+                Client.getConnection().doInServer("GameController","endWithLostConnection",User.getLoggedUser(),User.getLoggedUser().getActiveGame());
+                lostConnectionTimeLine.stop();
+            }
+        }));
+        lostConnectionTimeLine.setCycleCount(120);
+        lostConnectionTimeLine.play();
+    }
+
+    public static void opponentBackTurn (ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            User.getLoggedUser().boardMaker();
+            ApplicationController.setEnable(ApplicationController.getRoot());
+            ApplicationController.getRoot().getChildren().remove(gameMenu.timeLabel);
+            ApplicationController.getRoot().getChildren().remove(gameMenu.lostConnectionLabel);
+            gameMenu.lostConnectionTimeLine.stop();
+            gameMenu.setImagesOfBoard();
+            gameMenu.updateCardEvent();
+            gameMenu.yourTurn();
+        });
+    }
+
+    public static void opponentBack (ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            ApplicationController.getRoot().getChildren().remove(gameMenu.timeLabel);
+            ApplicationController.getRoot().getChildren().remove(gameMenu.lostConnectionLabel);
+            gameMenu.lostConnectionTimeLine.stop();
         });
     }
 }

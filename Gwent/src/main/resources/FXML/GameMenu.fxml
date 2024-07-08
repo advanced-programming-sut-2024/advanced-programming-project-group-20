@@ -25,7 +25,7 @@
          <Font name="Book Antiqua" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="470.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
+   <Label fx:id="passed" alignment="CENTER" contentDisplay="CENTER" layoutX="323.0" layoutY="500.0" prefHeight="45.0" prefWidth="79.0" style="-fx-background-color: #ffffff44;" text="passed" textFill="#9e1d1d">
       <font>
          <Font name="Book Antiqua" size="20.0" />
       </font>
@@ -76,12 +76,12 @@
       <font>
          <Font name="Agency FB Bold" size="24.0" />
       </font></TextField>
-   <Button fx:id="chatButton" layoutX="1442.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: rgba(222,201,0,0.27);" text="chat" textFill="#cfb74a">
+   <Button id="chat" fx:id="chatButton" layoutX="1442.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: rgba(222,201,0,0.27);" text="chat" textFill="#cfb74a">
       <font>
          <Font name="Baskerville Old Face" size="17.0" />
       </font>
    </Button>
-   <AnchorPane fx:id="chatPane" layoutX="1257.0" layoutY="220.0" prefHeight="434.0" prefWidth="235.0">
+   <AnchorPane id="chat" fx:id="chatPane" layoutX="1257.0" layoutY="220.0" prefHeight="434.0" prefWidth="235.0">
       <children>
          <ScrollPane fx:id="chatScroll" prefHeight="408.0" prefWidth="235.0">
            <content>
@@ -92,8 +92,31 @@
          <TextField fx:id="sendField" layoutX="-1.0" layoutY="409.0" prefHeight="26.0" prefWidth="185.0" />
       </children>
    </AnchorPane>
-   <ImageView  fx:id="biggerCardImage" layoutX="1257.0" layoutY="220.0" fitHeight="434.0" fitWidth="235.0">
+   <ImageView fx:id="biggerCardImage" fitHeight="434.0" fitWidth="235.0" layoutX="1257.0" layoutY="220.0">
    </ImageView>
+   <VBox id="emojiVbox" fx:id="emoji" layoutX="389.0" layoutY="669.0" prefHeight="147.0" prefWidth="50.0">
+      <children>
+         <ImageView id="1" fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../someImages/khande.png" />
+                 </ImageView>
+         <ImageView id="2" fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../someImages/ainak.png" />
+                 </ImageView>
+         <ImageView id="3" fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../someImages/khandeShadid.png" />
+                 </ImageView>
+      </children>
+   </VBox>
+   <Label fx:id="lostConnectionLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="447.0" layoutY="260.0" prefHeight="70.0" prefWidth="785.0" text="Your Opponent lost his connection you will win in :" textFill="#74caff">
+      <font>
+         <Font name="Algerian" size="28.0" />
+      </font>
+   </Label>
+   <Label fx:id="timeLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="660.0" layoutY="340.0" prefHeight="70.0" prefWidth="300.0" text="120 seconds" textAlignment="CENTER" textFill="#df15cb">
+      <font>
+         <Font name="Algerian" size="28.0" />
+      </font>
+   </Label>
 
 
 

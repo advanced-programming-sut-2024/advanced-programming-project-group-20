@@ -1,6 +1,7 @@
 package Controller;
 
 import Model.GameHistory;
+import Model.Request;
 import Model.User;
 import WebConnection.Connection;
 import WebConnection.SendingPacket;
@@ -12,12 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-//import static Controller.RegisterController.saveServerUsersToJson;
-
 public class ProfileController {
 
     public static void changeUserName(String lastUsername, String usernameField) {
-//        System.out.println(username);
         User.getUserByName(lastUsername).setUsername(usernameField);
     }
 
@@ -91,10 +89,10 @@ public class ProfileController {
             user.setGameHistories(new ArrayList<>());
         }
 
-        return new SendingPacket("ProfileMenu","setGameHistories", objects1.toArray());
+        return new SendingPacket("ProfileMenu", "setGameHistories", objects1.toArray());
     }
 
-        public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
+    public static SendingPacket changeInformationUsingButtonSaveChanges(ArrayList<Object> objects) {
         String lastUsername = (String) objects.get(0);
         String usernameField = (String) objects.get(1);
         String passwordField = (String) objects.get(2);
@@ -172,34 +170,39 @@ public class ProfileController {
         System.out.println("into send request" + ((User) objects.get(1)).getUsername());
         if (User.getUserByName(friend) == null)
             return new SendingPacket("ApplicationController", "alert2", "this user doesnt exist", "erorre!!");
-        else
+        else if (!User.getUserByName(friend).getFriendRequests().contains(user.getUsername())) {
             User.getUserByName(friend).getFriendRequests().add(user.getUsername());
-
-        if (connection == null)
+            user.getRequests().add(new Request(friend));
+        }
+//todo age request kar nakard inon comment nakon
+//        if (connection == null)
             return null;
-        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
+//        return new SendingPacket("ProfileMenu", "setRequest", connection, user.getUsername());
     }
 
     public static SendingPacket updateRequests(ArrayList<Object> objects) {
-
+        String friendName =(String) objects.get(0);
+        String username = ((User)objects.get(1)).getUsername();
+        User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
+        User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
         System.out.println("into update request" + ((User) objects.get(1)).getUsername());
-        User user = (User) objects.get(1);
-        ArrayList<String> strings = new ArrayList<>();
-        if (user.getFriendRequests() != null && !user.getFriendRequests().isEmpty()) {
-            System.out.println("requ khali nist");
-            strings.addAll(user.getFriendRequests());
-        }
-        user.getFriendRequests().clear();
-//ArrayList<Object> objects1 = new ArrayList<>();
-//for (User user1: User.getAllUsers()){
-//    objects1.add(user1);
-//}
-//        ApplicationController.saveTheUsersInGson(User.getAllUsers());
-//TODO check this part
-        ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
-        ApplicationController.saveTheUsersInGson(objects1);
+        setRequestHistory(friendName);
+        return null;
 
-        return new SendingPacket("ProfileMenu", "updateRequestInMenu", strings.toArray());
+    }
+
+    private static void setRequestHistory(String friendName) {
+        System.out.println("miad");
+        for (Request request : User.getUserByName(friendName).getRequests()) {
+            if (User.getUserByName(friendName).getFriends().contains(request.getFriendName()) && !request.getResult().equals("rejected")) {
+                request.setResult("accepted");
+                System.out.println(request.getFriendName()+ " accepted");
+            }
+            if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getUserByName(friendName)) && !request.getResult().equals("accepted")) {
+                request.setResult("rejected");
+                System.out.println(request.getFriendName()+ " rejected");
+            }
+        }
     }
 
     private static void confirmAlert() {
@@ -209,11 +212,33 @@ public class ProfileController {
     }
 
     public static SendingPacket beFriend(ArrayList<Object> objects) {
+String friendName = (String) objects.get(0);
+String username = (String) objects.get(1);
         // the second is connection owner
-        if (!User.getUserByName((String) objects.get(0)).getFriends().contains((String) objects.get(1)))
-            User.getUserByName((String) objects.get(0)).getFriends().add((String) objects.get(1));
-        if (!User.getUserByName((String) objects.get(1)).getFriends().contains((String) objects.get(0)))
-            User.getUserByName((String) objects.get(1)).getFriends().add((String) objects.get(0));
+        if (!User.getUserByName(friendName).getFriends().contains(username))
+            User.getUserByName(friendName).getFriends().add(username);
+        if (!User.getUserByName(username).getFriends().contains(friendName))
+            User.getUserByName(username).getFriends().add(friendName);
+        User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
+        User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
+
+        setRequestHistory(friendName);
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (User user: User.getAllUsers()){
+            objects1.add(user);
+        }
+
+        ApplicationController.saveTheUsersInGson(objects1);
         return null;
+
+    }
+
+    public static SendingPacket showLastGame(ArrayList<Object> objects) {
+        User user = User.getUserByName((String) objects.get(0));
+        GameHistory gameHistory = user.getGameHistories().getLast();
+        Object[] objects1 = new Object[2];
+        objects1[0] = user.getUsername();
+        objects1[1] = gameHistory;
+        return new SendingPacket("ProfileMenu", "showLastGame", objects1);
     }
 }

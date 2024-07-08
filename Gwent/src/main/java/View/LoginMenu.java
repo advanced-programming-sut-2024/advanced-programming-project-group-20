@@ -148,6 +148,10 @@ Platform.runLater(()->{
 
     public static void goToMainMenu(String username) {
         User.setLoggedUser(User.giveUserByUsername(username));
+        // todo uncomment login check
+        if (User.giveUserByUsername(username)==null){
+            System.out.println("inja avalish taraf :"+username);
+        }
         MainMenu mainMenu = new MainMenu();
         Platform.runLater(() -> {
             try {

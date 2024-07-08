@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class User {
+    private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<GameHistory> gameHistories = new ArrayList<>();
     transient private GameHistory activeGame;
     private String username;
@@ -48,6 +49,7 @@ public class User {
     }
 
     public ArrayList<HashMap<Integer, ArrayList<String>>> getMoves() {
+        if (moves == null) moves = new ArrayList<>();
         return moves;
     }
 
@@ -218,6 +220,7 @@ public class User {
 
 
     public ArrayList<GameHistory> getGameHistories() {
+        if (gameHistories == null) gameHistories = new ArrayList<>();
         return gameHistories;
     }
 
@@ -342,11 +345,13 @@ public class User {
     }
 
     public ArrayList<String > getFriends() {
+        if(friends == null) friends = new ArrayList<>();
         return friends;
     }
 
 
     public ArrayList<String> getFriendRequests() {
+        if(friendRequests == null) friendRequests = new ArrayList<>();
         return friendRequests;
     }
 
@@ -363,11 +368,29 @@ public class User {
     }
 
     public ArrayList<String> getGameRequests() {
+        if(gameRequests == null) gameRequests = new ArrayList<>();
         return gameRequests;
     }
 
     public void setGameHistories(ArrayList<GameHistory> gameHistories) {
         this.gameHistories = gameHistories;
+    }
+
+    public String getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public ArrayList<Request> getRequests() {
+        if(requests == null) requests = new ArrayList<>();
+        return requests;
+    }
+
+    public void setRequests(ArrayList<Request> requests) {
+        this.requests = requests;
     }
 }
 

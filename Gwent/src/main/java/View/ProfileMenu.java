@@ -1,9 +1,6 @@
 package View;
 
-import Model.Faction;
-import Model.GameHistory;
-import Model.Leader;
-import Model.User;
+import Model.*;
 import com.google.gson.Gson;
 import javafx.animation.Transition;
 import javafx.application.Application;
@@ -38,6 +35,7 @@ public class ProfileMenu extends Application {
     public ScrollPane scrollOfFriends;
     public HBox sendRequestHbox;
     public AnchorPane pane;
+    public ScrollPane scrollOfRequests;
     @FXML
     private Button button1;
     @FXML
@@ -79,12 +77,10 @@ public class ProfileMenu extends Application {
     @FXML
     public void initialize() {
         root = pane;
-        setFriendsTable();
         setRankOfUsers();
         contentsOfProfileMenu();
         setTablePointsContent();
-        setHistoryContents();
-        Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
+        setFriendsTable();
         profileMenu = this;
     }
 
@@ -94,7 +90,12 @@ public class ProfileMenu extends Application {
         GameHistory gameHistory;
         for (Object object : objects) {
             gameHistory = gson.fromJson(gson.toJson(object), GameHistory.class);
+            System.out.println(gameHistory.getWinner());
             User.getLoggedUser().getGameHistories().add(gameHistory);
+        }
+        for (GameHistory gameHistory1 : User.getLoggedUser().getGameHistories()) {
+            System.out.println(gameHistory1.getWinner());
+            System.out.println(gameHistory1.getLeaderName());
         }
         Platform.runLater(() -> {
             profileMenu.setHistoryContents();
@@ -103,7 +104,6 @@ public class ProfileMenu extends Application {
 
     private void setFriendsTable() {
         Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
-
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -127,8 +127,6 @@ public class ProfileMenu extends Application {
         Gson gson = new Gson();
         for (User user : User.getAllUsers())
             System.out.println(gson.toJson(user));
-        // todo handel friends
-        User.setLoggedUser((User.getUserByName(User.getLoggedUser().getUsername())));
         System.out.println("his name" + User.getLoggedUser().getUsername());
         for (String s : User.getLoggedUser().getFriends())
             tableView.getItems().add(User.getUserByName(s));
@@ -140,14 +138,69 @@ public class ProfileMenu extends Application {
             objects.add(requesterName);
             setRequest(objects);
         }
-
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                User user = tableView.getSelectionModel().getSelectedItem();
+                if (user != null && user.getNumberOfGames() > 0) {
+                    Client.getConnection().doInServer("MainController", "playWithFriend",
+                            User.getLoggedUser().getUsername(), user.getUsername(),true);
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
+
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
-            Client.getConnection().doInServer("ProfileController", "sendRequest", ((TextField) sendRequestHbox.getChildren().get(0)).getText());
+            if (User.getUserByName(((TextField) sendRequestHbox.getChildren().get(0)).getText()) == null)
+                ApplicationController.alert("this user doesnt exist", "erorre!!");
+            else {
+                showFriendInfo(((TextField) sendRequestHbox.getChildren().get(0)).getText());
+                ((TextField) sendRequestHbox.getChildren().get(0)).setText("");
+            }
         });
-//todo in bashe ya na?
-//        Client.getConnection().doInServer("ProfileController", "updateRequests", new Object());
+
+        for (Request request : User.getLoggedUser().getRequests()) {
+            if (User.getLoggedUser().getFriends().contains(request.getFriendName()) && !request.getResult().equals("rejected"))
+                request.setResult("accepted");
+            if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getLoggedUser().getUsername()) && !request.getResult().equals("accepted"))
+                request.setResult("rejected");
+        }
+            TilePane collectionContentRequest = new TilePane(2, 3);
+            collectionContentRequest.setPrefWidth(200);
+            collectionContentRequest.setMinHeight(300);
+            TableView<Request> tableViewRequest = new TableView<>();
+            tableViewRequest.setStyle("-fx-background-color: transparent");
+            tableViewRequest.setPrefWidth(500);
+            tableViewRequest.setPrefHeight(600);
+            tableViewRequest.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            TableColumn<Request, String> requestTo = new TableColumn<>("request to");
+            requestTo.setCellValueFactory(new PropertyValueFactory<>("friendName"));
+            tableViewRequest.getColumns().add(requestTo);
+            TableColumn<Request, String> result = new TableColumn<>("result");
+            result.setCellValueFactory(new PropertyValueFactory<>("result"));
+            tableViewRequest.getColumns().add(result);
+
+            collectionContentRequest.getChildren().add(tableViewRequest);
+            scrollOfRequests.setContent(collectionContentRequest);
+   for (Request request :User.getLoggedUser().getRequests())
+       tableViewRequest.getItems().add(request);
+
+    }
+
+    private void showFriendInfo(String text) {
+
+        User user = User.getUserByName(text);
+        Label label = new Label();
+        label.setText(user.getUsername() + "\nEmail: " + user.getEmail() + "\nWins Number:" + user.getNumberOfWins());
+        Button button = new Button("send");
+        button.setOnMouseClicked(mouseEvent -> {
+            Client.getConnection().doInServer("ProfileController", "sendRequest", text);
+            ((TextField) sendRequestHbox.getChildren().get(0)).setText("");
+            friendRequest.getChildren().remove(1);
+        });
+
+        HBox sendHbox = new HBox(label, button);
+        friendRequest.getChildren().add(sendHbox);
     }
 
     private void setRankOfUsers() {
@@ -180,13 +233,49 @@ public class ProfileMenu extends Application {
         numberOfWins.setCellValueFactory(new PropertyValueFactory<>("numberOfWins"));
         tableView.getColumns().add(numberOfWins);
 
+        TableColumn<User, Date> lastSeen = new TableColumn<>("Last seen");
+        lastSeen.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
+        tableView.getColumns().add(lastSeen);
+
         for (User user : User.getAllUsers()) {
             tableView.getItems().add(user);
         }
+        tableView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 1) {
+                User user = tableView.getSelectionModel().getSelectedItem();
+                if (user != null && user.getNumberOfGames() > 0) {
+                    Client.getConnection().doInServer("ProfileController", "showLastGame", user.getUsername());
+                }
+            }
+        });
         collectionContent.getChildren().add(tableView);
         scrollOfPointsTable.setContent(collectionContent);
     }
 
+    public static void showLastGame(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            Gson gson = new Gson();
+            User user = User.getUserByName((String) objects.get(0));
+            GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
+            GameHistoryShower gameHistoryShower = new GameHistoryShower();
+            GameHistoryShower.setGameUser(user);
+            GameHistoryShower.setGameHistory(gameHistory);
+            user.setOpponentUser(User.getUserByName(gameHistory.getOpponentName()));
+            user.readyForGame();
+            user.getOpponentUser().readyForGame();
+            user.setFaction(Faction.giveFactionByName(gameHistory.getFactionName()));
+            user.setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getLeaderName(), user.getFaction()));
+            user.getOpponentUser().setFaction(Faction.giveFactionByName(gameHistory.getOppFactionName()));
+            user.getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(gameHistory.getOppLeaderName(),
+                    user.getOpponentUser().getFaction()));
+            user.getOpponentUser().setOpponentUser(user);
+            try {
+                gameHistoryShower.start(ApplicationController.getStage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
     private void setHistoryContents() {
         if (User.getLoggedUser().getGameHistories() == null) {
             User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -251,12 +340,8 @@ public class ProfileMenu extends Application {
         TableColumn<GameHistory, String> winner = new TableColumn<>("Winner");
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         tableView.getColumns().add(winner);
-        if (User.getLoggedUser().getGameHistories() != null) {
-            for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
-                tableView.getItems().add(gameHistory);
-            }
-        } else {
-            User.getLoggedUser().setGameHistories(new ArrayList<>());
+        for (GameHistory gameHistory : User.getLoggedUser().getGameHistories()) {
+            tableView.getItems().add(gameHistory);
         }
 
         tableView.setOnMouseClicked(mouseEvent -> {
@@ -362,7 +447,7 @@ public class ProfileMenu extends Application {
     }
 
     public void button1Clicked(ActionEvent actionEvent) {
-
+        setTablePointsContent();
         button1.setScaleX(1.2);
         button1.setScaleY(1.2);
         button2.setScaleX(1.0);
@@ -374,6 +459,7 @@ public class ProfileMenu extends Application {
         scrollOfPointsTable.setVisible(true);
         scrollOfHistory.setVisible(false);
         friendRequest.setVisible(false);
+        scrollOfRequests.setVisible(false);
         scrollOfFriends.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
@@ -393,6 +479,7 @@ public class ProfileMenu extends Application {
         scrollOfPointsTable.setVisible(false);
         scrollOfFriends.setVisible(false);
         friendRequest.setVisible(false);
+        scrollOfRequests.setVisible(false);
         scrollOfHistory.setVisible(true);
         for (Node node : informationPane.getChildren())
             node.setVisible(false);
@@ -411,6 +498,7 @@ public class ProfileMenu extends Application {
         scrollOfHistory.setVisible(false);
         friendRequest.setVisible(false);
         scrollOfFriends.setVisible(false);
+        scrollOfRequests.setVisible(false);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(true);
         }
@@ -430,6 +518,7 @@ public class ProfileMenu extends Application {
         friendRequest.setVisible(true);
         scrollOfHistory.setVisible(false);
         scrollOfFriends.setVisible(true);
+        scrollOfRequests.setVisible(true);
         for (Node node : informationPane.getChildren()) {
             node.setVisible(false);
         }
@@ -450,20 +539,24 @@ public class ProfileMenu extends Application {
             for (Node node : root.getChildren()) {
                 // todo no hardcode
                 if (node.getId() != null && node.getId().equals("request")) {
+                    for (Node node1 : ((VBox) node).getChildren()) {
+                        if (node1.getId() != null && node1.getId().equals(friendName))
+                            return;
+                    }
+
                     ((VBox) node).getChildren().add(hBox = new HBox(new Label("Friend request from " + friendName),
                             yesButton = new Button("ok"), noButton = new Button("no")));
                     hBox.setId(friendName);
-                    noButton.setOnMouseClicked(event -> ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName)));
+                    noButton.setOnMouseClicked(event -> {
+                        ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
+                        Client.getConnection().doInServer("ProfileController", "updateRequests", friendName);
+
+                    });
                     yesButton.setOnMouseClicked(mouseEvent -> {
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-//                        if (User.getLoggedUser().getFriends() == null)
-//                            User.getLoggedUser().setFriends(new ArrayList<>());
-//                        if (!User.getLoggedUser().getFriends().contains(friendName))
-//                            User.getLoggedUser().getFriends().add(friendName);
                         System.out.println("dost add shode " + friendName);
                         System.out.println("User in client" + User.getLoggedUser().getUsername());
                         Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());
-
                     });
                 }
             }
@@ -471,15 +564,10 @@ public class ProfileMenu extends Application {
 
     }
 
-    public static void updateRequestInMenu(ArrayList<Object> objects) {
-        System.out.println("sefre?" + objects.size());
-        for (Object object : objects) {
-            System.out.println(object);
-            ArrayList<Object> objectArrayList = new ArrayList<>();
-            objectArrayList.add(new Object());
-            objectArrayList.add(object);
-            setRequest(objectArrayList);
-        }
 
+    public void updateGameHistories(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
     }
 }
+
+
