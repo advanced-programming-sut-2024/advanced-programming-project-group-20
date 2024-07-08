@@ -31,7 +31,6 @@ public class TournamentController {
             if (connection == null) continue;
             connection.sendOrder(new SendingPacket("TournamentMenu","updateTournament",objects));
         }
-        Thread.sleep(1000);
     }
 
 
@@ -73,7 +72,7 @@ public class TournamentController {
         return null;
     }
 
-    public static SendingPacket acceptGame(ArrayList<Object> objects) throws IOException {
+    public static SendingPacket acceptGame(ArrayList<Object> objects) throws IOException, InterruptedException {
         User user = User.getUserByName((String) objects.get(0));
         int pot = potYob(user.getUsername());
         int oppPot;
@@ -86,6 +85,7 @@ public class TournamentController {
         user.setOppName(opp.getUsername());
         opp.setOppName(user.getUsername());
         Tournament.getTournament().getActiveGames().add(user.getUsername() + " " + opp.getUsername());
+        sendNewTableForAllConnections();
         Connection connection = Connection.getConnectionByUserName(opp.getUsername());
         Object[] objects1 = new Object[1];
         objects1[0] = user.getUsername();
