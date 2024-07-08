@@ -2,7 +2,6 @@ package View;
 
 import View.ApplicationController;
 //import Controller.RegisterController;
-import Controller.RegisterController;
 import Model.Factions.Nilfgaard;
 import Model.GameHistory;
 import Model.User;

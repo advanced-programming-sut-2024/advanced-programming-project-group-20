@@ -148,8 +148,9 @@ public class RegisterController {
 
                 if (objects1 != null) {
                     for (Object object : objects1) {
-                        User.getAllUsers().add((User) object);
                         User user = (User) object;
+                        if (User.getUserByName(user.getUsername()) != null) continue;
+                        User.getAllUsers().add((User) object);
                         if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
                     }
 

@@ -47,6 +47,21 @@ public class User {
     private ArrayList<String> friendRequests =new ArrayList<>();
     private boolean privateGame = true;
 
+    public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
+        this.activeGame = null;
+        this.username = username;
+        this.password = password;
+        this.nickName = nickName;
+        this.email = email;
+        this.secureQuestion = secureQuestion;
+        this.secureAnswer = secureAnswer;
+        allUsers.add(this);
+        numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
+    }
+    public User(String username) {
+        this.username = username;
+    }
+
     public String getFactionName() {
         return factionName;
     }
@@ -69,21 +84,6 @@ public class User {
 
     public void setOppName(String oppName) {
         this.oppName = oppName;
-    }
-
-    public User(String username, String password, String nickName, String email, String secureQuestion, String secureAnswer) {
-        this.activeGame = null;
-        this.username = username;
-        this.password = password;
-        this.nickName = nickName;
-        this.email = email;
-        this.secureQuestion = secureQuestion;
-        this.secureAnswer = secureAnswer;
-        allUsers.add(this);
-        numberOfLose = numberOfWins = numberOfDraws = numberOfGames = maxPoint = 0;
-    }
-    public User(String username) {
-        this.username = username;
     }
 
     public HashMap<Integer, ArrayList<String>> getCards() {

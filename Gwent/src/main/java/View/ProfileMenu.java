@@ -141,7 +141,7 @@ public class ProfileMenu extends Application {
         tableView.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getClickCount() == 1) {
                 User user = tableView.getSelectionModel().getSelectedItem();
-                if (user != null && user.getNumberOfGames() > 0) {
+                if (user != null) {
                     Client.getConnection().doInServer("MainController", "playWithFriend",
                             User.getLoggedUser().getUsername(), user.getUsername(),true);
                 }

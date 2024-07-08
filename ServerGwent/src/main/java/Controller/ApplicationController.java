@@ -55,23 +55,11 @@ public class ApplicationController {
         Gson gson = new Gson();
         ArrayList<User> usersToSave = new ArrayList<>();
 
-        for (User user : User.getAllUsers()) {
-            System.out.println("Userrr: " + user.getUsername());
-        }
-
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
-            System.out.println(user.getUsername() + "ajab");
             usersToSave.add(user);
         }
 
-        for (User user : usersToSave) {
-            System.out.println("User: " + user.getUsername());
-        }
-
-        for (User user: User.getAllUsers()){
-            System.out.println("("+user.getUsername()+")");
-        }
 
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
         String json = gson1.toJson(User.getAllUsers());
