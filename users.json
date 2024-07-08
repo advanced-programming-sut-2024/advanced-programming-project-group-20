@@ -1,15 +1,12 @@
 [
   {
     "requests": [],
-    "gameHistories": [],
     "username": "a",
     "password": "S1a{dSP)",
     "nickName": "a",
     "secureQuestion": "What\u0027s your father\u0027s name?",
     "secureAnswer": "a",
-    "friends": [
-      "b"
-    ],
+    "friends": [],
     "numberOfDraws": 0,
     "numberOfLose": 0,
     "numberOfWins": 0,
@@ -29,21 +26,13 @@
     "privateGame": true
   },
   {
-    "requests": [
-      {
-        "friendName": "a",
-        "result": "accepted"
-      }
-    ],
-    "gameHistories": [],
+    "requests": [],
     "username": "b",
     "password": "S1a{dSP)",
     "nickName": "b",
     "secureQuestion": "What\u0027s your father\u0027s name?",
     "secureAnswer": "b",
-    "friends": [
-      "a"
-    ],
+    "friends": [],
     "numberOfDraws": 0,
     "numberOfLose": 0,
     "numberOfWins": 0,

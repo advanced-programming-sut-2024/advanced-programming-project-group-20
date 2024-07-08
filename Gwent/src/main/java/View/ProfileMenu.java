@@ -446,7 +446,7 @@ public class ProfileMenu extends Application {
     }
 
     public void button1Clicked(ActionEvent actionEvent) {
-
+        setTablePointsContent();
         button1.setScaleX(1.2);
         button1.setScaleY(1.2);
         button2.setScaleX(1.0);

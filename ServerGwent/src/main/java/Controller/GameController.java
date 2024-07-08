@@ -43,6 +43,15 @@ public class GameController {
             throw new RuntimeException(e);
         }
     }
+    public static void setMessage(ArrayList<Object> objects){
+        User opponent = User.getUserByName(((User) objects.get(1)).getOppName());
+        Connection connection = Connection.getConnectionByUserName(opponent.getUsername());
+        try {
+            connection.sendOrder(new SendingPacket("GameMenu","getMessage",objects.get(0)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static SendingPacket nextTurn(ArrayList<Object> objects) throws InterruptedException, IOException {
         Gson gson = new Gson();

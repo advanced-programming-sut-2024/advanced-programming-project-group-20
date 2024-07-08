@@ -9,7 +9,6 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableNumberValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -28,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
@@ -57,6 +57,7 @@ public class GameMenu extends Application {
     public VBox emoji;
     public Label lostConnectionLabel;
     public Label timeLabel;
+    public Pane reaction;
     @FXML
     private ImageView activeLeader;
     public Label passed;
@@ -77,6 +78,7 @@ public class GameMenu extends Application {
     public ImageView opponentBurnt;
     private Timeline lostConnectionTimeLine;
     private int time = 120;
+    private static ArrayList<String> readyMessages =new ArrayList<>(List.of(new String[]{"ریزی", "برو بابا", "حال کردی؟"}));
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     public static Chat chat;
@@ -164,7 +166,7 @@ public class GameMenu extends Application {
         //emoji
         for (Node node : emoji.getChildren()) {
             node.setOnMouseClicked(mouseEvent -> {
-                GameMenu.showEmoji(node);
+                GameMenu.showEmoji(node,450);
                 Client.getConnection().doInServer("GameController","setEmoji", node.getId());
             });
         }
@@ -193,7 +195,45 @@ public class GameMenu extends Application {
         updateCardEvent();
         placeCard();
         startCheatMenu();
+        setReactionSetting();
     }
+
+    private void setReactionSetting() {
+        reaction.getChildren().get(1).setOnMouseClicked(mouseEvent ->{
+            showMessage(((TextField)reaction.getChildren().get(0)).getText(),450);
+            Client.getConnection().doInServer("GameController", "setMessage",((TextField)reaction.getChildren().get(0)).getText());
+        });
+        reaction.getChildren().get(2).setOnMouseClicked(mouseEvent -> {
+            String message =readyMessages.get(new Random().nextInt(0,3));
+            showMessage(message,450);
+            Client.getConnection().doInServer("GameController", "setMessage",message);
+        });
+    }
+    public static void showMessage(String text, int height){
+        Label messageLabel = new Label(text);
+        messageLabel.setLayoutX(735);
+        messageLabel.setLayoutY(height);
+        messageLabel.setPrefHeight(200);
+        messageLabel.setPrefWidth(500);
+        messageLabel.setStyle("-fx-background-color: #11111107;");
+        messageLabel.setFont(new Font("Arial", 60));
+
+        if (!ApplicationController.getRoot().getChildren().contains(messageLabel))
+            ApplicationController.getRoot().getChildren().add(messageLabel);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), messageLabel);
+        fadeTransition.setFromValue(1.0);
+        fadeTransition.setToValue(0);
+        fadeTransition.setCycleCount(1);
+        fadeTransition.setOnFinished(actionEvent -> ApplicationController.getRoot().getChildren().remove(messageLabel));
+        fadeTransition.play();
+
+    }
+    public static void getMessage(ArrayList<Object> objects){
+        Platform.runLater(()-> {
+            showMessage((String) objects.get(0), 200);
+        });
+    }
+
     public static synchronized   void giveEmojiId(ArrayList<Object> objects ){
         Platform.runLater(()->{
             if (ApplicationController.getRoot()==null)
@@ -202,19 +242,20 @@ public class GameMenu extends Application {
             if (node.getId()!=null&&node.getId().equals("emojiVbox")){
                 for (Node node1: ((VBox)node).getChildren()){
                     if (node1.getId().equals(objects.get(0))) {
-                        showEmoji(node1);
+                        showEmoji(node1,200);
                         break;
                     }
                 }
+                break;
             }
         }
         });
     }
 
-    public static synchronized void showEmoji(Node node) {
+    public static synchronized void showEmoji(Node node, int height) {
         ImageView imageView = new ImageView(((ImageView) node).getImage());
         imageView.setX(735);
-        imageView.setY(350);
+        imageView.setY(height);
         imageView.setFitHeight(200);
         imageView.setFitWidth(200);
         if (!ApplicationController.getRoot().getChildren().contains(imageView))
@@ -223,6 +264,7 @@ public class GameMenu extends Application {
         fadeTransition.setFromValue(1.0);
         fadeTransition.setToValue(0);
         fadeTransition.setCycleCount(1);
+        fadeTransition.setOnFinished(actionEvent -> ApplicationController.getRoot().getChildren().remove(imageView));
         fadeTransition.play();
     }
 
