@@ -21,15 +21,6 @@ public class Message {
         this.senderName = senderName;
     }
 
-//    public void addEmoji(Emoji emoji) {
-//        emojis.add(emoji);
-//    }
-
-//    public void removeEmoji(Emoji emoji) {
-//        emojis.remove(emoji);
-//    }
-//
-
 
     public String getContent() {
         return content;
@@ -43,10 +34,6 @@ public class Message {
         return sentTime;
     }
 
-
-//    public ArrayList<Emoji> getEmojis() {
-//        return emojis;
-//    }
 
     public VBox toVBox() {
         Label content = initLabel(getContent());
@@ -65,8 +52,6 @@ public class Message {
         return label;
     }
 
-    public enum Emoji {
 
-    }
 }
 

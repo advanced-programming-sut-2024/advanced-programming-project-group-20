@@ -8,7 +8,6 @@ public class Tournament {
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> activeGames = new ArrayList<>();
     private String[] table = new String[28];
-    private String champion;
 
     public static ArrayList<Tournament> getTournaments () {
         return tournaments;
@@ -22,10 +21,6 @@ public class Tournament {
     }
     public ArrayList<String> getNames() {
         return names;
-    }
-    public void addPlayer(String name) {
-        names.add(name);
-        table[names.size()-1] = name;
     }
 
     public ArrayList<String> getActiveGames() {

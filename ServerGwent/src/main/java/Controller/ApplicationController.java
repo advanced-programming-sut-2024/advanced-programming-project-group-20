@@ -30,7 +30,6 @@ public class ApplicationController {
         alert.setContentText(contentText);
         alert.show();
     }
-//<<<<<<< HEAD
 
     public static void logout(ArrayList<Object> objects) {
         ArrayList<Object> objects1 = new ArrayList<>();
@@ -40,7 +39,6 @@ public class ApplicationController {
         ApplicationController.saveTheUsersInGson(objects1);
     }
 
-    // if you want to have all users of Server you should call this method in your client
     public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects) {
         ArrayList<Object> objects1 = new ArrayList<>();
         for (User user : User.getAllUsers()) {

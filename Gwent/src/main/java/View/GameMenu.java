@@ -155,7 +155,6 @@ public class GameMenu extends Application {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println(chat.getMessages().size());
             chat.getvBox().getChildren().clear();
             for (Message message1 : chat.getMessages()) {
                 chat.getvBox().getChildren().add(message1.toVBox());
@@ -189,7 +188,6 @@ public class GameMenu extends Application {
             card.setOnMouseExited(event -> biggerCardImage.setImage(null));
         }
         if (User.getLoggedUser().getBoard().getHand().isEmpty()) setRandomHand();
-        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         setImagesOfBoard();
         setHighScoreIcon();
         updateCardEvent();
@@ -200,9 +198,9 @@ public class GameMenu extends Application {
 
     private void setReactionSetting() {
         reaction.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
-            ((TextField) reaction.getChildren().get(0)).setText("");
             showMessage(((TextField) reaction.getChildren().get(0)).getText(), 450);
             Client.getConnection().doInServer("GameController", "setMessage", ((TextField) reaction.getChildren().get(0)).getText());
+            ((TextField) reaction.getChildren().get(0)).setText("");
         });
         reaction.getChildren().get(2).setOnMouseClicked(mouseEvent -> {
             String message = readyMessages.get(new Random().nextInt(0, 3));
@@ -284,7 +282,9 @@ public class GameMenu extends Application {
                         node.setEffect(gaussianBlur);
                     }
                     ApplicationController.getRoot().getChildren().add(cheatLabel);
+                    cheatLabel.setDisable(false);
                     ApplicationController.getRoot().getChildren().add(cheatText);
+                    cheatText.setDisable(false);
                 }
                 cheatText.setOnKeyPressed(keyEvent -> {
                     if (keyEvent.getCode().equals(KeyCode.ENTER)) {
@@ -1033,7 +1033,6 @@ public class GameMenu extends Application {
                 } else if (User.getLoggedUser().isFullHealth() && User.getLoggedUser().getOpponentUser().isFullHealth()) {
                     User.getLoggedUser().getOpponentUser().setFullHealth(false);
                     User.getLoggedUser().setFullHealth(false);
-                    System.out.println("here");
                 } else if (User.getLoggedUser().isFullHealth()) {
                     ending(User.getLoggedUser());
                     return;
@@ -1047,8 +1046,6 @@ public class GameMenu extends Application {
             ending(null);
             return;
         }
-        System.out.println(User.getLoggedUser().isFullHealth());
-        System.out.println(User.getLoggedUser().getOpponentUser().isFullHealth());
         if (User.getLoggedUser().getFaction().getName().equals("Monsters")) {
             monster1 = monstersAction(hBoxes.subList(0, 3));
         }
@@ -1308,7 +1305,10 @@ public class GameMenu extends Application {
                 int number = card.getPower();
                 if (!SpecialAction.clearWeather(user))
                     number = SpecialAction.torrentialRain(number, user);
-                if (User.getLoggedUser().getBoard().leaderBoost[0]) {
+                if (user.getBoard().leaderBoost[3] && card.getAbility() != null && card.getAbility().contains("spy")) {
+                    number *= 2;
+                }
+                if (user.getBoard().leaderBoost[0]) {
                     number *= 2;
                 } else {
                     ArrayList<Card> fullLine = new ArrayList<>();
@@ -1329,6 +1329,9 @@ public class GameMenu extends Application {
                 int number = card.getPower();
                 if (!SpecialAction.clearWeather(user))
                     number = SpecialAction.impenetrableFog(number, user);
+                if (user.getBoard().leaderBoost[3] && card.getAbility() != null && card.getAbility().contains("spy")) {
+                    number *= 2;
+                }
                 if (user.getBoard().leaderBoost[1]) {
                     number *= 2;
                 } else {
@@ -1350,6 +1353,9 @@ public class GameMenu extends Application {
                 int number = card.getPower();
                 if (!SpecialAction.clearWeather(user))
                     number = SpecialAction.bitingFrost(number, User.getLoggedUser());
+                if (user.getBoard().leaderBoost[3] && card.getAbility() != null && card.getAbility().contains("spy")) {
+                    number *= 2;
+                }
                 if (user.getBoard().leaderBoost[2]) {
                     number *= 2;
                 } else {
@@ -1408,11 +1414,9 @@ public class GameMenu extends Application {
         GameHistory gameHistory = gson.fromJson(gson.toJson(objects.get(1)), GameHistory.class);
         User.getLoggedUser().setActiveGame(gameHistory);
         User.getLoggedUser().setCards(temp.getCards());
-        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         User.getLoggedUser().boardMaker();
         ApplicationController.setEnable(ApplicationController.getRoot());
         Platform.runLater(() -> {
-            System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
             gameMenu.yourTurn();
@@ -1479,6 +1483,7 @@ public class GameMenu extends Application {
                 int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
                 int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
                 calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
+                User.getLoggedUser().getActiveGame().countTotalPoints();
                 Client.getConnection().doInServer("GameController", "endWithLostConnection", User.getLoggedUser(), User.getLoggedUser().getActiveGame());
                 lostConnectionTimeLine.stop();
             }

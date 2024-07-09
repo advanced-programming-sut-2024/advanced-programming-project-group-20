@@ -83,8 +83,6 @@ public class ApplicationController {
     }
 
     public static void alert2(ArrayList<Object> objects) {
-        System.out.println(objects.get(0));
-        System.out.println(objects.get(1));
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText((String) objects.get(1));
@@ -131,16 +129,6 @@ public class ApplicationController {
         }
     }
 
-//    public static void saveTheUsersInGson(ArrayList<User> users) {
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        String json = gson.toJson(users);
-//        try (PrintWriter pw = new PrintWriter("users.json")) {
-//            pw.write(json);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public static Scene getScene() {
         return scene;

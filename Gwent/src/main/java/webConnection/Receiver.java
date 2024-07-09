@@ -18,22 +18,6 @@ public class Receiver extends Thread {
         this.in = new DataInputStream(socket.getInputStream());
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public String getReceivedPacket() {
-        return receivedPacket;
-    }
-
-    public boolean isReceivedPacketAccessible() {
-        return isReceivedPacketAccessible;
-    }
-
-    public void setReceivedPacketAccessible(boolean receivedPacketAccessible) {
-        isReceivedPacketAccessible = receivedPacketAccessible;
-    }
-
     @Override
     public void run() {
         while (true) {

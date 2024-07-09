@@ -128,7 +128,6 @@ public class Spectator extends Application {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println(chat.getMessages().size());
             chat.getvBox().getChildren().clear();
             for (Message message1 : chat.getMessages()) {
                 chat.getvBox().getChildren().add(message1.toVBox());

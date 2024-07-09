@@ -170,13 +170,6 @@ public class User {
         return null;
     }
 
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
 
     public String getUsername() {
         return username;
@@ -260,53 +253,8 @@ public class User {
         return allUsers;
     }
 
-    public static void setAllUsers(ArrayList<User> allUsers) {
-        User.allUsers = allUsers;
-    }
-
-
-    public double getMaxPoint() {
-        return maxPoint;
-    }
-
-    public void setMaxPoint(int maxPoint) {
-        this.maxPoint = maxPoint;
-    }
-
-    public String getSecureQuestion() {
-        return secureQuestion;
-    }
-
-    public String getSecureAnswer() {
-        return secureAnswer;
-    }
-
-    public void setSecureAnswer(String secureAnswer) {
-        this.secureAnswer = secureAnswer;
-    }
-
-    public boolean isPassed() {
-        return isPassed;
-    }
-
     public void setPassed(boolean passed) {
         isPassed = passed;
-    }
-
-    public boolean isFullHealth() {
-        return isFullHealth;
-    }
-
-    public void setFullHealth(boolean fullHealth) {
-        isFullHealth = fullHealth;
-    }
-
-    public boolean isFirstTurn() {
-        return firstTurn;
-    }
-
-    public void setFirstTurn(boolean firstTurn) {
-        this.firstTurn = firstTurn;
     }
 
     public boolean isReady() {
@@ -355,10 +303,6 @@ public class User {
         return friendRequests;
     }
 
-    public void setFriendRequests(ArrayList<String> friendRequests) {
-        this.friendRequests = friendRequests;
-    }
-
     public boolean isSearch() {
         return search;
     }
@@ -376,10 +320,6 @@ public class User {
         this.gameHistories = gameHistories;
     }
 
-    public String getLastSeen() {
-        return lastSeen;
-    }
-
     public void setLastSeen(String lastSeen) {
         this.lastSeen = lastSeen;
     }
@@ -389,9 +329,6 @@ public class User {
         return requests;
     }
 
-    public void setRequests(ArrayList<Request> requests) {
-        this.requests = requests;
-    }
 }
 
 

@@ -32,7 +32,4 @@ public class ReceivingPacket {
         return parameters;
     }
 
-    public OperationType getOperationType() {
-        return operationType;
-    }
 }

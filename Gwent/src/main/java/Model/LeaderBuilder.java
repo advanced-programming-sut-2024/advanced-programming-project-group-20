@@ -99,24 +99,28 @@ public class LeaderBuilder {
                         }
                         nonHeroCards.add(card1);
                     }
-                    int randomNumber = random.nextInt(0,nonHeroCards.size());
-                    Card card = nonHeroCards.get(randomNumber);
-                    user.getBoard().getBurnedCard().remove(card);
-                    user.getBoard().getHand().add(card);
-                    GameMenu.getGameMenu().updateBorder();
+                    if (!nonHeroCards.isEmpty()) {
+                        int randomNumber = random.nextInt(0,nonHeroCards.size());
+                        Card card = nonHeroCards.get(randomNumber);
+                        user.getBoard().getBurnedCard().remove(card);
+                        user.getBoard().getHand().add(card);
+                    }
                     nonHeroCards = new ArrayList<>();
-                    for (Card card1 : user.getBoard().getBurnedCard()){
-                        if (card.getAbility() != null){
-                            if (card.getAbility().contains("hero")) {
+                    for (Card card1 : user.getOpponentUser().getBoard().getBurnedCard()){
+                        if (card1.getAbility() != null){
+                            if (card1.getAbility().contains("hero")) {
                                 continue;
                             }
                         }
                         nonHeroCards.add(card1);
                     }
-                    randomNumber = random.nextInt(0,nonHeroCards.size());
-                    card = nonHeroCards.get(randomNumber);
-                    user.getOpponentUser().getBoard().getBurnedCard().remove(card);
-                    user.getOpponentUser().getBoard().getHand().add(card);
+                    if (!nonHeroCards.isEmpty()) {
+                        int randomNumber = random.nextInt(0,nonHeroCards.size());
+                        Card card = nonHeroCards.get(randomNumber);
+                        user.getOpponentUser().getBoard().getBurnedCard().remove(card);
+                        user.getOpponentUser().getBoard().getHand().add(card);
+                    }
+                    GameMenu.getGameMenu().updateBorder();
                 }
             };
             case "TheWhiteFlame" -> new Leader(faction, "TheWhiteFlame") {
@@ -127,6 +131,7 @@ public class LeaderBuilder {
                             user.getDeck().remove(card);
                             user.getBoard().getWeather().add(card);
                             GameMenu.getGameMenu().updateBorder();
+                            return;
                         }
                     }
                 }
@@ -144,16 +149,22 @@ public class LeaderBuilder {
                     Card mostPowerfulCard = null;
                     int n = 0;
                     for (Card card : user.getOpponentUser().getBoard().getSiege()){
-                        n += card.getPower();
+                        n += card.getRealPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
                         }
-                        else if (mostPowerfulCard.getPower() < card.getPower()) {
+                        else if (mostPowerfulCard.getRealPower() < card.getRealPower()) {
                             mostPowerfulCard = card;
                         }
                     }
                     if (n > 10) {
-                        user.getOpponentUser().getBoard().getSiege().remove(mostPowerfulCard);
+                        for (Card card : user.getOpponentUser().getBoard().getSiege()) {
+                            if (card.getRealPower() == mostPowerfulCard.getRealPower()) {
+                                user.getOpponentUser().getBoard().getSiege().remove(card);
+                                user.getOpponentUser().getBoard().getBurnedCard().add(card);
+                            }
+                        }
+
                     }
                 }
             };
@@ -195,16 +206,22 @@ public class LeaderBuilder {
                     Card mostPowerfulCard = null;
                     int n = 0;
                     for (Card card : user.getOpponentUser().getBoard().getRanged()){
-                        n += card.getPower();
+                        n += card.getRealPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
                         }
-                        else if (mostPowerfulCard.getPower() < card.getPower()) {
+                        else if (mostPowerfulCard.getRealPower() < card.getRealPower()) {
                             mostPowerfulCard = card;
                         }
                     }
                     if (n > 10) {
-                        user.getOpponentUser().getBoard().getRanged().remove(mostPowerfulCard);
+                        for (Card card : user.getOpponentUser().getBoard().getRanged()) {
+                            if (card.getRealPower() == mostPowerfulCard.getRealPower()) {
+                                user.getOpponentUser().getBoard().getRanged().remove(card);
+                                user.getOpponentUser().getBoard().getBurnedCard().add(card);
+                            }
+                        }
+
                     }
                 }
             };
@@ -390,7 +407,8 @@ public class LeaderBuilder {
             case "HopeOfTheAenSeidhe" -> new Leader(faction, "HopeOfTheAenSeidhe") {
                 @Override
                 public void action(User user) {
-                    for (Card card : user.getBoard().getCloseCombat()) {
+                    ArrayList<Card> cards = new ArrayList<>(user.getBoard().getCloseCombat());
+                    for (Card card : cards) {
                         if (!card.getType().equals("agileUnit") || card.getAbility().contains("hero")) continue;
                         int currentPower = card.getPower(), secondPower = card.getPower();
                         currentPower = SpecialAction.bitingFrost(currentPower, user);
@@ -412,7 +430,8 @@ public class LeaderBuilder {
                             user.getBoard().getRanged().add(card);
                         }
                     }
-                    for (Card card : user.getBoard().getRanged()) {
+                    cards = new ArrayList<>(user.getBoard().getRanged());
+                    for (Card card : cards) {
                         if (!card.getType().equals("agileUnit") ||
                                 (card.getAbility() != null && card.getAbility().contains("hero"))) continue;
                         int currentPower = card.getPower(), secondPower = card.getPower();
@@ -443,16 +462,21 @@ public class LeaderBuilder {
                     Card mostPowerfulCard = null;
                     int n = 0;
                     for (Card card : user.getOpponentUser().getBoard().getCloseCombat()){
-                        n += card.getPower();
+                        n += card.getRealPower();
                         if (mostPowerfulCard == null) {
                             mostPowerfulCard = card;
                         }
-                        else if (mostPowerfulCard.getPower() < card.getPower()) {
+                        else if (mostPowerfulCard.getRealPower() < card.getRealPower()) {
                             mostPowerfulCard = card;
                         }
                     }
                     if (n > 10) {
-                        user.getOpponentUser().getBoard().getCloseCombat().remove(mostPowerfulCard);
+                        for (Card card : user.getOpponentUser().getBoard().getCloseCombat()) {
+                            if (card.getRealPower() == mostPowerfulCard.getRealPower()) {
+                                user.getOpponentUser().getBoard().getCloseCombat().remove(card);
+                                user.getOpponentUser().getBoard().getBurnedCard().add(card);
+                            }
+                        }
                     }
                 }
             };

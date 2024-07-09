@@ -89,17 +89,11 @@ public class Card extends Pane {
         return ability;
     }
 
-    public void setAbility(String ability) {
-        this.ability = ability;
-    }
 
     public int getPower() {
         return power;
     }
 
-    public void setPower(int power) {
-        this.power = power;
-    }
 
     public Faction getFaction() {
         return faction;
@@ -124,15 +118,6 @@ public class Card extends Pane {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public BackgroundImage createBackGroundImage(Image image) {
-        BackgroundImage backgroundImage = new BackgroundImage(image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-        return backgroundImage;
     }
 
     public static Card giveCardByName(String cardName) {

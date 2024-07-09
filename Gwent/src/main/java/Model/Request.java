@@ -1,7 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
-
 public class Request {
     String friendName;
     private String result ;

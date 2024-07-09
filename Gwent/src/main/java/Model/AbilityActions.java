@@ -176,7 +176,24 @@ public class AbilityActions {
                     shouldBurn.add(card);
                 }
             }
-            user.getOpponentUser().getBoard().getCloseCombat().removeAll(shouldBurn);
+            user.getOpponentUser().getBoard().getSiege().removeAll(shouldBurn);
+            user.getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
+        } else if(scorch.getAbility().equals("rangesUnit")) {
+            ArrayList<Card> shouldBurn = new ArrayList<>();
+            int maxPointOfCards = 0;
+            for (Card card : user.getOpponentUser().getBoard().getRanged()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() > maxPointOfCards) {
+                    maxPointOfCards = card.getRealPower();
+                }
+            }
+            for (Card card : user.getOpponentUser().getBoard().getRanged()) {
+                if (card.getAbility() != null && card.getAbility().contains("hero")) continue;
+                if (card.getRealPower() == maxPointOfCards) {
+                    shouldBurn.add(card);
+                }
+            }
+            user.getOpponentUser().getBoard().getRanged().removeAll(shouldBurn);
             user.getOpponentUser().getBoard().getBurnedCard().addAll(shouldBurn);
         } else {
             int maxPower = Card.maxPowerFinder(scorch.getType().equals("spell"));

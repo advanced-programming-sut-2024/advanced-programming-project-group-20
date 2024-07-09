@@ -69,7 +69,7 @@ public class MainMenu extends Application {
     @FXML
     public void initialize() {
 //        setScaleTransition();
-        if (User.getLoggedUser().getOppName() == null) pane.getChildren().remove(continueGame);
+        if (User.getLoggedUser() != null && User.getLoggedUser().getOppName() == null) pane.getChildren().remove(continueGame);
         if (User.getLoggedUser().isPrivateGame()) gameMode.setText("Private");
         else gameMode.setText("Public");
 
@@ -484,7 +484,6 @@ public class MainMenu extends Application {
         User.getLoggedUser().getOpponentUser().setLeader(Leader.giveLeaderByNameAndFaction(
                 gameHistory.getOppLeaderName(), User.getLoggedUser().getOpponentUser().getFaction()));
         User.getLoggedUser().getOpponentUser().mergeActiveGame(User.getLoggedUser());
-        System.out.println(User.getLoggedUser().getOpponentUser().getUsername());
         User.getLoggedUser().boardMaker();
         Platform.runLater(() -> {
             GameMenu gameMenu = new GameMenu();

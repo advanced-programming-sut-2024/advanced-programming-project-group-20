@@ -2,10 +2,8 @@ package Model;
 
 import Model.Factions.Nilfgaard;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formattable;
 import java.util.HashMap;
 
 public class User {
@@ -384,14 +382,6 @@ public class User {
         return null;
     }
 
-    public boolean isReady() {
-        return isReady;
-    }
-
-    public void setReady(boolean ready) {
-        isReady = ready;
-    }
-
     public int getRank() {
         return rank;
     }
@@ -401,10 +391,6 @@ public class User {
     }
     public Board getBoard() {
         return board;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public String getUsername() {
@@ -435,17 +421,11 @@ public class User {
         return numberOfGames;
     }
 
-    public void setNumberOfGames(int numberOfGames) {
-        this.numberOfGames = numberOfGames;
-    }
 
     public int getNumberOfWins() {
         return numberOfWins;
     }
 
-    public void setNumberOfWins(int numberOfWins) {
-        this.numberOfWins = numberOfWins;
-    }
 
     public Faction getFaction() {
         return faction;
@@ -490,9 +470,6 @@ public class User {
         return numberOfDraws;
     }
 
-    public void setNumberOfDraws(int numberOfDraws) {
-        this.numberOfDraws = numberOfDraws;
-    }
 
     public int getNumberOfLose() {
         return numberOfLose;
@@ -512,10 +489,6 @@ public class User {
 
     public String getAnswer() {
         return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
     }
 
     public static ArrayList<User> getAllUsers() {
@@ -539,9 +512,6 @@ public class User {
         return maxPoint;
     }
 
-    public void setMaxPoint(int maxPoint) {
-        this.maxPoint = maxPoint;
-    }
 
     public String getSecureQuestion() {
         return secureQuestion;
@@ -549,10 +519,6 @@ public class User {
 
     public String getSecureAnswer() {
         return secureAnswer;
-    }
-
-    public void setSecureAnswer(String secureAnswer) {
-        this.secureAnswer = secureAnswer;
     }
 
     public boolean isPassed() {
@@ -595,13 +561,6 @@ public class User {
         return lastSeen;
     }
 
-    public void setLastSeen(String lastSeen) {
-        this.lastSeen = lastSeen;
-    }
-
-    public void setFriends(ArrayList<String> friends) {
-        this.friends = friends;
-    }
 
     public void mergeActiveGame(User user) {
         if (activeGame == null) {
@@ -628,10 +587,6 @@ public class User {
     public ArrayList<String> getFriendRequests() {
         if (friendRequests == null) friendRequests = new ArrayList<>();
         return friendRequests;
-    }
-
-    public void setFriendRequests(ArrayList<String> friendRequests) {
-        this.friendRequests = friendRequests;
     }
 
     public ArrayList<Request> getRequests() {

@@ -67,7 +67,4 @@ public class Chat {
         this.vBox = vBox;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
-    }
 }

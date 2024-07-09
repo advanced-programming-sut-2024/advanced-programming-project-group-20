@@ -90,12 +90,7 @@ public class ProfileMenu extends Application {
         GameHistory gameHistory;
         for (Object object : objects) {
             gameHistory = gson.fromJson(gson.toJson(object), GameHistory.class);
-            System.out.println(gameHistory.getWinner());
             User.getLoggedUser().getGameHistories().add(gameHistory);
-        }
-        for (GameHistory gameHistory1 : User.getLoggedUser().getGameHistories()) {
-            System.out.println(gameHistory1.getWinner());
-            System.out.println(gameHistory1.getLeaderName());
         }
         Platform.runLater(() -> {
             profileMenu.setHistoryContents();
@@ -120,20 +115,14 @@ public class ProfileMenu extends Application {
         TableColumn<User, String> rank = new TableColumn<>("Name");
         rank.setCellValueFactory(new PropertyValueFactory<>("username"));
         tableView.getColumns().add(rank);
-
         TableColumn<User, Date> name = new TableColumn<>("Last seen");
         name.setCellValueFactory(new PropertyValueFactory<>("lastSeen"));
         tableView.getColumns().add(name);
-        Gson gson = new Gson();
-        for (User user : User.getAllUsers())
-            System.out.println(gson.toJson(user));
-        System.out.println("his name" + User.getLoggedUser().getUsername());
-        for (String s : User.getLoggedUser().getFriends())
+        for (String s : User.getLoggedUser().getFriends()) {
             tableView.getItems().add(User.getUserByName(s));
-        System.out.println("his name" + User.getLoggedUser().getFriends().size());
+        }
         ArrayList<Object> objects = new ArrayList<>();
         for (String requesterName : User.getLoggedUser().getFriendRequests()) {
-            System.out.println("requ hast");
             objects.add(new Object());
             objects.add(requesterName);
             setRequest(objects);
@@ -149,7 +138,6 @@ public class ProfileMenu extends Application {
         });
         collectionContent.getChildren().add(tableView);
         scrollOfFriends.setContent(collectionContent);
-
         sendRequestHbox.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
             if (User.getUserByName(((TextField) sendRequestHbox.getChildren().get(0)).getText()) == null)
                 ApplicationController.alert("this user doesnt exist", "erorre!!");
@@ -188,7 +176,6 @@ public class ProfileMenu extends Application {
     }
 
     private void showFriendInfo(String text) {
-
         User user = User.getUserByName(text);
         Label label = new Label();
         label.setText(user.getUsername() + "\nEmail: " + user.getEmail() + "\nWins Number:" + user.getNumberOfWins());
@@ -211,8 +198,6 @@ public class ProfileMenu extends Application {
     }
 
     private void setTablePointsContent() {
-//        User.getAllUsers().sort(Comparator.comparing(User::getNumberOfWins).reversed());
-
         TilePane collectionContent = new TilePane(5, 5);
         collectionContent.setPrefWidth(500);
         collectionContent.setMinHeight(600);
@@ -526,7 +511,6 @@ public class ProfileMenu extends Application {
     public static void setRequest(ArrayList<Object> objects) {
         String friendName = (String) objects.get(1);
         if (root == null) {
-            System.out.println("root nulle");
             return;
         }
         Platform.runLater(() -> {
@@ -552,8 +536,6 @@ public class ProfileMenu extends Application {
                     });
                     yesButton.setOnMouseClicked(mouseEvent -> {
                         ((VBox) node).getChildren().removeIf(node1 -> node1.getId().equals(friendName));
-                        System.out.println("dost add shode " + friendName);
-                        System.out.println("User in client" + User.getLoggedUser().getUsername());
                         Client.getConnection().doInServer("ProfileController", "beFriend", friendName, User.getLoggedUser().getUsername());
                     });
                 }
@@ -564,6 +546,17 @@ public class ProfileMenu extends Application {
 
     public void updateGameHistories(MouseEvent mouseEvent) {
         Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
+    }
+
+    public void updateRankTable(MouseEvent mouseEvent) {
+        Client.getConnection().doInServer("ApplicationController", "deliverUsersOfServerToClient", new Object());
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        setRankOfUsers();
+        setTablePointsContent();
     }
 }
 

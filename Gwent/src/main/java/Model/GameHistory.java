@@ -70,6 +70,12 @@ public class GameHistory {
     }
 
     public void countTotalPoints() {
+        if (firstRoundPointMe < 0) firstRoundPointMe = 0;
+        if (secondRoundPointMe < 0) secondRoundPointMe = 0;
+        if (thirdRoundPointMe < 0) thirdRoundPointMe = 0;
+        if (firstRoundPointOpponent < 0) firstRoundPointOpponent = 0;
+        if (secondRoundPointOpponent < 0) secondRoundPointOpponent = 0;
+        if (thirdRoundPointOpponent < 0) thirdRoundPointOpponent = 0;
         totalPointsMe = firstRoundPointMe + secondRoundPointMe + thirdRoundPointMe;
         totalPointsOpponent = firstRoundPointOpponent + secondRoundPointOpponent + thirdRoundPointOpponent;
     }
@@ -140,10 +146,6 @@ public class GameHistory {
 
     public String getOpponentName() {
         return opponentName;
-    }
-
-    public void setOpponentName(String opponentName) {
-        this.opponentName = opponentName;
     }
 
     public String getDate() {

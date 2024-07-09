@@ -82,14 +82,10 @@ public class RegisterMenu extends Application {
             User user = gson.fromJson(gson.toJson(object), User.class);
             if (user.getUsername() == null)
                 continue;
-            System.out.println("load from server userss"+ user.getUsername());
             User.getAllUsers().add(user);
         }
     }
 
-    public static void printRespond(String respond) {
-        System.out.println(respond);
-    }
 
     private void SetHeightAndWidth(Stage stage) {
         stage.setX((Screen.getPrimary().getVisualBounds().getWidth() - stage.getWidth() - 400) / 2);
@@ -116,9 +112,6 @@ public class RegisterMenu extends Application {
     }
 
 
-//    public void makeRandomPassword(MouseEvent mouseEvent) {
-//        RegisterController.randomPassword(passwordField, repeatedPasswordField);
-//    }
     public void makeRandomPassword(MouseEvent mouseEvent) {
         ArrayList<Object> objects = new ArrayList<>();
         objects.add(passwordField.getText());
@@ -126,12 +119,6 @@ public class RegisterMenu extends Application {
         //todo
         Client.getConnection().doInServer("RegisterController", "randomPassword", objects.toArray());
 
-//        RegisterController.randomPassword(objects);
-    }
-
-    public void WriteRandomPasswordFromServer(ArrayList<Object> objects) {
-        passwordField.setText((String) objects.get(0));
-        repeatedPasswordField.setText((String) objects.get(1));
     }
 
     public static void showSecurityQuestions(ArrayList<Object> objects) {
@@ -242,10 +229,6 @@ public class RegisterMenu extends Application {
         User user = new User(username, password,
                 nickName, email, secureQuestion.getText(), secureAnswer.getText());
         User.setLoggedUser(User.giveUserByUsername(username));
-        // todo uncomment login check
-        if (User.giveUserByUsername(username)==null){
-            System.out.println("inja sevvomish taraf :"+username);
-        }
         LoginMenu loginMenu = new LoginMenu();
         try {
             loginMenu.start(ApplicationController.getStage());

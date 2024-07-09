@@ -1,13 +1,7 @@
 package Model;
 
 import View.GameMenu;
-import javafx.application.Application;
-import javafx.scene.Node;
-import View.ApplicationController;
-import javafx.scene.control.Label;
-
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SpecialAction {
     public static int bitingFrost(int number, User user){

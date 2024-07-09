@@ -10,8 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,7 +24,6 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -129,7 +126,6 @@ public class GameHistoryShower extends Application {
                 gameUser.boardMaker();
                 setImagesOfBoard();
                 i.getAndIncrement();
-                System.out.println(i.get());
             }
         }));
         timeline.setCycleCount(gameHistory.getMoves().size() + 1);

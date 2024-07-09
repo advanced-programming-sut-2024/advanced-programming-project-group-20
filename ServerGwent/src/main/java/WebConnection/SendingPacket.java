@@ -12,12 +12,6 @@ public class SendingPacket {
     public String methodName;
     public ArrayList<Object> parameters = new ArrayList<>();
 
-//    public SendingPacket(OperationType operationType, String className, String methodName, Object... parameters) {
-//        this.operationType = operationType;
-//        this.className = className;
-//        this.methodName = methodName;
-//        this.parameters.addAll(Arrays.asList(parameters));
-//    }
 
     public SendingPacket( String className, String methodName, Object ... parameters) {
         this.className = className;
@@ -25,9 +19,6 @@ public class SendingPacket {
         this.parameters.addAll(Arrays.asList(parameters));
     }
 
-    public String getClassName() {
-        return className;
-    }
 
     public String getMethodName() {
         return methodName;
@@ -37,7 +28,4 @@ public class SendingPacket {
         return parameters;
     }
 
-    public OperationType getOperationType() {
-        return operationType;
-    }
 }

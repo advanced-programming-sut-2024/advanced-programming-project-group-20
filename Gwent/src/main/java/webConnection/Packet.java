@@ -25,19 +25,4 @@ public class Packet {
         this.parameters.addAll(Arrays.asList(parameters));
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public String getMethodName() {
-        return methodName;
-    }
-
-    public ArrayList<Object> getParameters() {
-        return parameters;
-    }
-
-    public OperationType getOperationType() {
-        return operationType;
-    }
 }

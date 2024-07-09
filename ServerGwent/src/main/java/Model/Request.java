@@ -13,8 +13,6 @@ public class Request {
             this.result = result;
     }
 
-
-
     public String getResult() {
         return result;
     }

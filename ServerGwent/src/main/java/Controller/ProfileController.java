@@ -31,53 +31,6 @@ public class ProfileController {
         user.setEmail(emailField);
     }
 
-//    public static void saveChanges(ArrayList<Object> objects) {
-//        String username = (String) objects.get(0);
-//        String password = (String) objects.get(1);
-//        String email = (String) objects.get(2);
-//        String nickname = (String) objects.get(3);
-//
-////        String respond
-//        if (User.getLoggedUser().getUsername().equals(username)
-//                && User.getLoggedUser().getPassword().equals(password)
-//                && User.getLoggedUser().getPassword().equals(email)
-//                && User.getLoggedUser().getNickName().equals(nickname)) {
-//            ApplicationController.alert("no changes!", "change at least one parameter");
-//        } else {
-////            System.out.println("po");
-////            changeInformation(username, password, email, nickname, objects);1
-//            Gson gson = new Gson();
-//            User.getAllUsers().clear();
-//            int i = 0;
-//            for (Object object : objects) {
-//                User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
-//                if (user != null)
-//                    User.getAllUsers().add(user);
-//                i++;
-//            }
-//            for (User user : User.getAllUsers()) {
-//                System.out.println(user.getUsername());
-//            }
-//            saveTheUsersInGson(User.getAllUsers());
-//        }
-//    }
-
-//    public static void saveTheUsersInGson(ArrayList<User> users) {
-//
-//        for (User user : User.getAllUsers()) {
-//            System.out.println(user.getUsername() + "      1111"
-//            );
-//        }
-//
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        String json = gson.toJson(users);
-//        try (PrintWriter pw = new PrintWriter("users.json")) {
-//            pw.write(json);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public static SendingPacket getGameHistories(ArrayList<Object> objects) {
         User user = User.getUserByName((String) objects.get(0));
         ArrayList<Object> objects1 = new ArrayList<>();
@@ -143,12 +96,7 @@ public class ProfileController {
             String methodeName = "alert2";
             return new SendingPacket(className, methodeName, respondObjects.toArray());
         } else {
-            // set the new information
-//            for (User user : User.getAllUsers()) {
-//                System.out.println("User: " + user.getUsername()
-//                );
-//            }
-//            System.out.println(lastUsername + "   last");
+
             changeUserName(lastUsername, usernameField);
             changePassword(User.getUserByName(usernameField), passwordField);
             changeEmail(User.getUserByName(usernameField), emailField);
@@ -185,22 +133,18 @@ public class ProfileController {
         String username = ((User)objects.get(1)).getUsername();
         User.getUserByName(friendName).getFriendRequests().removeIf(string -> string.equals(username));
         User.getUserByName(username).getFriendRequests().removeIf(string -> string.equals(friendName));
-        System.out.println("into update request" + ((User) objects.get(1)).getUsername());
         setRequestHistory(friendName);
         return null;
 
     }
 
     private static void setRequestHistory(String friendName) {
-        System.out.println("miad");
         for (Request request : User.getUserByName(friendName).getRequests()) {
             if (User.getUserByName(friendName).getFriends().contains(request.getFriendName()) && !request.getResult().equals("rejected")) {
                 request.setResult("accepted");
-                System.out.println(request.getFriendName()+ " accepted");
             }
             if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getUserByName(friendName)) && !request.getResult().equals("accepted")) {
                 request.setResult("rejected");
-                System.out.println(request.getFriendName()+ " rejected");
             }
         }
     }
@@ -212,8 +156,8 @@ public class ProfileController {
     }
 
     public static SendingPacket beFriend(ArrayList<Object> objects) {
-String friendName = (String) objects.get(0);
-String username = (String) objects.get(1);
+        String friendName = (String) objects.get(0);
+        String username = (String) objects.get(1);
         // the second is connection owner
         if (!User.getUserByName(friendName).getFriends().contains(username))
             User.getUserByName(friendName).getFriends().add(username);

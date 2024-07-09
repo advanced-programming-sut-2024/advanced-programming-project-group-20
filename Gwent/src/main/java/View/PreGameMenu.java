@@ -25,14 +25,12 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import webConnection.Client;
-import webConnection.Connection;
 
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 
 public class PreGameMenu extends Application {
 
@@ -77,12 +75,10 @@ public class PreGameMenu extends Application {
         User.getLoggedUser().getFaction().createAllCards();
         allCards.addAll(User.getLoggedUser().getFaction().getCollection());
         collection = allCards;
-        //loadLastDeckContent();
         setContents();
     }
 
     private void setContents() {
-        //TODO put write image
         username.setText(User.getLoggedUser().getUsername());
         factionName.setText(User.getLoggedUser().getFaction().getName());
         userImageView.setImage(new Image(PreGameMenu.class.getResource
@@ -297,47 +293,6 @@ public class PreGameMenu extends Application {
         Client.getConnection().doInServer("PreGameController","ready",objects.toArray());
     }
 
-    private void saveLastDeckContent() {
-        Faction faction = User.getLoggedUser().getFaction();
-        Neutral neutral = new Neutral();
-        ArrayList<Card> allCards = neutral.getCollection();
-        allCards.addAll(faction.getCollection());
-        ArrayList<String> nameOfCards = new ArrayList<>();
-        for (Node node : deckContent.getChildren()) {
-            if (node instanceof ImageView) {
-                for (Card card : allCards) {
-                    if ((((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() != null)
-                            || (!((ImageView) node).getImage().getUrl().toString().contains("Neutral") && card.getFaction() == null)) {
-
-
-                    } else if (((ImageView) node).getImage().getUrl().toString().contains("Neutral")) {
-
-                        if (((ImageView) node).getImage().getUrl().toString()
-                                .equals(PreGameMenu.class.getResource("/Cards/Neutral/" + card.getName() + ".jpg").toString())) {
-
-                            nameOfCards.add("Neutral:" + User.getLoggedUser().getLeader().getName()
-                                    + ":" + card.getName());
-                            break;
-                        }
-
-                    } else if (((ImageView) node).getImage().getUrl().toString()
-                            .equals(PreGameMenu.class.getResource("/Cards/" + faction.getName() + "/" + card.getName() + ".jpg").toString())) {
-                        nameOfCards.add(User.getLoggedUser().getFaction().getName() + ":" + User.getLoggedUser().getLeader().getName()
-                                + ":" + card.getName());
-                        break;
-                    }
-                }
-            }
-        }
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(nameOfCards);
-        try (PrintWriter pw = new PrintWriter("lastDeckContent.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void chooseFaction(MouseEvent mouseEvent) {
         ImageView monsters = new ImageView(new Image(String.valueOf(Nilfgaard.class.getResource("/Factions/faction_monsters.jpg"))));
@@ -673,6 +628,7 @@ public class PreGameMenu extends Application {
 
         }
     }
+
     public static void startGame(ArrayList<Object> objects) throws Exception {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);
@@ -693,28 +649,5 @@ public class PreGameMenu extends Application {
         });
     }
 
-
-
-//TODO last deck content
-//    private void loadLastDeckContent() {
-//        ArrayList<String> arr = new ArrayList<>();
-//        Gson gson = new Gson();
-//        try {
-//            JsonArray a = gson.fromJson(new FileReader("lastDeckContent.json"), JsonArray.class);
-//            a.forEach(e -> {
-//                try {
-//                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
-//                    reader.setLenient(true);
-//                    String obj = gson.fromJson(reader, String.class);
-//                    arr.add(obj);
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        loadGameByFile(arr);
-//    }
 }
 
