@@ -95,7 +95,7 @@ public class ApplicationController {
     }
 
 
-//server call this method to set all users of client like its own
+    //server call this method to set all users of client like its own
     public static void receiveUsersOfServerSent(ArrayList<Object> objects) {
         User.getAllUsers().clear();
         Gson gson = new Gson();
@@ -126,8 +126,8 @@ public class ApplicationController {
 
     public static void setDisable(Pane root) {
         for (Node node : root.getChildren()) {
-if (node.getId()==null||(!node.getId().startsWith("chat")&&!node.getId().matches("[123]")))
-            node.setDisable(true);
+            if (node.getId() == null || (!node.getId().startsWith("chat") && !node.getId().matches("emojiVbox")))
+                node.setDisable(true);
         }
     }
 

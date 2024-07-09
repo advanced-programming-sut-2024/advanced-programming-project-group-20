@@ -61,7 +61,7 @@ public class Spectator extends Application {
     }
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         ApplicationController.setStage(stage);
@@ -89,14 +89,14 @@ public class Spectator extends Application {
         stage.setHeight(741);
         stage.centerOnScreen();
     }
-    
+
     @FXML
     public void initialize() {
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);
         timeline = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
-            Client.getConnection().doInServer("GameController","getUpdateGame",gameUser);
+            Client.getConnection().doInServer("GameController", "getUpdateGame", gameUser);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -113,8 +113,8 @@ public class Spectator extends Application {
         for (String string : Tournament.getTournament().getActiveGames()) {
             if (string.contains(gameUser.getUsername()) && string.contains(gameUser.getOpponentUser().getUsername())) {
                 changeGame.setOnMouseClicked(mouseEvent ->
-                    Client.getConnection().doInServer("TournamentController","getCurrentGames",
-                            User.getLoggedUser().getUsername()));
+                        Client.getConnection().doInServer("TournamentController", "getCurrentGames",
+                                User.getLoggedUser().getUsername()));
                 tournament = true;
             }
         }
@@ -294,6 +294,7 @@ public class Spectator extends Application {
             }
         }
     }
+
     private void setLeaderImage(User user, int height) {
         ImageView leader = new ImageView();
         leader.setImage(new Image(String.valueOf(GameMenu.class.getResource("/Leaders/" + user.getLeader().getName() + ".jpg"))));
@@ -420,7 +421,7 @@ public class Spectator extends Application {
     }
 
 
-    public static void updateGame (ArrayList<Object> objects) {
+    public static void updateGame(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             Gson gson = new Gson();
             User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);

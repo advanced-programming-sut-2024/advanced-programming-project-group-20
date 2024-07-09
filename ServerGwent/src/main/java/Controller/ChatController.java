@@ -43,6 +43,7 @@ String opponentName = User.getUserByName(username).getOppName();
         objects1.add(messages);
         try {
             Connection.getConnectionByUserName(opponentName).sendOrder(new SendingPacket("Chat","updateChat",messages));
+            Connection.getConnectionByUserName(username).sendOrder(new SendingPacket("Chat","updateChat",messages));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

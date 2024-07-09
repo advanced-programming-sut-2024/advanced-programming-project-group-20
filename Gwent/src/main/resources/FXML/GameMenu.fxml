@@ -117,7 +117,7 @@
          <Font name="Algerian" size="28.0" />
       </font>
    </Label>
-   <Pane  fx:id="reaction" layoutX="237.0" layoutY="737.0" prefHeight="84.0" prefWidth="142.0">
+   <Pane   id="chat2" fx:id="reaction" layoutX="237.0" layoutY="737.0" prefHeight="84.0" prefWidth="142.0">
       <children>
          <TextField id="chat2" prefHeight="80.0" prefWidth="90.0" />
          <Button id="chat2" layoutX="90.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="50.0" text="send" />

@@ -143,7 +143,7 @@ public class ProfileMenu extends Application {
                 User user = tableView.getSelectionModel().getSelectedItem();
                 if (user != null && user.getNumberOfGames() > 0) {
                     Client.getConnection().doInServer("MainController", "playWithFriend",
-                            User.getLoggedUser().getUsername(), user.getUsername(),true);
+                            User.getLoggedUser().getUsername(), user.getUsername(), true);
                 }
             }
         });
@@ -165,25 +165,25 @@ public class ProfileMenu extends Application {
             if (!User.getUserByName(request.getFriendName()).getFriendRequests().contains(User.getLoggedUser().getUsername()) && !request.getResult().equals("accepted"))
                 request.setResult("rejected");
         }
-            TilePane collectionContentRequest = new TilePane(2, 3);
-            collectionContentRequest.setPrefWidth(200);
-            collectionContentRequest.setMinHeight(300);
-            TableView<Request> tableViewRequest = new TableView<>();
-            tableViewRequest.setStyle("-fx-background-color: transparent");
-            tableViewRequest.setPrefWidth(500);
-            tableViewRequest.setPrefHeight(600);
-            tableViewRequest.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            TableColumn<Request, String> requestTo = new TableColumn<>("request to");
-            requestTo.setCellValueFactory(new PropertyValueFactory<>("friendName"));
-            tableViewRequest.getColumns().add(requestTo);
-            TableColumn<Request, String> result = new TableColumn<>("result");
-            result.setCellValueFactory(new PropertyValueFactory<>("result"));
-            tableViewRequest.getColumns().add(result);
+        TilePane collectionContentRequest = new TilePane(2, 3);
+        collectionContentRequest.setPrefWidth(200);
+        collectionContentRequest.setMinHeight(300);
+        TableView<Request> tableViewRequest = new TableView<>();
+        tableViewRequest.setStyle("-fx-background-color: transparent");
+        tableViewRequest.setPrefWidth(500);
+        tableViewRequest.setPrefHeight(600);
+        tableViewRequest.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<Request, String> requestTo = new TableColumn<>("request to");
+        requestTo.setCellValueFactory(new PropertyValueFactory<>("friendName"));
+        tableViewRequest.getColumns().add(requestTo);
+        TableColumn<Request, String> result = new TableColumn<>("result");
+        result.setCellValueFactory(new PropertyValueFactory<>("result"));
+        tableViewRequest.getColumns().add(result);
 
-            collectionContentRequest.getChildren().add(tableViewRequest);
-            scrollOfRequests.setContent(collectionContentRequest);
-   for (Request request :User.getLoggedUser().getRequests())
-       tableViewRequest.getItems().add(request);
+        collectionContentRequest.getChildren().add(tableViewRequest);
+        scrollOfRequests.setContent(collectionContentRequest);
+        for (Request request : User.getLoggedUser().getRequests())
+            tableViewRequest.getItems().add(request);
 
     }
 
@@ -276,6 +276,7 @@ public class ProfileMenu extends Application {
             }
         });
     }
+
     private void setHistoryContents() {
         if (User.getLoggedUser().getGameHistories() == null) {
             User.getLoggedUser().setGameHistories(new ArrayList<>());
@@ -565,7 +566,7 @@ public class ProfileMenu extends Application {
 
 
     public void updateGameHistories(MouseEvent mouseEvent) {
-        Client.getConnection().doInServer("ProfileController","getGameHistories",User.getLoggedUser().getUsername());
+        Client.getConnection().doInServer("ProfileController", "getGameHistories", User.getLoggedUser().getUsername());
     }
 }
 

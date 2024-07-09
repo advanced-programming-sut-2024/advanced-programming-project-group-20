@@ -78,7 +78,7 @@ public class GameMenu extends Application {
     public ImageView opponentBurnt;
     private Timeline lostConnectionTimeLine;
     private int time = 120;
-    private static ArrayList<String> readyMessages =new ArrayList<>(List.of(new String[]{"ریزی", "برو بابا", "حال کردی؟"}));
+    private static ArrayList<String> readyMessages = new ArrayList<>(List.of(new String[]{"ریزی", "برو بابا", "حال کردی؟"}));
 
     public ArrayList<HBox> hBoxes = new ArrayList<>();
     public static Chat chat;
@@ -112,7 +112,7 @@ public class GameMenu extends Application {
         stage.setScene(scene);
         ApplicationController.setStage(stage);
         stage.setOnCloseRequest(windowEvent -> {
-            Client.getConnection().doInServer("GameController","lostConnection",User.getLoggedUser());
+            Client.getConnection().doInServer("GameController", "lostConnection", User.getLoggedUser());
             System.exit(0);
         });
         stage.show();
@@ -166,8 +166,8 @@ public class GameMenu extends Application {
         //emoji
         for (Node node : emoji.getChildren()) {
             node.setOnMouseClicked(mouseEvent -> {
-                GameMenu.showEmoji(node,450);
-                Client.getConnection().doInServer("GameController","setEmoji", node.getId());
+                GameMenu.showEmoji(node, 450);
+                Client.getConnection().doInServer("GameController", "setEmoji", node.getId());
             });
         }
         //emoji
@@ -199,25 +199,29 @@ public class GameMenu extends Application {
     }
 
     private void setReactionSetting() {
-        reaction.getChildren().get(1).setOnMouseClicked(mouseEvent ->{
-            showMessage(((TextField)reaction.getChildren().get(0)).getText(),450);
-            Client.getConnection().doInServer("GameController", "setMessage",((TextField)reaction.getChildren().get(0)).getText());
+        reaction.getChildren().get(1).setOnMouseClicked(mouseEvent -> {
+            ((TextField) reaction.getChildren().get(0)).setText("");
+            showMessage(((TextField) reaction.getChildren().get(0)).getText(), 450);
+            Client.getConnection().doInServer("GameController", "setMessage", ((TextField) reaction.getChildren().get(0)).getText());
         });
         reaction.getChildren().get(2).setOnMouseClicked(mouseEvent -> {
-            String message =readyMessages.get(new Random().nextInt(0,3));
-            showMessage(message,450);
-            Client.getConnection().doInServer("GameController", "setMessage",message);
+            String message = readyMessages.get(new Random().nextInt(0, 3));
+            showMessage(message, 450);
+            Client.getConnection().doInServer("GameController", "setMessage", message);
         });
     }
-    public static void showMessage(String text, int height){
+
+    public static void showMessage(String text, int height) {
         Label messageLabel = new Label(text);
-        messageLabel.setLayoutX(735);
+        messageLabel.setLayoutX(600);
         messageLabel.setLayoutY(height);
         messageLabel.setPrefHeight(200);
         messageLabel.setPrefWidth(500);
-        messageLabel.setStyle("-fx-background-color: #11111107;");
+        messageLabel.setStyle("-fx-background-color: #11111177;");
         messageLabel.setFont(new Font("Arial", 60));
-
+        messageLabel.setAlignment(Pos.CENTER);
+        if (ApplicationController.getRoot() == null)
+            return;
         if (!ApplicationController.getRoot().getChildren().contains(messageLabel))
             ApplicationController.getRoot().getChildren().add(messageLabel);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), messageLabel);
@@ -228,27 +232,28 @@ public class GameMenu extends Application {
         fadeTransition.play();
 
     }
-    public static void getMessage(ArrayList<Object> objects){
-        Platform.runLater(()-> {
+
+    public static void getMessage(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
             showMessage((String) objects.get(0), 200);
         });
     }
 
-    public static synchronized   void giveEmojiId(ArrayList<Object> objects ){
-        Platform.runLater(()->{
-            if (ApplicationController.getRoot()==null)
+    public static synchronized void giveEmojiId(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
+            if (ApplicationController.getRoot() == null)
                 return;
-            for (Node node: ApplicationController.getRoot().getChildren()){
-            if (node.getId()!=null&&node.getId().equals("emojiVbox")){
-                for (Node node1: ((VBox)node).getChildren()){
-                    if (node1.getId().equals(objects.get(0))) {
-                        showEmoji(node1,200);
-                        break;
+            for (Node node : ApplicationController.getRoot().getChildren()) {
+                if (node.getId() != null && node.getId().equals("emojiVbox")) {
+                    for (Node node1 : ((VBox) node).getChildren()) {
+                        if (node1.getId().equals(objects.get(0))) {
+                            showEmoji(node1, 200);
+                            break;
+                        }
                     }
+                    break;
                 }
-                break;
             }
-        }
         });
     }
 
@@ -258,6 +263,8 @@ public class GameMenu extends Application {
         imageView.setY(height);
         imageView.setFitHeight(200);
         imageView.setFitWidth(200);
+        if (ApplicationController.getRoot() == null)
+            return;
         if (!ApplicationController.getRoot().getChildren().contains(imageView))
             ApplicationController.getRoot().getChildren().add(imageView);
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), imageView);
@@ -1453,8 +1460,8 @@ public class GameMenu extends Application {
         });
     }
 
-    public static void opponentLostConnection (ArrayList<Object> objects) {
-        Platform.runLater(() ->{
+    public static void opponentLostConnection(ArrayList<Object> objects) {
+        Platform.runLater(() -> {
             ApplicationController.setDisable(ApplicationController.getRoot());
             gameMenu.opponentLost();
         });
@@ -1471,7 +1478,7 @@ public class GameMenu extends Application {
                 int totalPoints1 = getTotalHboxPower(hBoxes.get(2)) + getTotalHboxPower(hBoxes.get(1)) + getTotalHboxPower(hBoxes.get(0));
                 int totalPoints2 = getTotalHboxPower(hBoxes.get(3)) + getTotalHboxPower(hBoxes.get(4)) + getTotalHboxPower(hBoxes.get(5));
                 calculatePoints(User.getLoggedUser(), totalPoints1, totalPoints2);
-                Client.getConnection().doInServer("GameController","endWithLostConnection",User.getLoggedUser(),User.getLoggedUser().getActiveGame());
+                Client.getConnection().doInServer("GameController", "endWithLostConnection", User.getLoggedUser(), User.getLoggedUser().getActiveGame());
                 lostConnectionTimeLine.stop();
             }
         }));
@@ -1479,7 +1486,7 @@ public class GameMenu extends Application {
         lostConnectionTimeLine.play();
     }
 
-    public static void opponentBackTurn (ArrayList<Object> objects) {
+    public static void opponentBackTurn(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             User.getLoggedUser().boardMaker();
             ApplicationController.setEnable(ApplicationController.getRoot());
@@ -1492,7 +1499,7 @@ public class GameMenu extends Application {
         });
     }
 
-    public static void opponentBack (ArrayList<Object> objects) {
+    public static void opponentBack(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             ApplicationController.getRoot().getChildren().remove(gameMenu.timeLabel);
             ApplicationController.getRoot().getChildren().remove(gameMenu.lostConnectionLabel);
