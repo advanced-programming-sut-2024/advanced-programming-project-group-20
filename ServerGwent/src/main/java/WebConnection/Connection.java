@@ -1,17 +1,12 @@
 package WebConnection;
 
-import Controller.RegisterController;
 import com.google.gson.Gson;
 import Model.User;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +23,7 @@ public class Connection extends Thread {
     private boolean isInScoreboard = false;
     private boolean isInMainMenu = false;
 
-    private User currentUser;
+    private User sessionId;
     private static ArrayList<Connection> connections = new ArrayList<>();
 
     public Connection(Socket socket) throws IOException {
@@ -50,9 +45,9 @@ public class Connection extends Thread {
                 sendRespond(receivingPacket, controllerMethod);
             } catch (IOException e) {
                 System.out.println("Connection \"ip=" + socket.getInetAddress().getHostAddress() + " port=" + socket.getPort() + "\" lost!");
-                if (currentUser==null)
+                if (sessionId ==null)
                     break;
-                currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
+                sessionId.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
                 connections.remove(this);
                 break;
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
@@ -69,13 +64,14 @@ public class Connection extends Thread {
     private void sendRespond(ReceivingPacket receivingPacket, Method controllerMethod) throws IllegalAccessException, InvocationTargetException, IOException {
         SendingPacket sendingPacket;
         System.out.println("inja");
-        receivingPacket.getParameters().add(this.currentUser);
-        if (this.currentUser != null)
-            receivingPacket.getParameters().add(this.currentUser);
+//TODO delete line below?
+//        receivingPacket.getParameters().add(this.currentUser);
+        if (this.sessionId != null)
+            receivingPacket.getParameters().add(this.sessionId);
         SendingPacket result = (SendingPacket) controllerMethod.invoke(null, receivingPacket.getParameters());
         if (receivingPacket.getMethodName().equals("logout")){
-            currentUser.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
-            this.currentUser = null;
+            sessionId.setLastSeen(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("HH:mm")));
+            this.sessionId = null;
         }
         if (result == null)
             return;
@@ -85,8 +81,8 @@ public class Connection extends Thread {
         DataOutputStream sendOut = out;
         if (result.getMethodName().equals("loginToMainMenu")) {
             System.out.println("userName taraf:" + result.getParameters().get(0));
-            this.currentUser = User.getUserByName((String) result.getParameters().get(0));
-            currentUser.setLastSeen("online");
+            this.sessionId = User.getUserByName((String) result.getParameters().get(0));
+            sessionId.setLastSeen("online");
         }
         if (result.getParameters().get(0) instanceof Connection) {
             sendOut = new DataOutputStream(((Connection) result.getParameters().get(0)).socket.getOutputStream());
@@ -120,12 +116,12 @@ public class Connection extends Thread {
 //        }
 //    }
 
-    public User getCurrentUser() {
-        return currentUser;
+    public User getSessionId() {
+        return sessionId;
     }
 
-    public void setCurrentUser(User currentUser) {
-        this.currentUser = currentUser;
+    public void setSessionId(User sessionId) {
+        this.sessionId = sessionId;
     }
 
     public boolean isInScoreboard() {
@@ -150,7 +146,7 @@ public class Connection extends Thread {
 
     public static Connection getConnectionByUserName(String username) {
         for (Connection connection : connections) {
-            if (connection.currentUser != null && connection.currentUser.getUsername().equals(username))
+            if (connection.sessionId != null && connection.sessionId.getUsername().equals(username))
                 return connection;
         }
         return null;

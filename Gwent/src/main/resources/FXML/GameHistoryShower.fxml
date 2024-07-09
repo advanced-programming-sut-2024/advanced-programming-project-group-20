@@ -50,23 +50,6 @@
     <HBox fx:id="opponentRangedNext" alignment="CENTER" layoutX="463.0" layoutY="121.0" prefHeight="100.0" prefWidth="95.0" />
     <HBox fx:id="opponentSiegeNext" alignment="CENTER" layoutX="463.0" layoutY="14.0" prefHeight="100.0" prefWidth="95.0" />
 
-    <Button fx:id="chatButton" layoutX="1442.0" layoutY="221.0" mnemonicParsing="false" style="-fx-background-color: rgba(222,201,0,0.27);" text="chat" textFill="#cfb74a">
-        <font>
-            <Font name="Baskerville Old Face" size="17.0" />
-        </font>
-    </Button>
-    <AnchorPane fx:id="chatPane" layoutX="1257.0" layoutY="220.0" prefHeight="434.0" prefWidth="235.0">
-        <children>
-            <ScrollPane fx:id="chatScroll" prefHeight="408.0" prefWidth="235.0">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
-                </content>
-            </ScrollPane>
-            <Button fx:id="sendButton" layoutX="183.0" layoutY="408.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="50.0" text="send" />
-            <TextField fx:id="sendField" layoutX="-1.0" layoutY="409.0" prefHeight="26.0" prefWidth="185.0" />
-        </children>
-    </AnchorPane>
-
 
 
 </AnchorPane>

@@ -34,21 +34,33 @@ public class Chat {
     public VBox getvBox() {
         return vBox;
     }
+
     public static void updateChat(ArrayList<Object> objects){
         Platform.runLater(()->{
-        Gson gson = new Gson();
-        ArrayList<Message> messages =gson.fromJson(gson.toJson(objects.get(0)),ArrayList.class);
-        GameMenu.chat.getMessages().clear();
-        for (Object object : messages) {
-            System.out.println(object);
-            Message message = gson.fromJson(gson.toJson(object), Message.class);
-            GameMenu.chat.getMessages().add(message);
-        }
-            GameMenu.chat.getvBox().getChildren().clear();
-            for (Message message1 : GameMenu.chat.getMessages()) {
-                GameMenu.chat.getvBox().getChildren().add(message1.toVBox());
+            Gson gson = new Gson();
+            ArrayList<Message> messages =gson.fromJson(gson.toJson(objects.get(0)),ArrayList.class);
+            if (GameMenu.chat != null) {
+                GameMenu.chat.getMessages().clear();
+                for (Object object : messages) {
+                    Message message = gson.fromJson(gson.toJson(object), Message.class);
+                    GameMenu.chat.getMessages().add(message);
+                }
+                GameMenu.chat.getvBox().getChildren().clear();
+                for (Message message1 : GameMenu.chat.getMessages()) {
+                    GameMenu.chat.getvBox().getChildren().add(message1.toVBox());
+                }
+            } else if (Spectator.chat != null) {
+                Spectator.chat.getMessages().clear();
+                for (Object object : messages) {
+                    Message message = gson.fromJson(gson.toJson(object), Message.class);
+                    Spectator.chat.getMessages().add(message);
+                }
+                Spectator.chat.getvBox().getChildren().clear();
+                for (Message message1 : Spectator.chat.getMessages()) {
+                    Spectator.chat.getvBox().getChildren().add(message1.toVBox());
+                }
             }
-        });
+            });
     }
 
     public void setvBox(VBox vBox) {

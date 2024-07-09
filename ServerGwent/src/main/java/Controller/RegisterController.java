@@ -5,14 +5,19 @@ import Model.User;
 
 import WebConnection.SendingPacket;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RegisterController {
@@ -24,7 +29,6 @@ public class RegisterController {
         String nickNameField = (String) (objects.get(3));
         String repeatedPasswordField = (String) (objects.get(4));
         String respond = "";
-//        parseFile(new ArrayList<>());
         if (usernameField.isEmpty()) {
             respond = ("username section is empty!");
 
@@ -63,19 +67,16 @@ public class RegisterController {
             String methodeName = "alert2";
             return new SendingPacket(className, methodeName, respondObjects.toArray());
         }
-//        showSecurityQuestions(usernameField, passwordField, nickNameField, emailField);
         return new SendingPacket("RegisterMenu", "showSecurityQuestions", objects.toArray());
     }
 
     public static void addUserToServerModel(ArrayList<Object> objects) {
         Gson gson = new Gson();
-        int i = 0;
-        for (Object object : objects) {
-            User user = gson.fromJson(gson.toJson(objects.get(i)), User.class);
-            if (user != null && User.getUserByName(user.getUsername()) == null)
-                User.getAllUsers().add(user);
-            i++;
-        }
+        User user = gson.fromJson(gson.toJson(objects.get(0)), User.class);
+
+        if (user != null)
+            User.getAllUsers().add(user);
+
         ArrayList<Object> objects1 = new ArrayList<>(User.getAllUsers());
         ApplicationController.saveTheUsersInGson(objects1);
     }
@@ -89,14 +90,15 @@ public class RegisterController {
         String specialChars = "!@#$%^&*()-_=+[]{},.<>?";
         StringBuilder randomPassword = new StringBuilder(8);
 
+        String validChars = uppercase + lowercase + digits + specialChars;
+        for (int i = 0; i < 4; i++) {
+            randomPassword.append(validChars.charAt(random.nextInt(validChars.length())));
+        }
         randomPassword.append(uppercase.charAt(random.nextInt(uppercase.length())));
         randomPassword.append(digits.charAt(random.nextInt(digits.length())));
         randomPassword.append(lowercase.charAt(random.nextInt(lowercase.length())));
         randomPassword.append(specialChars.charAt(random.nextInt(specialChars.length())));
-        String validChars = uppercase + lowercase + digits + specialChars;
-        for (int i = 4; i < 8; i++) {
-            randomPassword.append(validChars.charAt(random.nextInt(validChars.length())));
-        }
+
 
         ArrayList<Object> objects1 = new ArrayList<>();
         objects1.add(randomPassword.toString());
@@ -106,36 +108,60 @@ public class RegisterController {
 
     ///this method just is called first of program and don't use it for giving users from it
     public static SendingPacket parseFile(ArrayList<Object> objects) {
-        Gson gson = new Gson();
-        try {
-            JsonArray a = gson.fromJson(new FileReader("users.json"), JsonArray.class);
-            if (a == null) return null;
-            a.forEach(e -> {
-                try {
-                    JsonReader reader = new JsonReader(new StringReader(e.toString()));
-                    reader.setLenient(true);
-                    User obj = gson.fromJson(reader, User.class);
-                    if (User.getUserByName(obj.getUsername()) == null)
-                        User.getAllUsers().add(obj);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-        } catch (FileNotFoundException e) {
-            //if file is not present, make it for first time
-            try {
-                FileWriter fileWriter = new FileWriter("users.json");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-//            saveToFile(arr, file);
-        }
 
-        ArrayList<Object> objects1 = new ArrayList<>();
-        for (User user : User.getAllUsers()) {
-            if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
-            objects1.add(user);
+        ResultSet rs = null;
+        String gsonString = "";
+        File file = new File("sample.db");
+        if (!file.exists()) {
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        } else {
+            try {
+                // Establishing the database connection
+                Connection conn = DriverManager.getConnection("jdbc:sqlite:sample.db");
+                Statement stmt = conn.createStatement();
+
+                ResultSet resultSet = stmt.executeQuery("SELECT COUNT(*) AS count FROM users");
+                int rowCount = resultSet.getInt("count");
+                if (rowCount == 0) {
+                    System.out.println("Nothing in the table");
+                    return null;
+                }
+                // Query data
+                rs = stmt.executeQuery("SELECT * FROM users");
+                while (rs.next()) {
+                    gsonString = rs.getString("names");
+                }
+
+                // Closing the resources
+                stmt.close();
+                conn.close();
+                ArrayList<Object> objects1;
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<User>>() {
+                }.getType();
+                objects1 = gson.fromJson(gsonString, listType);
+
+                if (objects1 != null) {
+                    for (Object object : objects1) {
+                        User user = (User) object;
+                        if (User.getUserByName(user.getUsername()) != null) continue;
+                        User.getAllUsers().add((User) object);
+                        if (user.getGameHistories() == null) user.setGameHistories(new ArrayList<>());
+                    }
+
+                } else {
+                    objects1 = new ArrayList<>();
+                }
+                return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
-        return new SendingPacket("RegisterMenu", "loadAllUsersFromServer", objects1.toArray());
     }
 }

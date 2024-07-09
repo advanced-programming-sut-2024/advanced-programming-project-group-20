@@ -1,6 +1,7 @@
 package View;
 
 import Model.*;
+import Model.chat.Message;
 import com.google.gson.Gson;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
@@ -54,7 +56,13 @@ public class Spectator extends Application {
     public Button exit;
     private static Spectator spectator;
     public Button changeGame;
+    public AnchorPane chatPane;
+    public ScrollPane chatScroll;
+    public Button sendButton;
+    public TextField sendField;
+    public Button chatButton;
     Timeline timeline;
+    public static Chat chat;
 
     public static void setGameUser(User gameUser) {
         Spectator.gameUser = gameUser;
@@ -92,6 +100,42 @@ public class Spectator extends Application {
 
     @FXML
     public void initialize() {
+        chat = new Chat(User.getLoggedUser().getUsername());
+        chat.setvBox(new VBox());
+        chat.getvBox().setPrefWidth(chatScroll.getPrefWidth() - 30);
+        chat.getvBox().getChildren().add(new Label("salam"));
+        chat.getvBox().setSpacing(10);
+        chatScroll.setContent(chat.getvBox());
+        chatPane.setVisible(false);
+        chatButton.setOnMouseClicked(mouseEvent -> {
+            if (!chatPane.isVisible()) {
+                chatPane.setVisible(true);
+                chatButton.setLayoutX(chatButton.getLayoutX() - 235);
+            } else {
+                chatPane.setVisible(false);
+                chatButton.setLayoutX(chatButton.getLayoutX() + 235);
+            }
+        });
+        sendButton.setOnMouseClicked(mouseEvent -> {
+            Message message = new Message(sendField.getText(), chat.getName(), Chat.getTime());
+            ArrayList<Object> objects = new ArrayList<>();
+            objects.add(message);
+            objects.add(User.getLoggedUser().getUsername());
+            chat.getMessages().clear();
+            Client.getConnection().doInServer("ChatController", "getMessages", message, gameUser.getUsername());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println(chat.getMessages().size());
+            chat.getvBox().getChildren().clear();
+            for (Message message1 : chat.getMessages()) {
+                chat.getvBox().getChildren().add(message1.toVBox());
+            }
+            sendField.setText("");
+        });
+        //chat
         ApplicationController.setRoot(pane);
         pane.getChildren().remove(passed);
         pane.getChildren().remove(passedOpponent);

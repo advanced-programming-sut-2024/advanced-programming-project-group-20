@@ -30,14 +30,23 @@ public class ApplicationController {
         alert.setContentText(contentText);
         alert.show();
     }
-    public static void logout(ArrayList<Object> objects){
-ProfileController.saveTheUsersInGson(User.getAllUsers());
-//salam
+//<<<<<<< HEAD
+
+    public static void logout(ArrayList<Object> objects) {
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (User user : User.getAllUsers()) {
+            objects1.add(user);
+        }
+        ApplicationController.saveTheUsersInGson(objects1);
     }
 
     // if you want to have all users of Server you should call this method in your client
-    public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects){
-        ProfileController.saveTheUsersInGson(User.getAllUsers());
+    public static SendingPacket deliverUsersOfServerToClient(ArrayList<Object> objects) {
+        ArrayList<Object> objects1 = new ArrayList<>();
+        for (User user : User.getAllUsers()) {
+            objects1.add(user);
+        }
+        ApplicationController.saveTheUsersInGson(objects1);
         return new SendingPacket("ApplicationController"
                 , "receiveUsersOfServerSent", User.getAllUsers().toArray());
     }
@@ -48,20 +57,12 @@ ProfileController.saveTheUsersInGson(User.getAllUsers());
 
         for (Object object : objects) {
             User user = gson.fromJson(gson.toJson(object), User.class);
-            System.out.println(user.getUsername() + "ajab");
             usersToSave.add(user);
         }
 
 
-        ///delete last content (we don't need that)
-//        try (Writer writer = new FileWriter("users.json")) {
-//            writer.write("");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         Gson gson1 = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson1.toJson(usersToSave);
+        String json = gson1.toJson(User.getAllUsers());
 
 
 //========================================================================================================================
@@ -75,6 +76,10 @@ ProfileController.saveTheUsersInGson(User.getAllUsers());
             // Delete the last inserted data
             // stmt.execute("DELETE FROM users WHERE id = (SELECT MAX(id) FROM your_table)");
 
+            String dropQuery = "DROP TABLE IF EXISTS users";
+
+            // Execute the delete statement
+            stmt.executeUpdate(dropQuery);
             // Create table
             String sql = "CREATE TABLE IF NOT EXISTS users (names TEXT)";
             stmt.execute(sql);
@@ -99,11 +104,6 @@ ProfileController.saveTheUsersInGson(User.getAllUsers());
         }
 //=================================================================================================================
 
-        try (PrintWriter pw = new PrintWriter("users.json")) {
-            pw.write(json);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
 }

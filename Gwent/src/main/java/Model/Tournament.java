@@ -7,13 +7,14 @@ public class Tournament {
     private static Tournament tournament;
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<String> activeGames = new ArrayList<>();
-    private String[] table = new String[22];
+    private String[] table = new String[28];
     private String champion;
 
     public static ArrayList<Tournament> getTournaments () {
         return tournaments;
     }
     public static Tournament getTournament () {
+        if (tournament == null) tournament = new Tournament();
         return tournament;
     }
     public String[] getTable() {

@@ -13,11 +13,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.simplejavamail.api.internal.clisupport.model.Cli;
@@ -54,6 +57,7 @@ public class MainMenu extends Application {
         Pane root = FXMLLoader.load(url);
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         root.setBackground(new Background(ApplicationController.createBackGroundImage("/backgrounds/Ciri_CGI_1920x1080_EN.jpg"
                 , stage.getHeight(), stage.getWidth())));
         stage.show();
@@ -210,10 +214,10 @@ public class MainMenu extends Application {
             alert1.setContentText((String) objects.get(0) + " wants play with you");
             ButtonType accept = new ButtonType("Accept");
             ButtonType reject = new ButtonType("Reject");
+            objects.add(User.getLoggedUser().getUsername());
             alert1.getButtonTypes().setAll(accept, reject);
             alert1.showAndWait().ifPresent(response -> {
                 if (response == accept) {
-                    objects.add(User.getLoggedUser().getUsername());
                     Client.getConnection().doInServer("MainController", "acceptFriend", objects.toArray());
                 } else if (response == reject) {
                     Client.getConnection().doInServer("MainController", "rejectFriend", objects.toArray());
@@ -241,14 +245,32 @@ public class MainMenu extends Application {
             VBox newRoot = new VBox(10);
             newRoot.setPadding(new Insets(20));
             newRoot.setAlignment(Pos.TOP_CENTER);
+            newRoot.setStyle("-fx-background-color: black");
             for (String name : names) {
                 Label nameLabel = new Label(name);
-                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #00ff59");
+                if(name.contains("Accept")) {
+                    nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #41ba0a; -fx-font-size: 25; -fx-text-fill: white");
+                } else {
+                    nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #f60505; -fx-font-size: 25; -fx-text-fill: white");
+                }
+                nameLabel.setMinWidth(500);
+                nameLabel.setAlignment(Pos.TOP_CENTER);
                 newRoot.getChildren().add(nameLabel);
             }
-            Scene newScene = new Scene(newRoot, 300, 200);
+            if (names.isEmpty()) {
+                Label nameLabel = new Label("YOU DON'T SEND ANY GAME REQUEST");
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 23; -fx-text-fill: white");
+                nameLabel.setAlignment(Pos.TOP_CENTER);
+                nameLabel.setPrefWidth(500);
+                newRoot.getChildren().add(nameLabel);
+            }
+            Scene newScene = new Scene(newRoot);
             Stage newStage = new Stage();
             newStage.setScene(newScene);
+            newStage.setMinWidth(500);
+            newStage.setMaxWidth(500);
+            newStage.setWidth(500);
+            newStage.setMaxHeight(1000);
             newStage.setTitle("Game Requests");
             newStage.show();
             Button submitButton = new Button("OK");
@@ -264,18 +286,17 @@ public class MainMenu extends Application {
             VBox newRoot = new VBox(10);
             newRoot.setAlignment(Pos.TOP_CENTER);
             newRoot.setPadding(new Insets(20));
-            Scene newScene = new Scene(newRoot, 300, 200);
+            newRoot.setStyle("-fx-background-color: black");
+            Scene newScene = new Scene(newRoot);
             Stage newStage = new Stage();
-            newStage.setScene(newScene);
-            newStage.setTitle("Random Games");
-            newStage.show();
-            Button submitButton = new Button("OK");
-            submitButton.setOnAction(event -> {
-                newStage.close();
-            });
             for (String name : names) {
                 Label nameLabel = new Label(name);
-                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+
+                if (name.contains("private"))
+                    nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #531203; -fx-font-size: 25; -fx-text-fill: white");
+                else
+                    nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #031175; -fx-font-size: 25; -fx-text-fill: white");
+                nameLabel.setAlignment(Pos.TOP_CENTER);
                 nameLabel.setOnMouseClicked(mouseEvent -> {
                     String[] parts = name.split(" ");
                     boolean privateGame;
@@ -285,30 +306,47 @@ public class MainMenu extends Application {
                             User.getLoggedUser().getUsername(), parts[0], privateGame);
                     newStage.close();
                 });
+                nameLabel.setPrefWidth(500);
                 newRoot.getChildren().add(nameLabel);
             }
-
+            if (names.isEmpty()) {
+                Label nameLabel = new Label("THERE IS NO RANDOM GAME");
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 30; -fx-text-fill: white");
+                nameLabel.setAlignment(Pos.TOP_CENTER);
+                nameLabel.setPrefWidth(500);
+                newRoot.getChildren().add(nameLabel);
+            }
+            newStage.setMinWidth(500);
+            newStage.setMaxWidth(500);
+            newStage.setWidth(500);
+            newStage.setMaxHeight(1000);
+            newStage.setScene(newScene);
+            newStage.setTitle("Random Games");
+            newStage.show();
         });
     }
 
     public static void showCurrentGames(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             ArrayList<String> names = (ArrayList<String>) objects.get(0);
-            VBox newRoot = new VBox(10);
+            HBox newRoot = new HBox(10);
             newRoot.setAlignment(Pos.TOP_CENTER);
             newRoot.setPadding(new Insets(20));
-            Scene newScene = new Scene(newRoot, 300, 200);
+            newRoot.setStyle("-fx-background-color: #000000");
+            Scene newScene = new Scene(newRoot);
             Stage newStage = new Stage();
-            newStage.setScene(newScene);
-            newStage.setTitle("TV");
-            newStage.show();
-            Button submitButton = new Button("OK");
-            submitButton.setOnAction(event -> {
-                newStage.close();
-            });
+
+            int i = 0;
             for (String name : names) {
+                VBox vBox = new VBox();
+                vBox.setAlignment(Pos.TOP_CENTER);
+                vBox.setStyle("-fx-background-color: #030368");
+                ImageView imageView;
                 Label nameLabel = new Label(name);
-                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                if (name.contains("private"))
+                    nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #ff4d00; -fx-font-size: 20");
+                else
+                    nameLabel.setStyle("-fx-font-weight: bold; -fx-background-color: #02f6bc; -fx-font-size: 20");
                 nameLabel.setOnMouseClicked(mouseEvent -> {
                     String[] parts = name.split(" ");
                     boolean privateGame;
@@ -318,9 +356,29 @@ public class MainMenu extends Application {
                             User.getLoggedUser().getUsername(), parts[0],parts[1], privateGame);
                     newStage.close();
                 });
+                nameLabel.setPrefWidth(300);
+                nameLabel.setAlignment(Pos.TOP_CENTER);
+                if (names.size() > 1 && i == 0) {
+                    imageView = new ImageView(String.valueOf(MainMenu.class.getResource("/someImages/2.png")));
+                } else {
+                    imageView = new ImageView(String.valueOf(MainMenu.class.getResource("/someImages/1.png")));
+                }
+                imageView.setFitWidth(300);
+                imageView.setPreserveRatio(true);
+                newRoot.getChildren().add(nameLabel);
+                i++;
+                vBox.getChildren().addAll(nameLabel, imageView);
+                newRoot.getChildren().add(vBox);
+            }
+            if (i == 0) {
+                Label nameLabel = new Label("THERE IS NO ACTIVE GAME");
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 30; -fx-text-fill: white");
+                nameLabel.setAlignment(Pos.TOP_CENTER);
                 newRoot.getChildren().add(nameLabel);
             }
-
+            newStage.setScene(newScene);
+            newStage.setTitle("TV");
+            newStage.show();
         });
     }
 
@@ -409,6 +467,7 @@ public class MainMenu extends Application {
     public void continueGame(MouseEvent mouseEvent) {
         Client.getConnection().doInServer("GameController","backToGame",User.getLoggedUser().getUsername());
     }
+
     public static void backTurn(ArrayList<Object> objects) {
         Gson gson = new Gson();
         User temp = gson.fromJson(gson.toJson(objects.get(0)), User.class);

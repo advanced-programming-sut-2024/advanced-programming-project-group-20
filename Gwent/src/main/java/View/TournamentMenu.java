@@ -16,11 +16,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import webConnection.Client;
@@ -213,29 +211,43 @@ public class TournamentMenu extends Application {
     public static void showGamesList(ArrayList<Object> objects) {
         Platform.runLater(() -> {
             ArrayList<String> names = (ArrayList<String>) objects.get(0);
-            VBox newRoot = new VBox(10);
+            HBox newRoot = new HBox(10);
             newRoot.setAlignment(Pos.TOP_CENTER);
             newRoot.setPadding(new Insets(20));
-            Scene newScene = new Scene(newRoot, 300, 200);
+            newRoot.setStyle("-fx-background-color: #ffeb07");
+            Scene newScene = new Scene(newRoot);
             Stage newStage = new Stage();
-            newStage.setScene(newScene);
-            newStage.setTitle("Tournament TV");
-            newStage.show();
-            Button submitButton = new Button("OK");
-            submitButton.setOnAction(event -> {
-                newStage.close();
-            });
             for (String name : names) {
+                VBox vBox = new VBox();
+                vBox.setAlignment(Pos.TOP_CENTER);
+                vBox.setStyle("-fx-background-color: #000000");
+                ImageView imageView;
                 Label nameLabel = new Label(name);
-                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: yellow");
+                nameLabel.setStyle("-fx-font-weight: bold;-fx-background-color: #000000; -fx-font-size: 32; -fx-text-fill: #ffeb07");
                 nameLabel.setOnMouseClicked(mouseEvent -> {
                     String[] parts = name.split(" ");
                     Client.getConnection().doInServer("TournamentController", "seeGame", parts[0],parts[1]);
                     newStage.close();
                 });
+                nameLabel.setPrefWidth(400);
+                nameLabel.setAlignment(Pos.TOP_CENTER);
+                imageView = new ImageView(String.valueOf(MainMenu.class.getResource("/someImages/tour.png")));
+                imageView.setPreserveRatio(true);
+                imageView.setFitWidth(400);
+                vBox.getChildren().addAll(nameLabel,imageView);
+                newRoot.getChildren().add(vBox);
+            }
+            if (names.isEmpty()) {
+                Label nameLabel = new Label("NO ACTIVE TOURNAMENT GAME");
+                nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 30");
+                nameLabel.setAlignment(Pos.TOP_CENTER);
+                nameLabel.setPrefWidth(500);
                 newRoot.getChildren().add(nameLabel);
             }
-
+            newStage.setScene(newScene);
+            newStage.setTitle("Tournament TV");
+            newStage.show();
         });
+
     }
 }

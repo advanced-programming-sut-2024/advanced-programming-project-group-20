@@ -1457,6 +1457,7 @@ public class GameMenu extends Application {
         Platform.runLater(() -> {
             gameMenu.setImagesOfBoard();
             gameMenu.updateCardEvent();
+
         });
     }
 

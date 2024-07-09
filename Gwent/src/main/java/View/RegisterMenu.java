@@ -2,7 +2,6 @@ package View;
 
 import View.ApplicationController;
 //import Controller.RegisterController;
-import Controller.RegisterController;
 import Model.Factions.Nilfgaard;
 import Model.GameHistory;
 import Model.User;
@@ -63,7 +62,7 @@ public class RegisterMenu extends Application {
         stage.setScene(scene);
         ApplicationController.setIcon();
         if (User.getAllUsers().isEmpty()) {
-            Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<Object>());
+            Client.getConnection().doInServer("RegisterController", "parseFile", new ArrayList<>());
         }
         stage.setOnCloseRequest(windowEvent -> {
             System.exit(0);
@@ -204,14 +203,14 @@ public class RegisterMenu extends Application {
             if ((textField.getText().isEmpty() && textField1.getText().isEmpty() && !textField2.getText().isEmpty())) {
                 addANewUser(username, password, email, nickName, label2, textField2);
 
-                Client.getConnection().doInServer("RegisterController", "addUserToServerModel"
-                        , username, password, email, nickName, label2.getText(), textField2.getText());
+                Client.getConnection().doInServer("RegisterController", "addUserToServerModel",
+                        User.getUserByName(username));
 
             } else if (textField.getText().isEmpty() && !textField1.getText().isEmpty() && textField2.getText().isEmpty()) {
                 addANewUser(username, password, email, nickName, label1, textField1);
 
                 Client.getConnection().doInServer("RegisterController", "addUserToServerModel"
-                        , username, password, email, nickName, label1.getText(), textField1.getText());
+                        ,User.getUserByName(username));
 
             } else if (!textField.getText().isEmpty() && textField1.getText().isEmpty() && textField2.getText().isEmpty()) {
                 addANewUser(username, password, email, nickName, label, textField);
